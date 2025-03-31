@@ -9,11 +9,11 @@ from PIL import Image
 images_path = "/home/mostafaelfaggal/ChessReD/Chess Recognition Dataset (ChessReD)_2_all/chessred"
 # images_path = "/home/mostafaelfaggal/ChessReD/Chess Recognition Dataset (ChessReD)_2_all/chessred2k/images"
 
-labels_file_path = "/home/mostafaelfaggal/ChessReD/Chess Recognition Dataset (ChessReD)_2_all/chessred_annotations.pkl"
+labels_file_path = "/mnt/D/University/Thesis/DataSetLoaders/chessred_annotations.pkl"
 # labels_file_path = "/home/mostafaelfaggal/ChessReD/Chess Recognition Dataset (ChessReD)_2_all/chessred2k_annotations.pkl"
 
 
-def img_transform(img_size=(3024, 3024), pad_type="repeat", crop_anchor="center"):
+def img_transform(img_size=(3024, 3024), pad_type="repeat", crop_anchor="center", is_color=True):
     def transform_fn(x: torch.Tensor) -> torch.Tensor:
         if (img_size[0] < x.shape[0]):
             top = 0
@@ -86,6 +86,10 @@ def img_transform(img_size=(3024, 3024), pad_type="repeat", crop_anchor="center"
                     pass
 
             x = torch.cat([left_pad, x, right_pad], dim=1)
+
+        x = (x.permute(2, 0, 1).to(torch.float32)) / 255.0
+        if not (is_color):
+            x = x.mean(dim=0, keepdim=True)
 
         return x
 

@@ -1,0 +1,8 @@
+path: /home/hussein/uniWork/Spring2025/Thesis/YoloV8ChessboardDetection/ChessboardSegData
+train: images/train 
+val: images/val
+
+
+#classes
+nc: 1
+names: ['Chessboard']

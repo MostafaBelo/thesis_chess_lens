@@ -9,9 +9,10 @@ model = YOLO("./Piece_Detection/best6(11x).pt")
 
 
 def detect_pieces_img(img):
-    results = model(img.cpu().numpy())
+    results = model(np.ascontiguousarray(img.cpu().numpy()))
+    results[0].show()
 
-    return conv_boxes(results[0].boxes)
+    return conv_boxes(results[0].boxes), results[0]
 
 
 def conv_boxes(boxes):

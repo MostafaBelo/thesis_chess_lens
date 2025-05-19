@@ -63,7 +63,8 @@ class ChessLensImage:
             raise Exception("No image loaded")
 
         # run yolo piece detection and set piece_bboxs
-        self.piece_bboxs = piece_yolo.detect_pieces_img(self.img)
+        self.piece_bboxs, self.pieces_yolo = piece_yolo.detect_pieces_img(
+            self.img)
 
         if not self.is_board_detected():
             raise Exception("Board not detected")
@@ -80,6 +81,13 @@ class ChessLensImage:
             raise Exception("Pieces not detected")
 
         fen_img = ChessUtils.fen_to_png(self.fen, ".", "out_fen.png")
+
+    def preview_board(self):
+        plt.imshow(self.img)
+        plt.imshow(self.board_detection[2], alpha=self.board_detection[2])
+
+    def preview_pieces(self):
+        self.pieces_yolo.show()
 
     def apply(self):
         self.detect_board()

@@ -7,7 +7,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 
-model_path = 'bd_yolo.pt'
+model_path = './BoardDetector_Yolo/bd_yolo.pt'
 default_conf = 0.7
 
 

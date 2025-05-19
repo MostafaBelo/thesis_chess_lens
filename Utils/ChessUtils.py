@@ -87,7 +87,7 @@ class ChessTensorUtils():
 
 def fen_to_png(fen: str, folder_path: str, file_name: str):
     board = chess.Board(f"{fen} w KQkq - 1 1")
-    boardsvg = chess.svg.board(coordinates=False, board=board, size=350, colors={
+    boardsvg = chess.svg.board(coordinates=True, board=board, size=350, colors={
                                "square light": "#E6D0A7", "square dark": "#A67D5B"})
     svg_file_path = f"{folder_path}/positions.svg"
     f = open(svg_file_path, "w")

@@ -6,11 +6,13 @@ import numpy as np
 import pickle
 from PIL import Image
 
-images_path = "/home/mostafaelfaggal/ChessReD/Chess Recognition Dataset (ChessReD)_2_all/chessred"
+# images_path = "/home/mostafaelfaggal/ChessReD/Chess Recognition Dataset (ChessReD)_2_all/chessred"
 # images_path = "/home/mostafaelfaggal/ChessReD/Chess Recognition Dataset (ChessReD)_2_all/chessred2k/images"
+images_path = "/home/mostafaelfaggal/ChessReD/Chess Recognition Dataset (ChessReD)_2_all/manual_dataset"
 
-labels_file_path = "/mnt/D/University/Thesis/DataSetLoaders/chessred_annotations.pkl"
+# labels_file_path = "/mnt/D/University/Thesis/DataSetLoaders/chessred_annotations.pkl"
 # labels_file_path = "/home/mostafaelfaggal/ChessReD/Chess Recognition Dataset (ChessReD)_2_all/chessred2k_annotations.pkl"
+labels_file_path = "/home/mostafaelfaggal/ChessReD/Chess Recognition Dataset (ChessReD)_2_all/annotations_manual.pkl"
 
 
 def img_transform(img_size=(3024, 3024), pad_type="repeat", crop_anchor="center", is_color=True):
@@ -38,8 +40,8 @@ def img_transform(img_size=(3024, 3024), pad_type="repeat", crop_anchor="center"
 
             match pad_type:
                 case "repeat":
-                    top_pad = x[[0], :, :].repeat(1, top_diff, 1)
-                    bottom_pad = x[[-1], :, :].repeat(1, bottom_diff, 1)
+                    top_pad = x[[0], :, :].repeat(top_diff, 1, 1)
+                    bottom_pad = x[[-1], :, :].repeat(bottom_diff, 1, 1)
 
                 case "zero":
                     top_pad = torch.zeros(top_diff, x.shape[1], x.shape[2])

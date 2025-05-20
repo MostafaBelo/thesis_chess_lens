@@ -5,12 +5,13 @@ import cv2
 
 from PIL import Image
 
-model = YOLO("./Piece_Detection/best6(11x).pt")
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+model = YOLO("./Piece_Detection/best6(11x).pt").to(device)
 
 
 def detect_pieces_img(img):
     results = model(np.ascontiguousarray(img.cpu().numpy()))
-    results[0].show()
+    # results[0].show()
 
     return conv_boxes(results[0].boxes), results[0]
 

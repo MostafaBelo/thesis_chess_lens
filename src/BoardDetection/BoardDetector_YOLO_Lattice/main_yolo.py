@@ -1,5 +1,5 @@
 from BoardDetection.BoardDetector_YOLO.BoardDetector_YOLO import BoardDetector_YOLO
-from BoardDetection.BoardDetector_YOLO.BoundedCornerExtractor import BoundedCornerExtractor
+from BoardDetection.BoardDetector_YOLO_Lattice.BoundedCornerExtractor import BoundedCornerExtractor
 
 bd = BoardDetector_YOLO()
 CE = BoundedCornerExtractor()

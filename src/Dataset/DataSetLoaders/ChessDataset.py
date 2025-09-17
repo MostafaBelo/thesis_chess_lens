@@ -51,6 +51,23 @@ def convert_labels_txt_to_pkl(txt_data: str):
     return pkl_data
 
 
+def _resize_corners(original_size, new_size):
+    def main(label):
+        corners: torch.Tensor = label["corners"].clone()
+        corners[:, 0] *= new_size[1]/original_size[1]
+        corners[:, 1] *= new_size[0]/original_size[0]
+
+        # label["corners"] = corners
+        new_label = {
+            **label
+        }
+        new_label["corners"] = corners
+
+        return new_label
+
+    return main
+
+
 class ChessDataset(Dataset):
     def __init__(self, root_dirs: None | str | list[str] = None, img_transforms=None, target_transforms=None, force_build_pkl=False, config={}):
         if root_dirs is None:
@@ -70,10 +87,18 @@ class ChessDataset(Dataset):
         self.transforms = transforms.Compose([
             transforms.Resize(
                 (480, 640) if ("img_size" not in config) else config["img_size"]),
+            *([transforms.Grayscale()]
+              if ("gray" in config and config["gray"]) else []),
             transforms.ToTensor(),
+            *([lambda img: (img*255).to(torch.uint8)]
+              if ("is_int" in config and config["is_int"]) else []),
             *([img_transforms] if img_transforms is not None else [])
         ])
-        self.target_transforms = target_transforms
+        self.target_transforms = transforms.Compose([
+            *([_resize_corners((480, 640), config["img_size"])]
+              if ("img_size" in config) else []),
+            *([target_transforms] if target_transforms is not None else [])
+        ])
 
         self.labels = []
 
@@ -110,6 +135,7 @@ class ChessDataset(Dataset):
         img_path = label["image_path"]
         fen = label["fen"]
         orientation = label["orientation"]
+        corners = label["corners"]
 
         img = Image.open(img_path).convert("RGB")
 

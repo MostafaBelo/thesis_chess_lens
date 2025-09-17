@@ -1,2 +1,3 @@
-*/__pycache__/*
-Piece_Detection/*.pt
+**/.env
+**/__pycache__
+**/*.pt

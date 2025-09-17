@@ -1,0 +1,2200 @@
+{
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_1.jpg": {
+		"top-left": [147, 74],
+		"top-right": [473, 61],
+		"bottom-right": [619, 372],
+		"bottom-left": [21, 394]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_2.jpg": {
+		"top-left": [149, 74],
+		"top-right": [474, 61],
+		"bottom-right": [621, 371],
+		"bottom-left": [21, 394]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_3.jpg": {
+		"top-left": [149, 74],
+		"top-right": [474, 61],
+		"bottom-right": [614, 377],
+		"bottom-left": [14, 393]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_4.jpg": {
+		"top-left": [148, 74],
+		"top-right": [474, 65],
+		"bottom-right": [616, 378],
+		"bottom-left": [15, 396]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_5.jpg": {
+		"top-left": [146, 74],
+		"top-right": [473, 61],
+		"bottom-right": [623, 363],
+		"bottom-left": [28, 398]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_6.jpg": {
+		"top-left": [147, 73],
+		"top-right": [473, 61],
+		"bottom-right": [619, 372],
+		"bottom-left": [22, 396]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_7.jpg": {
+		"top-left": [146, 75],
+		"top-right": [471, 60],
+		"bottom-right": [620, 366],
+		"bottom-left": [24, 396]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_8.jpg": {
+		"top-left": [150, 73],
+		"top-right": [474, 59],
+		"bottom-right": [626, 362],
+		"bottom-left": [35, 391]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_9.jpg": {
+		"top-left": [150, 73],
+		"top-right": [474, 59],
+		"bottom-right": [625, 363],
+		"bottom-left": [34, 391]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_10.jpg": {
+		"top-left": [150, 73],
+		"top-right": [474, 59],
+		"bottom-right": [625, 363],
+		"bottom-left": [34, 391]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_11.jpg": {
+		"top-left": [150, 73],
+		"top-right": [475, 60],
+		"bottom-right": [625, 363],
+		"bottom-left": [34, 391]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_12.jpg": {
+		"top-left": [150, 73],
+		"top-right": [475, 60],
+		"bottom-right": [626, 362],
+		"bottom-left": [34, 391]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_13.jpg": {
+		"top-left": [150, 73],
+		"top-right": [474, 58],
+		"bottom-right": [626, 362],
+		"bottom-left": [34, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_14.jpg": {
+		"top-left": [150, 73],
+		"top-right": [474, 58],
+		"bottom-right": [626, 362],
+		"bottom-left": [34, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_15.jpg": {
+		"top-left": [150, 73],
+		"top-right": [474, 58],
+		"bottom-right": [626, 362],
+		"bottom-left": [34, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_16.jpg": {
+		"top-left": [150, 73],
+		"top-right": [474, 58],
+		"bottom-right": [624, 363],
+		"bottom-left": [34, 393]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_17.jpg": {
+		"top-left": [150, 73],
+		"top-right": [474, 58],
+		"bottom-right": [626, 363],
+		"bottom-left": [34, 393]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_18.jpg": {
+		"top-left": [150, 73],
+		"top-right": [474, 58],
+		"bottom-right": [626, 362],
+		"bottom-left": [34, 393]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_19.jpg": {
+		"top-left": [150, 73],
+		"top-right": [474, 58],
+		"bottom-right": [625, 364],
+		"bottom-left": [34, 393]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_20.jpg": {
+		"top-left": [150, 73],
+		"top-right": [474, 58],
+		"bottom-right": [626, 364],
+		"bottom-left": [34, 393]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_21.jpg": {
+		"top-left": [150, 73],
+		"top-right": [474, 58],
+		"bottom-right": [626, 363],
+		"bottom-left": [34, 393]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_22.jpg": {
+		"top-left": [150, 73],
+		"top-right": [474, 58],
+		"bottom-right": [627, 363],
+		"bottom-left": [34, 393]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_23.jpg": {
+		"top-left": [149, 75],
+		"top-right": [474, 58],
+		"bottom-right": [627, 363],
+		"bottom-left": [33, 397]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_24.jpg": {
+		"top-left": [154, 71],
+		"top-right": [474, 58],
+		"bottom-right": [614, 361],
+		"bottom-left": [33, 379]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_25.jpg": {
+		"top-left": [154, 71],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 377]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_26.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_27.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_28.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_29.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_30.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_31.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_32.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_33.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_34.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_35.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_36.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_37.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_38.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_39.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_40.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_41.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_42.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_43.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_44.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_45.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_46.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_47.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_48.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_49.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_50.jpg": {
+		"top-left": [154, 70],
+		"top-right": [476, 58],
+		"bottom-right": [615, 360],
+		"bottom-left": [34, 378]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_51.jpg": {
+		"top-left": [141, 68],
+		"top-right": [464, 51],
+		"bottom-right": [612, 350],
+		"bottom-left": [29, 385]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_52.jpg": {
+		"top-left": [139, 70],
+		"top-right": [461, 52],
+		"bottom-right": [612, 349],
+		"bottom-left": [29, 388]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_53.jpg": {
+		"top-left": [138, 70],
+		"top-right": [461, 52],
+		"bottom-right": [612, 349],
+		"bottom-left": [30, 389]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_54.jpg": {
+		"top-left": [137, 71],
+		"top-right": [462, 52],
+		"bottom-right": [612, 349],
+		"bottom-left": [30, 389]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_55.jpg": {
+		"top-left": [139, 71],
+		"top-right": [462, 52],
+		"bottom-right": [612, 349],
+		"bottom-left": [30, 389]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_56.jpg": {
+		"top-left": [138, 71],
+		"top-right": [462, 52],
+		"bottom-right": [612, 349],
+		"bottom-left": [30, 389]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_57.jpg": {
+		"top-left": [138, 71],
+		"top-right": [462, 52],
+		"bottom-right": [612, 349],
+		"bottom-left": [30, 389]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_58.jpg": {
+		"top-left": [138, 71],
+		"top-right": [462, 52],
+		"bottom-right": [612, 349],
+		"bottom-left": [30, 389]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_59.jpg": {
+		"top-left": [138, 71],
+		"top-right": [462, 52],
+		"bottom-right": [612, 349],
+		"bottom-left": [30, 389]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_60.jpg": {
+		"top-left": [138, 71],
+		"top-right": [462, 52],
+		"bottom-right": [612, 349],
+		"bottom-left": [30, 389]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_61.jpg": {
+		"top-left": [138, 71],
+		"top-right": [462, 52],
+		"bottom-right": [612, 349],
+		"bottom-left": [30, 389]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_62.jpg": {
+		"top-left": [138, 71],
+		"top-right": [462, 52],
+		"bottom-right": [612, 349],
+		"bottom-left": [30, 389]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_63.jpg": {
+		"top-left": [138, 71],
+		"top-right": [462, 52],
+		"bottom-right": [612, 349],
+		"bottom-left": [30, 389]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_64.jpg": {
+		"top-left": [138, 71],
+		"top-right": [462, 52],
+		"bottom-right": [612, 349],
+		"bottom-left": [30, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_65.jpg": {
+		"top-left": [137, 71],
+		"top-right": [462, 52],
+		"bottom-right": [612, 349],
+		"bottom-left": [30, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_66.jpg": {
+		"top-left": [137, 71],
+		"top-right": [462, 52],
+		"bottom-right": [612, 349],
+		"bottom-left": [30, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_67.jpg": {
+		"top-left": [137, 71],
+		"top-right": [462, 52],
+		"bottom-right": [612, 349],
+		"bottom-left": [30, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_68.jpg": {
+		"top-left": [137, 71],
+		"top-right": [462, 52],
+		"bottom-right": [612, 349],
+		"bottom-left": [30, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_69.jpg": {
+		"top-left": [137, 71],
+		"top-right": [461, 53],
+		"bottom-right": [612, 349],
+		"bottom-left": [27, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_70.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 51],
+		"bottom-right": [612, 349],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_71.jpg": {
+		"top-left": [137, 71],
+		"top-right": [462, 52],
+		"bottom-right": [612, 349],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_72.jpg": {
+		"top-left": [137, 71],
+		"top-right": [464, 53],
+		"bottom-right": [612, 349],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_73.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 51],
+		"bottom-right": [612, 349],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_74.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 51],
+		"bottom-right": [612, 349],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_75.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 51],
+		"bottom-right": [612, 349],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_76.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 51],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_77.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 51],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_78.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 51],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_79.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 51],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_80.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 51],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_81.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 51],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_82.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 51],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_83.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 51],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_84.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 51],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_85.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 51],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_86.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 51],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_87.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 52],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_88.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 52],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_89.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 52],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_90.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 52],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_91.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 52],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_92.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 52],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_93.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 52],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_94.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 52],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_95.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 52],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_96.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 52],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_97.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 52],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_98.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 52],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_99.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 52],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_100.jpg": {
+		"top-left": [137, 71],
+		"top-right": [463, 52],
+		"bottom-right": [612, 351],
+		"bottom-left": [29, 392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_101.jpg": {
+		"top-left": [156, 120],
+		"top-right": [471, 123],
+		"bottom-right": [619, 435],
+		"bottom-left": [4, 442]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_102.jpg": {
+		"top-left": [156, 120],
+		"top-right": [471, 123],
+		"bottom-right": [619, 438],
+		"bottom-left": [4, 442]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_103.jpg": {
+		"top-left": [153, 121],
+		"top-right": [466, 122],
+		"bottom-right": [622, 433],
+		"bottom-left": [10, 447]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_104.jpg": {
+		"top-left": [159, 119],
+		"top-right": [473, 122],
+		"bottom-right": [626, 430],
+		"bottom-left": [20, 438]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_105.jpg": {
+		"top-left": [159, 119],
+		"top-right": [472, 121],
+		"bottom-right": [626, 431],
+		"bottom-left": [19, 437]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_106.jpg": {
+		"top-left": [160, 120],
+		"top-right": [473, 121],
+		"bottom-right": [626, 431],
+		"bottom-left": [19, 439]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_107.jpg": {
+		"top-left": [160, 120],
+		"top-right": [473, 121],
+		"bottom-right": [626, 431],
+		"bottom-left": [19, 439]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_108.jpg": {
+		"top-left": [161, 119],
+		"top-right": [473, 121],
+		"bottom-right": [626, 431],
+		"bottom-left": [18, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_109.jpg": {
+		"top-left": [160, 119],
+		"top-right": [474, 121],
+		"bottom-right": [626, 431],
+		"bottom-left": [18, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_110.jpg": {
+		"top-left": [160, 119],
+		"top-right": [474, 121],
+		"bottom-right": [625, 431],
+		"bottom-left": [18, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_111.jpg": {
+		"top-left": [160, 119],
+		"top-right": [474, 121],
+		"bottom-right": [625, 431],
+		"bottom-left": [18, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_112.jpg": {
+		"top-left": [160, 120],
+		"top-right": [474, 121],
+		"bottom-right": [625, 431],
+		"bottom-left": [18, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_113.jpg": {
+		"top-left": [160, 120],
+		"top-right": [474, 121],
+		"bottom-right": [625, 431],
+		"bottom-left": [18, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_114.jpg": {
+		"top-left": [160, 120],
+		"top-right": [474, 121],
+		"bottom-right": [625, 431],
+		"bottom-left": [18, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_115.jpg": {
+		"top-left": [160, 120],
+		"top-right": [474, 121],
+		"bottom-right": [625, 431],
+		"bottom-left": [18, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_116.jpg": {
+		"top-left": [160, 120],
+		"top-right": [474, 121],
+		"bottom-right": [625, 431],
+		"bottom-left": [18, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_117.jpg": {
+		"top-left": [160, 120],
+		"top-right": [474, 121],
+		"bottom-right": [625, 431],
+		"bottom-left": [18, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_118.jpg": {
+		"top-left": [161, 120],
+		"top-right": [474, 121],
+		"bottom-right": [625, 431],
+		"bottom-left": [18, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_119.jpg": {
+		"top-left": [161, 120],
+		"top-right": [474, 121],
+		"bottom-right": [625, 431],
+		"bottom-left": [18, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_120.png": {
+		"top-left": [161, 120],
+		"top-right": [474, 121],
+		"bottom-right": [625, 431],
+		"bottom-left": [18, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_121.png": {
+		"top-left": [161, 120],
+		"top-right": [474, 121],
+		"bottom-right": [625, 431],
+		"bottom-left": [18, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_122.png": {
+		"top-left": [161, 120],
+		"top-right": [474, 121],
+		"bottom-right": [625, 431],
+		"bottom-left": [18, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_123.png": {
+		"top-left": [161, 120],
+		"top-right": [474, 121],
+		"bottom-right": [625, 432],
+		"bottom-left": [18, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_124.png": {
+		"top-left": [161, 120],
+		"top-right": [474, 121],
+		"bottom-right": [625, 432],
+		"bottom-left": [18, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_125.png": {
+		"top-left": [161, 120],
+		"top-right": [474, 121],
+		"bottom-right": [625, 432],
+		"bottom-left": [18, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_126.png": {
+		"top-left": [161, 120],
+		"top-right": [474, 121],
+		"bottom-right": [625, 432],
+		"bottom-left": [18, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_127.png": {
+		"top-left": [161, 120],
+		"top-right": [474, 121],
+		"bottom-right": [625, 432],
+		"bottom-left": [18, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_128.png": {
+		"top-left": [158, 120],
+		"top-right": [474, 121],
+		"bottom-right": [623, 429],
+		"bottom-left": [18, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_129.png": {
+		"top-left": [159, 120],
+		"top-right": [469, 121],
+		"bottom-right": [623, 429],
+		"bottom-left": [18, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_130.png": {
+		"top-left": [159, 120],
+		"top-right": [471, 121],
+		"bottom-right": [623, 429],
+		"bottom-left": [17, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_131.png": {
+		"top-left": [159, 120],
+		"top-right": [471, 121],
+		"bottom-right": [623, 429],
+		"bottom-left": [17, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_132.png": {
+		"top-left": [159, 120],
+		"top-right": [471, 121],
+		"bottom-right": [623, 429],
+		"bottom-left": [17, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_133.png": {
+		"top-left": [159, 120],
+		"top-right": [471, 121],
+		"bottom-right": [623, 429],
+		"bottom-left": [17, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_134.png": {
+		"top-left": [159, 120],
+		"top-right": [471, 121],
+		"bottom-right": [623, 429],
+		"bottom-left": [17, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_135.png": {
+		"top-left": [159, 120],
+		"top-right": [471, 121],
+		"bottom-right": [623, 429],
+		"bottom-left": [17, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_136.png": {
+		"top-left": [159, 120],
+		"top-right": [471, 121],
+		"bottom-right": [623, 429],
+		"bottom-left": [17, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_137.png": {
+		"top-left": [159, 120],
+		"top-right": [471, 121],
+		"bottom-right": [623, 429],
+		"bottom-left": [17, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_138.png": {
+		"top-left": [159, 120],
+		"top-right": [471, 121],
+		"bottom-right": [623, 429],
+		"bottom-left": [17, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_139.png": {
+		"top-left": [159, 120],
+		"top-right": [471, 121],
+		"bottom-right": [623, 429],
+		"bottom-left": [17, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_140.png": {
+		"top-left": [159, 120],
+		"top-right": [468, 119],
+		"bottom-right": [624, 422],
+		"bottom-left": [17, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_141.png": {
+		"top-left": [158, 120],
+		"top-right": [468, 119],
+		"bottom-right": [624, 422],
+		"bottom-left": [25, 435]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_142.png": {
+		"top-left": [158, 120],
+		"top-right": [468, 119],
+		"bottom-right": [624, 422],
+		"bottom-left": [23, 435]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_143.png": {
+		"top-left": [158, 120],
+		"top-right": [468, 119],
+		"bottom-right": [624, 422],
+		"bottom-left": [23, 435]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_144.png": {
+		"top-left": [158, 120],
+		"top-right": [468, 119],
+		"bottom-right": [624, 422],
+		"bottom-left": [22, 435]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_145.png": {
+		"top-left": [158, 120],
+		"top-right": [468, 119],
+		"bottom-right": [624, 422],
+		"bottom-left": [22, 435]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_146.png": {
+		"top-left": [158, 120],
+		"top-right": [468, 119],
+		"bottom-right": [624, 422],
+		"bottom-left": [22, 435]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_147.png": {
+		"top-left": [158, 120],
+		"top-right": [468, 119],
+		"bottom-right": [624, 422],
+		"bottom-left": [22, 435]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_148.png": {
+		"top-left": [158, 120],
+		"top-right": [469, 119],
+		"bottom-right": [624, 422],
+		"bottom-left": [22, 435]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_149.png": {
+		"top-left": [158, 120],
+		"top-right": [469, 119],
+		"bottom-right": [624, 422],
+		"bottom-left": [22, 435]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_150.png": {
+		"top-left": [158, 120],
+		"top-right": [469, 119],
+		"bottom-right": [623, 420],
+		"bottom-left": [22, 435]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_151.png": {
+		"top-left": [158, 120],
+		"top-right": [469, 119],
+		"bottom-right": [623, 420],
+		"bottom-left": [22, 435]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_152.png": {
+		"top-left": [158, 120],
+		"top-right": [469, 119],
+		"bottom-right": [623, 420],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_153.png": {
+		"top-left": [158, 120],
+		"top-right": [469, 119],
+		"bottom-right": [623, 420],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_154.png": {
+		"top-left": [158, 120],
+		"top-right": [468, 119],
+		"bottom-right": [623, 420],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_155.png": {
+		"top-left": [158, 120],
+		"top-right": [468, 119],
+		"bottom-right": [623, 420],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_156.png": {
+		"top-left": [158, 120],
+		"top-right": [468, 119],
+		"bottom-right": [623, 420],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_157.png": {
+		"top-left": [157, 120],
+		"top-right": [468, 119],
+		"bottom-right": [623, 420],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_158.png": {
+		"top-left": [157, 120],
+		"top-right": [468, 119],
+		"bottom-right": [623, 420],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_159.png": {
+		"top-left": [157, 120],
+		"top-right": [468, 119],
+		"bottom-right": [623, 420],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_160.png": {
+		"top-left": [157, 120],
+		"top-right": [468, 119],
+		"bottom-right": [623, 420],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_161.png": {
+		"top-left": [157, 120],
+		"top-right": [468, 119],
+		"bottom-right": [623, 420],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_162.png": {
+		"top-left": [157, 120],
+		"top-right": [464, 118],
+		"bottom-right": [623, 416],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_163.png": {
+		"top-left": [156, 120],
+		"top-right": [464, 117],
+		"bottom-right": [623, 416],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_164.png": {
+		"top-left": [155, 121],
+		"top-right": [464, 117],
+		"bottom-right": [622, 416],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_165.png": {
+		"top-left": [155, 121],
+		"top-right": [466, 118],
+		"bottom-right": [622, 416],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_166.png": {
+		"top-left": [155, 121],
+		"top-right": [466, 118],
+		"bottom-right": [622, 416],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_167.png": {
+		"top-left": [155, 121],
+		"top-right": [466, 118],
+		"bottom-right": [622, 417],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_168.png": {
+		"top-left": [155, 121],
+		"top-right": [466, 118],
+		"bottom-right": [622, 417],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_169.png": {
+		"top-left": [155, 121],
+		"top-right": [466, 118],
+		"bottom-right": [622, 417],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_170.png": {
+		"top-left": [155, 121],
+		"top-right": [466, 118],
+		"bottom-right": [622, 418],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_171.png": {
+		"top-left": [155, 121],
+		"top-right": [466, 118],
+		"bottom-right": [622, 418],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_172.png": {
+		"top-left": [155, 121],
+		"top-right": [466, 118],
+		"bottom-right": [622, 418],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_173.png": {
+		"top-left": [155, 121],
+		"top-right": [466, 118],
+		"bottom-right": [622, 418],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_174.png": {
+		"top-left": [155, 121],
+		"top-right": [466, 118],
+		"bottom-right": [622, 418],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_175.png": {
+		"top-left": [155, 121],
+		"top-right": [466, 118],
+		"bottom-right": [622, 418],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_176.png": {
+		"top-left": [155, 121],
+		"top-right": [466, 118],
+		"bottom-right": [622, 418],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_177.png": {
+		"top-left": [155, 121],
+		"top-right": [466, 118],
+		"bottom-right": [622, 418],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_178.png": {
+		"top-left": [155, 121],
+		"top-right": [466, 118],
+		"bottom-right": [622, 418],
+		"bottom-left": [23, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_179.jpg": {
+		"top-left": [141, 103],
+		"top-right": [451, 107],
+		"bottom-right": [601, 392],
+		"bottom-left": [23, 420]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_180.jpg": {
+		"top-left": [140, 103],
+		"top-right": [451, 107],
+		"bottom-right": [600, 392],
+		"bottom-left": [22, 422]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_181.jpg": {
+		"top-left": [142, 104],
+		"top-right": [453, 105],
+		"bottom-right": [605, 391],
+		"bottom-left": [27, 424]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_182.jpg": {
+		"top-left": [142, 105],
+		"top-right": [452, 107],
+		"bottom-right": [604, 392],
+		"bottom-left": [25, 424]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_183.jpg": {
+		"top-left": [141, 105],
+		"top-right": [451, 107],
+		"bottom-right": [604, 392],
+		"bottom-left": [24, 424]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_185.jpg": {
+		"top-left": [150, 101],
+		"top-right": [461, 107],
+		"bottom-right": [609, 396],
+		"bottom-left": [31, 414]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_186.jpg": {
+		"top-left": [151, 103],
+		"top-right": [463, 108],
+		"bottom-right": [610, 396],
+		"bottom-left": [31, 417]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_187.jpg": {
+		"top-left": [151, 103],
+		"top-right": [460, 108],
+		"bottom-right": [610, 396],
+		"bottom-left": [31, 417]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_188.jpg": {
+		"top-left": [164, 110],
+		"top-right": [473, 111],
+		"bottom-right": [625, 403],
+		"bottom-left": [47, 418]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_189.jpg": {
+		"top-left": [152, 105],
+		"top-right": [462, 109],
+		"bottom-right": [611, 397],
+		"bottom-left": [32, 417]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_190.jpg": {
+		"top-left": [153, 104],
+		"top-right": [463, 109],
+		"bottom-right": [613, 398],
+		"bottom-left": [34, 418]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_191.jpg": {
+		"top-left": [151, 105],
+		"top-right": [462, 109],
+		"bottom-right": [612, 397],
+		"bottom-left": [34, 418]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_192.jpg": {
+		"top-left": [152, 105],
+		"top-right": [462, 109],
+		"bottom-right": [611, 396],
+		"bottom-left": [33, 418]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_193.jpg": {
+		"top-left": [166, 113],
+		"top-right": [473, 113],
+		"bottom-right": [628, 403],
+		"bottom-left": [52, 420]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_194.jpg": {
+		"top-left": [163, 112],
+		"top-right": [471, 112],
+		"bottom-right": [623, 402],
+		"bottom-left": [48, 420]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_195.jpg": {
+		"top-left": [163, 112],
+		"top-right": [470, 113],
+		"bottom-right": [622, 402],
+		"bottom-left": [47, 419]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_196.jpg": {
+		"top-left": [161, 111],
+		"top-right": [470, 113],
+		"bottom-right": [622, 402],
+		"bottom-left": [45, 420]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_197.jpg": {
+		"top-left": [160, 110],
+		"top-right": [467, 112],
+		"bottom-right": [621, 401],
+		"bottom-left": [44, 419]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_198.jpg": {
+		"top-left": [151, 105],
+		"top-right": [467, 112],
+		"bottom-right": [611, 397],
+		"bottom-left": [34, 419]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_199.jpg": {
+		"top-left": [151, 105],
+		"top-right": [463, 110],
+		"bottom-right": [614, 398],
+		"bottom-left": [34, 417]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_200.jpg": {
+		"top-left": [151, 105],
+		"top-right": [459, 108],
+		"bottom-right": [612, 397],
+		"bottom-left": [34, 418]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_201.jpg": {
+		"top-left": [150, 105],
+		"top-right": [460, 109],
+		"bottom-right": [608, 396],
+		"bottom-left": [33, 419]
+	},
+
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_202.jpg": {
+		"top-left": [151, 104],
+		"top-right": [460, 109],
+		"bottom-right": [610, 397],
+		"bottom-left": [31, 418]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_203.jpg": {
+		"top-left": [153, 104],
+		"top-right": [460, 109],
+		"bottom-right": [613, 398],
+		"bottom-left": [33, 420]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_204.jpg": {
+		"top-left": [150, 104],
+		"top-right": [459, 109],
+		"bottom-right": [609, 397],
+		"bottom-left": [30, 419]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_205.jpg": {
+		"top-left": [149, 105],
+		"top-right": [459, 110],
+		"bottom-right": [609, 397],
+		"bottom-left": [30, 421]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_206.jpg": {
+		"top-left": [163, 118],
+		"top-right": [470, 114],
+		"bottom-right": [632, 403],
+		"bottom-left": [50, 427]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_207.jpg": {
+		"top-left": [150, 127],
+		"top-right": [456, 122],
+		"bottom-right": [610, 413],
+		"bottom-left": [24, 445]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_208.jpg": {
+		"top-left": [169, 122],
+		"top-right": [474, 117],
+		"bottom-right": [631, 414],
+		"bottom-left": [52, 432]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_209.jpg": {
+		"top-left": [167, 123],
+		"top-right": [473, 122],
+		"bottom-right": [627, 416],
+		"bottom-left": [48, 430]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_210.jpg": {
+		"top-left": [172, 122],
+		"top-right": [476, 120],
+		"bottom-right": [633, 415],
+		"bottom-left": [52, 432]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_211.jpg": {
+		"top-left": [172, 123],
+		"top-right": [478, 119],
+		"bottom-right": [630, 415],
+		"bottom-left": [53, 433]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_212.jpg": {
+		"top-left": [162, 120],
+		"top-right": [469, 120],
+		"bottom-right": [620, 414],
+		"bottom-left": [40, 434]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_213.jpg": {
+		"top-left": [165, 124],
+		"top-right": [470, 121],
+		"bottom-right": [627, 415],
+		"bottom-left": [46, 435]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_214.jpg": {
+		"top-left": [169, 124],
+		"top-right": [476, 118],
+		"bottom-right": [634, 414],
+		"bottom-left": [51, 435]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_215.jpg": {
+		"top-left": [167, 123],
+		"top-right": [474, 118],
+		"bottom-right": [630, 413],
+		"bottom-left": [50, 434]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_216.jpg": {
+		"top-left": [166, 124],
+		"top-right": [472, 118],
+		"bottom-right": [630, 413],
+		"bottom-left": [49, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_217.jpg": {
+		"top-left": [143, 135],
+		"top-right": [449, 111],
+		"bottom-right": [621, 392],
+		"bottom-left": [52, 455]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_218.jpg": {
+		"top-left": [145, 136],
+		"top-right": [453, 110],
+		"bottom-right": [622, 395],
+		"bottom-left": [47, 461]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_219.jpg": {
+		"top-left": [153, 136],
+		"top-right": [454, 110],
+		"bottom-right": [626, 394],
+		"bottom-left": [48, 463]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_220.jpg": {
+		"top-left": [147, 136],
+		"top-right": [455, 110],
+		"bottom-right": [629, 393],
+		"bottom-left": [51, 463]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_221.jpg": {
+		"top-left": [149, 117],
+		"top-right": [460, 115],
+		"bottom-right": [613, 407],
+		"bottom-left": [30, 438]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_222.jpg": {
+		"top-left": [165, 127],
+		"top-right": [473, 117],
+		"bottom-right": [633, 410],
+		"bottom-left": [51, 443]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_223.jpg": {
+		"top-left": [147, 130],
+		"top-right": [455, 120],
+		"bottom-right": [612, 410],
+		"bottom-left": [29, 449]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_224.jpg": {
+		"top-left": [158, 129],
+		"top-right": [465, 117],
+		"bottom-right": [628, 409],
+		"bottom-left": [48, 446]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_225.jpg": {
+		"top-left": [157, 128],
+		"top-right": [464, 117],
+		"bottom-right": [629, 408],
+		"bottom-left": [45, 447]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_226.jpg": {
+		"top-left": [151, 130],
+		"top-right": [460, 117],
+		"bottom-right": [622, 407],
+		"bottom-left": [39, 452]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_227.jpg": {
+		"top-left": [153, 129],
+		"top-right": [460, 117],
+		"bottom-right": [624, 406],
+		"bottom-left": [43, 450]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_228.jpg": {
+		"top-left": [153, 128],
+		"top-right": [460, 117],
+		"bottom-right": [623, 407],
+		"bottom-left": [42, 450]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_229.jpg": {
+		"top-left": [152, 131],
+		"top-right": [458, 127],
+		"bottom-right": [614, 417],
+		"bottom-left": [32, 448]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_230.jpg": {
+		"top-left": [166, 128],
+		"top-right": [471, 128],
+		"bottom-right": [627, 424],
+		"bottom-left": [44, 438]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_231.jpg": {
+		"top-left": [163, 125],
+		"top-right": [468, 119],
+		"bottom-right": [630, 414],
+		"bottom-left": [45, 440]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_232.jpg": {
+		"top-left": [169, 130],
+		"top-right": [471, 132],
+		"bottom-right": [626, 427],
+		"bottom-left": [44, 437]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_233.jpg": {
+		"top-left": [170, 133],
+		"top-right": [476, 132],
+		"bottom-right": [628, 427],
+		"bottom-left": [46, 439]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_234.jpg": {
+		"top-left": [151, 129],
+		"top-right": [458, 132],
+		"bottom-right": [607, 423],
+		"bottom-left": [25, 443]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_235.jpg": {
+		"top-left": [148, 128],
+		"top-right": [453, 129],
+		"bottom-right": [605, 419],
+		"bottom-left": [21, 447]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_236.jpg": {
+		"top-left": [157, 128],
+		"top-right": [463, 130],
+		"bottom-right": [612, 421],
+		"bottom-left": [32, 437]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_237.jpg": {
+		"top-left": [172, 126],
+		"top-right": [476, 130],
+		"bottom-right": [623, 426],
+		"bottom-left": [45, 430]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_238.jpg": {
+		"top-left": [160, 123],
+		"top-right": [465, 128],
+		"bottom-right": [613, 422],
+		"bottom-left": [32, 433]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_239.jpg": {
+		"top-left": [155, 121],
+		"top-right": [462, 126],
+		"bottom-right": [608, 418],
+		"bottom-left": [27, 434]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_240.jpg": {
+		"top-left": [136, 127],
+		"top-right": [447, 127],
+		"bottom-right": [599, 414],
+		"bottom-left": [14, 448]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_241.jpg": {
+		"top-left": [154, 128],
+		"top-right": [459, 124],
+		"bottom-right": [613, 413],
+		"bottom-left": [33, 442]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_242.jpg": {
+		"top-left": [146, 133],
+		"top-right": [452, 132],
+		"bottom-right": [604, 419],
+		"bottom-left": [21, 450]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_243.jpg": {
+		"top-left": [172, 125],
+		"top-right": [476, 122],
+		"bottom-right": [630, 416],
+		"bottom-left": [52, 429]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_244.jpg": {
+		"top-left": [163, 122],
+		"top-right": [467, 132],
+		"bottom-right": [611, 425],
+		"bottom-left": [30, 428]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_245.jpg": {
+		"top-left": [160, 119],
+		"top-right": [465, 126],
+		"bottom-right": [611, 417],
+		"bottom-left": [32, 427]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_246.jpg": {
+		"top-left": [147, 120],
+		"top-right": [453, 125],
+		"bottom-right": [602, 416],
+		"bottom-left": [17, 434]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_247.jpg": {
+		"top-left": [149, 124],
+		"top-right": [458, 124],
+		"bottom-right": [609, 412],
+		"bottom-left": [24, 439]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_248.jpg": {
+		"top-left": [161, 119],
+		"top-right": [467, 128],
+		"bottom-right": [613, 423],
+		"bottom-left": [30, 428]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_249.jpg": {
+		"top-left": [169, 119],
+		"top-right": [472, 133],
+		"bottom-right": [613, 429],
+		"bottom-left": [32, 420]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_250.jpg": {
+		"top-left": [162, 118],
+		"top-right": [465, 133],
+		"bottom-right": [606, 429],
+		"bottom-left": [22, 423]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_251.jpg": {
+		"top-left": [156, 107],
+		"top-right": [462, 126],
+		"bottom-right": [598, 423],
+		"bottom-left": [16, 413]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_252.jpg": {
+		"top-left": [149, 109],
+		"top-right": [458, 126],
+		"bottom-right": [595, 419],
+		"bottom-left": [8, 422]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_253.jpg": {
+		"top-left": [166, 109],
+		"top-right": [476, 120],
+		"bottom-right": [617, 417],
+		"bottom-left": [38, 417]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_254.jpg": {
+		"top-left": [149, 122],
+		"top-right": [457, 119],
+		"bottom-right": [611, 410],
+		"bottom-left": [26, 439]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_255.jpg": {
+		"top-left": [151, 117],
+		"top-right": [457, 123],
+		"bottom-right": [603, 415],
+		"bottom-left": [21, 431]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_256.jpg": {
+		"top-left": [170, 123],
+		"top-right": [476, 129],
+		"bottom-right": [621, 425],
+		"bottom-left": [40, 427]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_257.jpg": {
+		"top-left": [175, 126],
+		"top-right": [477, 137],
+		"bottom-right": [619, 434],
+		"bottom-left": [37, 424]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_258.jpg": {
+		"top-left": [160, 112],
+		"top-right": [466, 129],
+		"bottom-right": [605, 426],
+		"bottom-left": [20, 419]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_259.jpg": {
+		"top-left": [161, 119],
+		"top-right": [467, 127],
+		"bottom-right": [611, 422],
+		"bottom-left": [31, 427]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_260.jpg": {
+		"top-left": [154, 128],
+		"top-right": [458, 132],
+		"bottom-right": [607, 422],
+		"bottom-left": [22, 436]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_261.jpg": {
+		"top-left": [161, 123],
+		"top-right": [464, 136],
+		"bottom-right": [607, 429],
+		"bottom-left": [19, 431]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_262.jpg": {
+		"top-left": [167, 118],
+		"top-right": [470, 137],
+		"bottom-right": [607, 434],
+		"bottom-left": [25, 417]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_263.jpg": {
+		"top-left": [159, 110],
+		"top-right": [464, 127],
+		"bottom-right": [602, 424],
+		"bottom-left": [21, 417]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_264.jpg": {
+		"top-left": [160, 115],
+		"top-right": [465, 129],
+		"bottom-right": [606, 424],
+		"bottom-left": [21, 420]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_265.jpg": {
+		"top-left": [160, 116],
+		"top-right": [463, 133],
+		"bottom-right": [602, 430],
+		"bottom-left": [18, 421]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_266.jpg": {
+		"top-left": [158, 111],
+		"top-right": [464, 131],
+		"bottom-right": [600, 427],
+		"bottom-left": [15, 418]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_267.jpg": {
+		"top-left": [181, 110],
+		"top-right": [488, 123],
+		"bottom-right": [626, 424],
+		"bottom-left": [51, 410]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_268.jpg": {
+		"top-left": [162, 122],
+		"top-right": [468, 132],
+		"bottom-right": [609, 424],
+		"bottom-left": [26, 428]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_269.jpg": {
+		"top-left": [156, 121],
+		"top-right": [464, 133],
+		"bottom-right": [602, 425],
+		"bottom-left": [18, 426]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_270.jpg": {
+		"top-left": [153, 109],
+		"top-right": [462, 124],
+		"bottom-right": [600, 419],
+		"bottom-left": [16, 421]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_271.jpg": {
+		"top-left": [145, 124],
+		"top-right": [452, 125],
+		"bottom-right": [604, 416],
+		"bottom-left": [17, 440]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_272.jpg": {
+		"top-left": [141, 120],
+		"top-right": [450, 125],
+		"bottom-right": [597, 414],
+		"bottom-left": [12, 437]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_273.jpg": {
+		"top-left": [143, 34],
+		"top-right": [485, 53],
+		"bottom-right": [630, 372],
+		"bottom-left": [6, 373]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_274.jpg": {
+		"top-left": [144, 35],
+		"top-right": [485, 53],
+		"bottom-right": [633, 373],
+		"bottom-left": [6, 373]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_275.jpg": {
+		"top-left": [141, 35],
+		"top-right": [483, 53],
+		"bottom-right": [630, 372],
+		"bottom-left": [6, 373]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_276.jpg": {
+		"top-left": [142, 35],
+		"top-right": [483, 53],
+		"bottom-right": [630, 373],
+		"bottom-left": [6, 373]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_277.jpg": {
+		"top-left": [149, 33],
+		"top-right": [490, 53],
+		"bottom-right": [635, 374],
+		"bottom-left": [13, 367]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_278.jpg": {
+		"top-left": [147, 33],
+		"top-right": [488, 53],
+		"bottom-right": [636, 371],
+		"bottom-left": [13, 369]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_279.jpg": {
+		"top-left": [149, 34],
+		"top-right": [488, 53],
+		"bottom-right": [634, 371],
+		"bottom-left": [13, 369]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_280.jpg": {
+		"top-left": [134, 54],
+		"top-right": [475, 62],
+		"bottom-right": [634, 380],
+		"bottom-left": [1, 399]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_281.jpg": {
+		"top-left": [139, 51],
+		"top-right": [477, 63],
+		"bottom-right": [633, 377],
+		"bottom-left": [8, 390]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_282.jpg": {
+		"top-left": [139, 50],
+		"top-right": [477, 63],
+		"bottom-right": [633, 377],
+		"bottom-left": [7, 391]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_283.jpg": {
+		"top-left": [139, 50],
+		"top-right": [477, 63],
+		"bottom-right": [633, 377],
+		"bottom-left": [7, 391]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_284.jpg": {
+		"top-left": [139, 50],
+		"top-right": [477, 63],
+		"bottom-right": [632, 377],
+		"bottom-left": [7, 391]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_285.jpg": {
+		"top-left": [138, 49],
+		"top-right": [477, 63],
+		"bottom-right": [632, 377],
+		"bottom-left": [7, 391]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_286.jpg": {
+		"top-left": [138, 49],
+		"top-right": [477, 63],
+		"bottom-right": [632, 377],
+		"bottom-left": [7, 391]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_287.jpg": {
+		"top-left": [138, 49],
+		"top-right": [477, 63],
+		"bottom-right": [632, 377],
+		"bottom-left": [7, 391]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_288.jpg": {
+		"top-left": [139, 49],
+		"top-right": [477, 63],
+		"bottom-right": [632, 378],
+		"bottom-left": [7, 391]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_289.jpg": {
+		"top-left": [139, 49],
+		"top-right": [477, 63],
+		"bottom-right": [632, 378],
+		"bottom-left": [6, 391]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_290.jpg": {
+		"top-left": [138, 85],
+		"top-right": [477, 63],
+		"bottom-right": [635, 394],
+		"bottom-left": [8, 425]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_291.jpg": {
+		"top-left": [138, 85],
+		"top-right": [467, 89],
+		"bottom-right": [634, 393],
+		"bottom-left": [6, 425]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_292.jpg": {
+		"top-left": [138, 85],
+		"top-right": [466, 89],
+		"bottom-right": [634, 393],
+		"bottom-left": [6, 425]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_293.jpg": {
+		"top-left": [138, 86],
+		"top-right": [466, 89],
+		"bottom-right": [634, 393],
+		"bottom-left": [6, 425]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_294.jpg": {
+		"top-left": [138, 86],
+		"top-right": [466, 89],
+		"bottom-right": [634, 393],
+		"bottom-left": [6, 425]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_295.jpg": {
+		"top-left": [138, 86],
+		"top-right": [466, 89],
+		"bottom-right": [634, 395],
+		"bottom-left": [7, 425]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_296.jpg": {
+		"top-left": [137, 85],
+		"top-right": [466, 89],
+		"bottom-right": [634, 394],
+		"bottom-left": [7, 425]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_297.jpg": {
+		"top-left": [137, 85],
+		"top-right": [466, 89],
+		"bottom-right": [634, 394],
+		"bottom-left": [7, 425]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_298.jpg": {
+		"top-left": [137, 85],
+		"top-right": [466, 89],
+		"bottom-right": [634, 394],
+		"bottom-left": [7, 425]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_299.jpg": {
+		"top-left": [137, 85],
+		"top-right": [466, 89],
+		"bottom-right": [634, 394],
+		"bottom-left": [7, 425]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_300.jpg": {
+		"top-left": [137, 85],
+		"top-right": [466, 89],
+		"bottom-right": [634, 393],
+		"bottom-left": [7, 425]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_301.jpg": {
+		"top-left": [137, 85],
+		"top-right": [466, 89],
+		"bottom-right": [634, 393],
+		"bottom-left": [6, 428]
+	},
+
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_302.jpg": {
+		"top-left": [137, 84],
+		"top-right": [463, 88],
+		"bottom-right": [634, 391],
+		"bottom-left": [6, 427]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_303.jpg": {
+		"top-left": [137, 86],
+		"top-right": [466, 89],
+		"bottom-right": [634, 391],
+		"bottom-left": [6, 426]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_304.jpg": {
+		"top-left": [136, 86],
+		"top-right": [465, 88],
+		"bottom-right": [634, 393],
+		"bottom-left": [6, 426]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_305.jpg": {
+		"top-left": [136, 86],
+		"top-right": [465, 88],
+		"bottom-right": [634, 393],
+		"bottom-left": [7, 427]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_306.jpg": {
+		"top-left": [136, 86],
+		"top-right": [464, 89],
+		"bottom-right": [634, 393],
+		"bottom-left": [7, 427]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_307.jpg": {
+		"top-left": [136, 86],
+		"top-right": [465, 89],
+		"bottom-right": [634, 393],
+		"bottom-left": [7, 427]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_308.jpg": {
+		"top-left": [136, 86],
+		"top-right": [465, 89],
+		"bottom-right": [635, 393],
+		"bottom-left": [7, 427]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_309.jpg": {
+		"top-left": [136, 86],
+		"top-right": [465, 89],
+		"bottom-right": [635, 393],
+		"bottom-left": [7, 427]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_310.jpg": {
+		"top-left": [136, 86],
+		"top-right": [465, 89],
+		"bottom-right": [635, 393],
+		"bottom-left": [7, 427]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_311.jpg": {
+		"top-left": [136, 86],
+		"top-right": [465, 89],
+		"bottom-right": [635, 393],
+		"bottom-left": [7, 427]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_312.jpg": {
+		"top-left": [136, 86],
+		"top-right": [465, 89],
+		"bottom-right": [635, 393],
+		"bottom-left": [7, 427]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_313.jpg": {
+		"top-left": [136, 86],
+		"top-right": [465, 89],
+		"bottom-right": [635, 393],
+		"bottom-left": [7, 427]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_314.jpg": {
+		"top-left": [136, 86],
+		"top-right": [465, 89],
+		"bottom-right": [635, 393],
+		"bottom-left": [7, 427]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_315.jpg": {
+		"top-left": [136, 86],
+		"top-right": [465, 89],
+		"bottom-right": [635, 393],
+		"bottom-left": [7, 427]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_316.jpg": {
+		"top-left": [136, 86],
+		"top-right": [465, 89],
+		"bottom-right": [634, 393],
+		"bottom-left": [7, 427]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_317.jpg": {
+		"top-left": [136, 86],
+		"top-right": [465, 89],
+		"bottom-right": [635, 393],
+		"bottom-left": [7, 427]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_318.jpg": {
+		"top-left": [136, 86],
+		"top-right": [465, 89],
+		"bottom-right": [635, 393],
+		"bottom-left": [7, 427]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_319.jpg": {
+		"top-left": [136, 86],
+		"top-right": [465, 89],
+		"bottom-right": [635, 393],
+		"bottom-left": [7, 427]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_320.jpg": {
+		"top-left": [136, 86],
+		"top-right": [465, 89],
+		"bottom-right": [635, 393],
+		"bottom-left": [4, 427]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_321.jpg": {
+		"top-left": [136, 86],
+		"top-right": [464, 88],
+		"bottom-right": [634, 390],
+		"bottom-left": [9, 426]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_322.jpg": {
+		"top-left": [136, 86],
+		"top-right": [464, 88],
+		"bottom-right": [635, 392],
+		"bottom-left": [6, 427]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_323.jpg": {
+		"top-left": [136, 86],
+		"top-right": [464, 88],
+		"bottom-right": [635, 392],
+		"bottom-left": [5, 425]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_324.jpg": {
+		"top-left": [143, 80],
+		"top-right": [471, 89],
+		"bottom-right": [632, 395],
+		"bottom-left": [8, 414]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_325.jpg": {
+		"top-left": [143, 80],
+		"top-right": [470, 88],
+		"bottom-right": [632, 395],
+		"bottom-left": [8, 415]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_326.jpg": {
+		"top-left": [142, 80],
+		"top-right": [470, 88],
+		"bottom-right": [632, 395],
+		"bottom-left": [8, 415]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_327.jpg": {
+		"top-left": [142, 80],
+		"top-right": [470, 88],
+		"bottom-right": [632, 395],
+		"bottom-left": [8, 415]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_328.jpg": {
+		"top-left": [142, 80],
+		"top-right": [470, 88],
+		"bottom-right": [632, 395],
+		"bottom-left": [8, 415]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_329.jpg": {
+		"top-left": [142, 80],
+		"top-right": [470, 88],
+		"bottom-right": [632, 395],
+		"bottom-left": [8, 415]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_330.jpg": {
+		"top-left": [142, 80],
+		"top-right": [470, 88],
+		"bottom-right": [633, 395],
+		"bottom-left": [8, 415]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_331.jpg": {
+		"top-left": [142, 80],
+		"top-right": [470, 88],
+		"bottom-right": [633, 395],
+		"bottom-left": [8, 415]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_332.jpg": {
+		"top-left": [142, 80],
+		"top-right": [470, 88],
+		"bottom-right": [633, 395],
+		"bottom-left": [8, 415]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_333.jpg": {
+		"top-left": [142, 80],
+		"top-right": [470, 88],
+		"bottom-right": [634, 394],
+		"bottom-left": [8, 415]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_334.jpg": {
+		"top-left": [142, 80],
+		"top-right": [470, 88],
+		"bottom-right": [634, 394],
+		"bottom-left": [8, 415]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_335.jpg": {
+		"top-left": [142, 80],
+		"top-right": [471, 89],
+		"bottom-right": [634, 394],
+		"bottom-left": [8, 415]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_336.jpg": {
+		"top-left": [142, 80],
+		"top-right": [471, 89],
+		"bottom-right": [634, 394],
+		"bottom-left": [8, 415]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_337.jpg": {
+		"top-left": [142, 80],
+		"top-right": [471, 89],
+		"bottom-right": [634, 394],
+		"bottom-left": [8, 415]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_338.jpg": {
+		"top-left": [142, 80],
+		"top-right": [471, 89],
+		"bottom-right": [634, 394],
+		"bottom-left": [8, 415]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_339.jpg": {
+		"top-left": [142, 80],
+		"top-right": [471, 89],
+		"bottom-right": [634, 394],
+		"bottom-left": [8, 415]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_340.jpg": {
+		"top-left": [142, 80],
+		"top-right": [471, 89],
+		"bottom-right": [634, 394],
+		"bottom-left": [8, 415]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_341.jpg": {
+		"top-left": [145, 79],
+		"top-right": [473, 86],
+		"bottom-right": [637, 393],
+		"bottom-left": [13, 412]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_342.jpg": {
+		"top-left": [144, 79],
+		"top-right": [474, 85],
+		"bottom-right": [637, 394],
+		"bottom-left": [10, 414]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_343.jpg": {
+		"top-left": [144, 78],
+		"top-right": [473, 85],
+		"bottom-right": [636, 393],
+		"bottom-left": [12, 413]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_344.jpg": {
+		"top-left": [144, 78],
+		"top-right": [473, 85],
+		"bottom-right": [636, 393],
+		"bottom-left": [12, 413]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_345.jpg": {
+		"top-left": [144, 78],
+		"top-right": [473, 85],
+		"bottom-right": [636, 393],
+		"bottom-left": [12, 413]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_346.jpg": {
+		"top-left": [144, 78],
+		"top-right": [473, 85],
+		"bottom-right": [637, 393],
+		"bottom-left": [12, 413]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_347.jpg": {
+		"top-left": [144, 78],
+		"top-right": [473, 85],
+		"bottom-right": [637, 393],
+		"bottom-left": [12, 413]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_348.jpg": {
+		"top-left": [144, 79],
+		"top-right": [473, 85],
+		"bottom-right": [637, 393],
+		"bottom-left": [12, 413]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_349.jpg": {
+		"top-left": [144, 79],
+		"top-right": [473, 85],
+		"bottom-right": [637, 393],
+		"bottom-left": [12, 413]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_350.jpg": {
+		"top-left": [144, 79],
+		"top-right": [473, 85],
+		"bottom-right": [637, 393],
+		"bottom-left": [12, 413]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_351.jpg": {
+		"top-left": [144, 79],
+		"top-right": [473, 85],
+		"bottom-right": [637, 393],
+		"bottom-left": [12, 413]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_352.jpg": {
+		"top-left": [144, 79],
+		"top-right": [473, 85],
+		"bottom-right": [637, 393],
+		"bottom-left": [12, 413]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_353.jpg": {
+		"top-left": [144, 79],
+		"top-right": [473, 85],
+		"bottom-right": [637, 393],
+		"bottom-left": [12, 413]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_354.jpg": {
+		"top-left": [144, 79],
+		"top-right": [473, 85],
+		"bottom-right": [637, 393],
+		"bottom-left": [12, 413]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_355.jpg": {
+		"top-left": [144, 79],
+		"top-right": [473, 85],
+		"bottom-right": [637, 393],
+		"bottom-left": [12, 413]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_356.jpg": {
+		"top-left": [144, 79],
+		"top-right": [473, 85],
+		"bottom-right": [637, 393],
+		"bottom-left": [12, 413]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_357.jpg": {
+		"top-left": [144, 79],
+		"top-right": [473, 85],
+		"bottom-right": [637, 393],
+		"bottom-left": [12, 413]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_358.jpg": {
+		"top-left": [144, 79],
+		"top-right": [473, 85],
+		"bottom-right": [637, 393],
+		"bottom-left": [12, 413]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_359.jpg": {
+		"top-left": [144, 79],
+		"top-right": [473, 85],
+		"bottom-right": [637, 393],
+		"bottom-left": [12, 413]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_360.jpg": {
+		"top-left": [144, 79],
+		"top-right": [473, 85],
+		"bottom-right": [637, 393],
+		"bottom-left": [10, 414]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_361.jpg": {
+		"top-left": [144, 79],
+		"top-right": [473, 85],
+		"bottom-right": [635, 393],
+		"bottom-left": [11, 414]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_362.jpg": {
+		"top-left": [144, 79],
+		"top-right": [473, 85],
+		"bottom-right": [636, 393],
+		"bottom-left": [11, 414]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_363.jpg": {
+		"top-left": [144, 79],
+		"top-right": [473, 85],
+		"bottom-right": [635, 393],
+		"bottom-left": [11, 414]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_364.jpg": {
+		"top-left": [144, 79],
+		"top-right": [473, 85],
+		"bottom-right": [636, 393],
+		"bottom-left": [11, 414]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_365.jpg": {
+		"top-left": [144, 79],
+		"top-right": [473, 85],
+		"bottom-right": [636, 393],
+		"bottom-left": [10, 414]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_366.jpg": {
+		"top-left": [144, 79],
+		"top-right": [473, 85],
+		"bottom-right": [636, 393],
+		"bottom-left": [10, 414]
+	},
+	"/mnt/D/University/Thesis_Dataset/Dataset/Images/image_367.jpg": {
+		"top-left": [144, 79],
+		"top-right": [473, 85],
+		"bottom-right": [637, 393],
+		"bottom-left": [11, 415]
+	}
+}

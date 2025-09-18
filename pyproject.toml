@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chess-lens"                  # distribution name on PyPI
+version = "0.1.0"
+description = "Chess board & piece detection tools"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "numpy",
+  "opencv-python",
+  "torch",            
+  "ultralytics",  
+  "matplotlib", 
+  "dotenv",   
+  "chess",
+  "cairosvg",
+  "Pillow",
+  "tqdm",
+  "scipy",
+  "scikit-learn",
+]
+
+# Optional: create CLI commands (map command -> module:function)
+#[project.scripts]
+#chesslens-yolo = "PieceDetection.main_yolo:main"   # ensure a main() exists
+#chesslens-board = "BoardDetection.BoardDetection:main"  # adjust to your file/function
+
+[tool.setuptools]
+package-dir = {"" = "src"}   # use the src/ layout
+
+# Auto-find packages in src/, but only include the ones you listed
+[tool.setuptools.packages.find]
+where = ["src"]
+include = [
+  "BoardDetection*",
+  "Clock_Recognition*",
+  "Dataset*",
+  "PieceDetection*",
+  "Utils*",
+  
+]
+
+# Package non-.py assets (png/svg etc.) inside those packages
+[tool.setuptools.package-data]
+BoardDetection = ["**/*.png", "**/*.svg"]
+Clock_Recognition = ["**/*.png", "**/*.svg"]
+Dataset = ["**/*"]
+PieceDetection = ["**/*.png", "**/*.svg"]
+Utils = ["**/*.png", "**/*.svg"]

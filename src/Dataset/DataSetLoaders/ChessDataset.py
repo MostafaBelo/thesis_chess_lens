@@ -118,7 +118,7 @@ class ChessDataset(Dataset):
 
             for i in range(len(labels)):
                 try:
-                    labels[i]["id"] = f"{root_dir} - {labels[i]["id"]}"
+                    labels[i]["id"] = f"{root_dir} - {labels[i]['id']}"
                     labels[i]["image_path"] = os.path.join(
                         root_dir, labels[i]["image_path"])
                 except Exception as e:

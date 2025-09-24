@@ -215,7 +215,7 @@ class BoardExtractor:
 
         return quad_ordered, conf
 
-    def warp(self, quad):
+    def warp(self, quad, padding=(0,0)):
         img_size = (256, 256)
         quad = quad.astype(np.float32)
         dst = np.array([
@@ -224,9 +224,11 @@ class BoardExtractor:
             [img_size[0], img_size[1]],
             [0, img_size[1]]
         ], dtype=np.float32)
+        dst[:, 0] += padding[0]
+        dst[:, 1] += padding[1]
 
         M = cv2.getPerspectiveTransform(quad, dst)
-        warpped = cv2.warpPerspective(self.img.numpy(), M, img_size)
+        warpped = cv2.warpPerspective(self.img.numpy(), M, (img_size[0]+2*padding[0], img_size[1]+2*padding[1]))
 
         return warpped, M
 

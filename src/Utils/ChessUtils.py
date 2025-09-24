@@ -2,8 +2,8 @@ import torch
 import numpy as np
 
 import chess
-import chess.svg
-import cairosvg
+# import chess.svg
+# import cairosvg
 
 
 class ChessTensorUtils():
@@ -93,13 +93,13 @@ class ChessTensorUtils():
         return ChessTensorUtils.tensorToFEN_MAX(ChessTensorUtils.randOneHot(seed))
 
 
-def fen_to_png(fen: str, folder_path: str, file_name: str):
-    board = chess.Board(f"{fen} w KQkq - 1 1")
-    boardsvg = chess.svg.board(coordinates=True, board=board, size=350, colors={
-                               "square light": "#E6D0A7", "square dark": "#A67D5B"})
-    svg_file_path = f"{folder_path}/positions.svg"
-    f = open(svg_file_path, "w")
-    f.write(boardsvg)
-    f.close()
-    png_file_path = f"{folder_path}/{file_name}"
-    cairosvg.svg2png(url=svg_file_path, write_to=png_file_path, scale=7)
+# def fen_to_png(fen: str, folder_path: str, file_name: str):
+#     board = chess.Board(f"{fen} w KQkq - 1 1")
+#     boardsvg = chess.svg.board(coordinates=True, board=board, size=350, colors={
+#                                "square light": "#E6D0A7", "square dark": "#A67D5B"})
+#     svg_file_path = f"{folder_path}/positions.svg"
+#     f = open(svg_file_path, "w")
+#     f.write(boardsvg)
+#     f.close()
+#     png_file_path = f"{folder_path}/{file_name}"
+#     cairosvg.svg2png(url=svg_file_path, write_to=png_file_path, scale=7)

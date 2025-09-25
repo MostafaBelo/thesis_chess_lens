@@ -13,6 +13,8 @@ import sys
 
 import re
 
+import random
+
 from Utils.ChessUtils import ChessTensorUtils
 
 # Load .env file
@@ -68,8 +70,51 @@ def _resize_corners(original_size, new_size):
     return main
 
 
+def _rotate_board_tensor():
+    def main(label):
+        orientation = label["orientation"]
+        board_tensor = label["board_tensor"].clone()
+
+        if orientation == 'r':
+            board_tensor = torch.rot90(board_tensor, k=1, dims=(0, 1))
+        elif orientation == 'l':
+            board_tensor = torch.rot90(board_tensor, k=-1, dims=(0, 1))
+        elif orientation == "t":
+            board_tensor = torch.rot90(board_tensor, k=2, dims=(0, 1))
+        elif orientation == "b":
+            pass
+
+        new_label = {
+            **label
+        }
+        new_label["board_tensor"] = board_tensor
+
+        return new_label
+    return main
+
+
 class ChessDataset(Dataset):
     def __init__(self, root_dirs: None | str | list[str] = None, img_transforms=None, target_transforms=None, force_build_pkl=False, config={}):
+        if "custom_dataset" in config:
+            data = config["custom_dataset"]
+
+            if "root_dirs" not in data:
+                raise Exception("Invalid Custom Dataset")
+            self.root_dirs = data["root_dirs"]
+
+            if "transforms" not in data:
+                raise Exception("Invalid Custom Dataset")
+            self.transforms = data["transforms"]
+
+            if "target_transforms" not in data:
+                raise Exception("Invalid Custom Dataset")
+            self.target_transforms = data["target_transforms"]
+
+            if "labels" not in data:
+                raise Exception("Invalid Custom Dataset")
+            self.labels = data["labels"]
+            return
+
         if root_dirs is None:
             if not os.environ.get(env_root_key):
                 raise Exception("CHESSDATASET_ROOT not found in .env")
@@ -97,6 +142,7 @@ class ChessDataset(Dataset):
         self.target_transforms = transforms.Compose([
             *([_resize_corners((480, 640), config["img_size"])]
               if ("img_size" in config) else []),
+            _rotate_board_tensor(),
             *([target_transforms] if target_transforms is not None else [])
         ])
 
@@ -140,13 +186,12 @@ class ChessDataset(Dataset):
         img = Image.open(img_path).convert("RGB")
 
         img = self.transforms(img)
-        if self.target_transforms is not None:
-            label = self.target_transforms(label)
+        label = self.target_transforms(label)
 
         return img, label
 
     @staticmethod
-    def getLoader(dataset, batch_size=4, num_worders=4):
+    def getLoader(dataset: 'ChessDataset', batch_size=4, num_worders=4):
         if num_worders == 0:
             return DataLoader(
                 dataset,
@@ -165,3 +210,54 @@ class ChessDataset(Dataset):
                 prefetch_factor=2,
                 persistent_workers=True,
             )
+
+    @staticmethod
+    def train_valid_test_split(dataset: 'ChessDataset', sizes=(.8, .1, .1), random_state=42):
+        random.seed(random_state)
+        tmp_labels = dataset.labels
+        random.shuffle(tmp_labels)
+        train_size = sizes[0]
+        valid_size = sizes[1]
+
+        train_idx = int(len(tmp_labels) * train_size)
+        train_labels = tmp_labels[:train_idx]
+
+        valid_idx = int(len(tmp_labels) * valid_size)
+        valid_labels = tmp_labels[train_idx:train_idx+valid_idx]
+
+        test_labels = tmp_labels[train_idx+valid_idx:]
+
+        train_dataset = ChessDataset(
+            config={
+                "custom_dataset": {
+                    "root_dirs": dataset.root_dirs,
+                    "transforms": dataset.transforms,
+                    "target_transforms": dataset.target_transforms,
+                    "labels": train_labels
+                }
+            }
+        )
+
+        valid_dataset = ChessDataset(
+            config={
+                "custom_dataset": {
+                    "root_dirs": dataset.root_dirs,
+                    "transforms": dataset.transforms,
+                    "target_transforms": dataset.target_transforms,
+                    "labels": valid_labels
+                }
+            }
+        )
+
+        test_dataset = ChessDataset(
+            config={
+                "custom_dataset": {
+                    "root_dirs": dataset.root_dirs,
+                    "transforms": dataset.transforms,
+                    "target_transforms": dataset.target_transforms,
+                    "labels": test_labels
+                }
+            }
+        )
+
+        return train_dataset, valid_dataset, test_dataset

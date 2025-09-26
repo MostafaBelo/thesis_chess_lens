@@ -2,10 +2,13 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 import torch
+from torchvision import transforms
 import cv2
 
-from BoardDetection.BoardDetector_YOLO import main_yolo as board_yolo
-from PieceDetection.Piece_Detection_YOLO import main_yolo as piece_yolo
+from PIL import Image
+
+from BoardDetection import BoardDetection
+from PieceDetection import PieceDetection
 
 from Utils import ChessUtils
 
@@ -20,7 +23,6 @@ class ChessLensImage:
 
         self.board_detection = None
         self.clock_time = None
-        self.piece_bboxs = None
         self.piece_matrix = None
         self.fen = None
 
@@ -34,11 +36,11 @@ class ChessLensImage:
         return not (self.clock_time is None)
 
     def is_pieces_detected(self) -> bool:
-        return not (self.piece_bboxs is None or self.piece_matrix is None or self.fen is None)
+        return not (self.piece_matrix is None or self.fen is None)
 
     def load_image(self, img: str | torch.Tensor | np.ndarray):
         if (type(img) == str):
-            img = torch.tensor(plt.imread(img))
+            img = transforms.ToTensor()(Image.open(img).convert("RGB").resize((640, 640)))
         elif (type(img) == np.ndarray):
             img = torch.tensor(img)
 
@@ -50,7 +52,9 @@ class ChessLensImage:
 
         # run board detection
 
-        self.board_detection = board_yolo.detect_board_img(self.img)
+        BoardDetection.board_extractor.set_img(self.img)
+        self.board_detection, conf = BoardDetection.board_extractor.extract_board()
+        self.board_detection = torch.tensor(self.board_detection)
 
     def recognize_clock(self):
         if not self.is_img_loaded():
@@ -62,19 +66,16 @@ class ChessLensImage:
         if not self.is_img_loaded():
             raise Exception("No image loaded")
 
-        # run yolo piece detection and set piece_bboxs
-        self.piece_bboxs, self.pieces_yolo = piece_yolo.detect_pieces_img(
-            self.img)
-
         if not self.is_board_detected():
-            raise Exception("Board not detected")
+            raise Exception("No board detected")
 
-        # align piece bboxs to squares using detected board
-        sqs, self.piece_matrix = piece_yolo.align_boxes_to_board(
-            self.piece_bboxs, self.board_detection)
+        PieceDetection.piece_detector.set_img(self.img, self.board_detection)
+        PieceDetection.piece_detector.preprocess()
+        self.piece_matrix = PieceDetection.piece_detector.predict()
+
         # convert piece matrix to fen
         self.fen = ChessUtils.ChessTensorUtils().tensorToFEN_MAX(
-            self.piece_matrix.unsqueeze(0))
+            self.piece_matrix)
 
     def save_fen_image(self):
         if not self.is_pieces_detected():

@@ -5,8 +5,9 @@
 ```
 bash init.sh
 ```
-- cd src
-- run the python script pipeline.py
+```
+ cd src
+```
 ```
 python pipeline.py
 ```

@@ -14,7 +14,7 @@ model = YOLO(os.path.join(os.path.dirname(
 
 def detect_pieces_img(img: torch.Tensor):
     # tmp = torch.tensor(np.ascontiguousarray(img.cpu().numpy()))
-    results = model(img.unsqueeze(0))
+    results = model(img.unsqueeze(0), verbose=False)
     # results[0].show()
 
     return conv_boxes(results[0].boxes), results[0]

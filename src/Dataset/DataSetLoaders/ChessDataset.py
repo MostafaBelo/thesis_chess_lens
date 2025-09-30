@@ -32,12 +32,15 @@ def convert_labels_txt_to_pkl(txt_data: str):
         rest_of_line = line[index+2:]
 
         data = re.findall(r"\((.*?)\)", rest_of_line)
-        if len(data) != 4:
+        if len(data) != 5:
             raise Exception(f"Invalid labels.txt record at: {line}")
-        image_path, fen, orientation, corners = data
+        image_path, fen, orientation, corners, orig_img_size = data
 
         corners = list(map(lambda x: float(x), corners.split(",")))
         corners = torch.tensor(corners, dtype=torch.float32).reshape(4, 2)
+
+        orig_img_size = list(map(lambda x: float(x), orig_img_size.split(",")))
+        orig_img_size = torch.tensor(orig_img_size, dtype=torch.float32)
 
         board_tensor = ChessTensorUtils.onehot_to_int(
             ChessTensorUtils.FENtoTensor(fen)).squeeze().to(torch.uint8)
@@ -45,6 +48,7 @@ def convert_labels_txt_to_pkl(txt_data: str):
         pkl_data.append({
             "id": int(id),
             "image_path": image_path,
+            "original_img_size": orig_img_size,
             "fen": fen,
             "orientation": orientation,
             "corners": corners,
@@ -94,7 +98,7 @@ def _rotate_board_tensor():
 
 
 class ChessDataset(Dataset):
-    def __init__(self, root_dirs: None | str | list[str] = None, img_transforms=None, target_transforms=None, force_build_pkl=False, config={}):
+    def __init__(self, root_dirs: None | str | list[str] = None, img_transforms=None, target_transforms=None, img_label_transforms=None, force_build_pkl=False, config={}):
         if "custom_dataset" in config:
             data = config["custom_dataset"]
 
@@ -109,6 +113,10 @@ class ChessDataset(Dataset):
             if "target_transforms" not in data:
                 raise Exception("Invalid Custom Dataset")
             self.target_transforms = data["target_transforms"]
+
+            if "img_label_transforms" not in data:
+                raise Exception("Invalid Custom Dataset")
+            self.img_label_transforms = data["img_label_transforms"]
 
             if "labels" not in data:
                 raise Exception("Invalid Custom Dataset")
@@ -144,6 +152,9 @@ class ChessDataset(Dataset):
               if ("img_size" in config) else []),
             _rotate_board_tensor(),
             *([target_transforms] if target_transforms is not None else [])
+        ])
+        self.img_label_transforms = transforms.Compose([
+            *([img_label_transforms] if img_label_transforms is not None else [])
         ])
 
         self.labels = []
@@ -187,6 +198,7 @@ class ChessDataset(Dataset):
 
         img = self.transforms(img)
         label = self.target_transforms(label)
+        img, label = self.img_label_transforms((img, label))
 
         return img, label
 
@@ -233,6 +245,7 @@ class ChessDataset(Dataset):
                     "root_dirs": dataset.root_dirs,
                     "transforms": dataset.transforms,
                     "target_transforms": dataset.target_transforms,
+                    "img_label_transforms": dataset.img_label_transforms,
                     "labels": train_labels
                 }
             }
@@ -244,6 +257,7 @@ class ChessDataset(Dataset):
                     "root_dirs": dataset.root_dirs,
                     "transforms": dataset.transforms,
                     "target_transforms": dataset.target_transforms,
+                    "img_label_transforms": dataset.img_label_transforms,
                     "labels": valid_labels
                 }
             }
@@ -255,6 +269,7 @@ class ChessDataset(Dataset):
                     "root_dirs": dataset.root_dirs,
                     "transforms": dataset.transforms,
                     "target_transforms": dataset.target_transforms,
+                    "img_label_transforms": dataset.img_label_transforms,
                     "labels": test_labels
                 }
             }

@@ -2,8 +2,8 @@ import torch
 import numpy as np
 import cv2
 
-from PieceDetection.Piece_Detection_CNN import PieceDetection_CNN
-from PieceDetection.Piece_Detection_YOLO import PieceDetection_YOLO
+from PieceDetection.PieceDetection_CNN import PieceDetection_CNN
+from PieceDetection.PieceDetection_YOLO import PieceDetection_YOLO
 
 from typing import Literal
 

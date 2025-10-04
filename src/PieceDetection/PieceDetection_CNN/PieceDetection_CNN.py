@@ -8,6 +8,8 @@ import cv2
 
 import os
 
+from PieceDetection.PieceCropper_3D import PieceCropper
+
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
@@ -15,12 +17,14 @@ class PieceDetectorCNNModel(nn.Module):
     def __init__(self):
         super().__init__()
 
+        self.latent_dim = 512
+
         self.resnet = models.resnet18(pretrained=True)
         for param in self.resnet.parameters():
             param.requires_grad = False
         # Remove the last FC layer and avgpool
         self.resnet = nn.Sequential(*list(self.resnet.children())[:-1])
-        for param in self.resnet[-1].parameters():
+        for param in self.resnet[-2:].parameters():
             param.requires_grad = True
 
         dropporb = .2
@@ -52,20 +56,26 @@ class PieceDetectorCNNModel(nn.Module):
 
         self.conv1 = nn.Sequential(
             nn.Flatten(),
-            nn.Linear(512, 128),
+            nn.Linear(512, self.latent_dim),
             nn.LeakyReLU(),
+
+            # nn.AdaptiveAvgPool2d((1,1))
         )
 
         self.conv2 = nn.Sequential(
-            nn.Conv2d(128, 128, 3, padding=1),
+            nn.Conv2d(self.latent_dim, self.latent_dim, 3, padding=1),
             nn.LeakyReLU(),
-            # nn.BatchNorm2d(128),
+            # nn.BatchNorm2d(self.latent_dim),
+            # nn.AdaptiveAvgPool2d((8,8)),
             nn.Dropout(dropporb),
 
-            nn.Conv2d(128, 128, 3, padding=1),
+            nn.Conv2d(self.latent_dim, self.latent_dim, 3, padding=1),
             nn.LeakyReLU(),
-            # nn.BatchNorm2d(128),
+            # nn.BatchNorm2d(self.latent_dim),
+            # nn.AdaptiveAvgPool2d((8,8)),
             nn.Dropout(dropporb),
+
+            nn.AdaptiveAvgPool2d((8, 8))
         )
 
         self.classifier = nn.Sequential(
@@ -75,28 +85,28 @@ class PieceDetectorCNNModel(nn.Module):
         )
 
         self.occupancy_classifier_heads = nn.Sequential(
-            nn.Linear(128, 64),
+            nn.Linear(self.latent_dim, 128),
             nn.LeakyReLU(),
             nn.Dropout(dropporb),
-            nn.Linear(64, 1)
+            nn.Linear(128, 1)
         )
         self.piece_color_classifier_heads = nn.Sequential(
-            nn.Linear(128, 64),
+            nn.Linear(self.latent_dim, 128),
             nn.LeakyReLU(),
             nn.Dropout(dropporb),
-            nn.Linear(64, 1)
+            nn.Linear(128, 1)
         )
         self.piece_type_classifier_heads = nn.Sequential(
-            nn.Linear(128, 64),
+            nn.Linear(self.latent_dim, 128),
             nn.LeakyReLU(),
             nn.Dropout(dropporb),
-            nn.Linear(64, 6)
+            nn.Linear(128, 6)
         )
 
-        # self.pos_emb = nn.Parameter(torch.zeros(128, 10, 10))
-        self.sin_pos_emb = None  # [C, 10, 10]
+        self.pos_emb = nn.Parameter(torch.zeros(self.latent_dim, 8, 8))
+        self.sin_pos_emb = None  # [C, 8, 8]
 
-    def sinusoidal_embeddings_2d(self, height=10, width=10, d_model=128):
+    def sinusoidal_embeddings_2d(self, height=10, width=10):
         """
         Create 2D sinusoidal positional embeddings for an (H, W) grid.
 
@@ -106,6 +116,7 @@ class PieceDetectorCNNModel(nn.Module):
         Returns:
             pos_emb: [H, W, d_model] tensor
         """
+        d_model = self.latent_dim
         if self.sin_pos_emb is not None and (tuple(self.sin_pos_emb.shape) == (d_model, height, width)):
             return self.sin_pos_emb
 
@@ -143,29 +154,32 @@ class PieceDetectorCNNModel(nn.Module):
         return self.sin_pos_emb
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        sq_size = (x.shape[2]//10, x.shape[3]//10)
+        # x: B, 8,8,c,32,32
+        # x = x.permute(0,3,1,2,4,5)
+
+        sq_size = (x.shape[4], x.shape[5])
         B = x.shape[0]
-        C = x.shape[1]
+        C = x.shape[3]
         if C != 3:
             raise Exception("Invalid Image")
 
-        board_split = x.reshape(
-            B, C, 10, sq_size[0], 10, sq_size[1]).permute(0, 1, 2, 4, 3, 5)
+        # board_split = x.reshape(B, C, 10, sq_size[0], 10, sq_size[1]).permute(0,1,2,4,3,5)
+        # board_split = x
 
         # embeds = self.conv1(board_split.permute(0,2,3,1,4,5).reshape(-1,C,sq_size[0],sq_size[1])).squeeze(-1).squeeze(-1).reshape(B, 10,10, 128).permute(0,3,1,2)
-        embeds = self.conv1(self.resnet(board_split.permute(0, 2, 3, 1, 4, 5).reshape(
-            -1, C, sq_size[0], sq_size[1]))).squeeze(-1).squeeze(-1).reshape(B, 10, 10, 128).permute(0, 3, 1, 2)
+        embeds = self.conv1(self.resnet(x.reshape(-1, C, sq_size[0], sq_size[1]))).squeeze(
+            -1).squeeze(-1).reshape(B, 8, 8, self.latent_dim).permute(0, 3, 1, 2)
 
-        sin_pos_emb = self.sinusoidal_embeddings_2d(10, 10, 128)
+        sin_pos_emb = self.sinusoidal_embeddings_2d(8, 8)
 
         # positioned_embeds = embeds + self.pos_emb + sin_pos_emb
         # positioned_embeds = embeds + sin_pos_emb
         positioned_embeds = embeds
         # attentioned_embeds = embeds.reshape(B, 10,10, 128).permute(0,3,1,2)
         attentioned_embeds = self.conv2(positioned_embeds)
-        cropped_attentioned_embeds = attentioned_embeds[:, :, 1:9, 1:9]
-        res = self.classifier(cropped_attentioned_embeds.permute(
-            0, 2, 3, 1).reshape(-1, 128))
+        # cropped_attentioned_embeds = attentioned_embeds[:,:,1:9,1:9]
+        res = self.classifier(attentioned_embeds.permute(
+            0, 2, 3, 1).reshape(-1, self.latent_dim))
         res_occupancy = self.occupancy_classifier_heads(res).reshape(B, 8, 8)
         res_piece_color = self.piece_color_classifier_heads(
             res).reshape(B, 8, 8)
@@ -189,6 +203,8 @@ class PieceDetector:
     def __init__(self):
         self.img = None
         self.corners = None
+
+        self.split_img = None
 
         self.warpped_img = None
         self.M = None
@@ -222,12 +238,15 @@ class PieceDetector:
         return warpped, M
 
     def preprocess(self):
-        warpped, M = self._warp(padding=(32, 32))
-        self.warpped_img = warpped
-        self.M = M
+        PieceCropper.piece_cropper.set_img(
+            self.img, self.corners)
+        self.board_split = PieceCropper.piece_cropper.process_img()
 
     def predict(self):
-        preds = piece_detection_model(self.warpped_img.unsqueeze(0).to(device))
+        piece_detection_model.eval()
+        with torch.inference_mode():
+            preds = piece_detection_model(
+                self.board_split.unsqueeze(0).to(device))
 
         occupancy: torch.Tensor = preds["occupancy"]
         piece_color: torch.Tensor = preds["piece_color"]

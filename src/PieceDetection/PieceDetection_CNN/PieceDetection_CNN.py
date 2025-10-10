@@ -195,7 +195,7 @@ class PieceDetectorCNNModel(nn.Module):
 
 piece_detection_model = PieceDetectorCNNModel()
 piece_detection_model.load_state_dict(torch.load(
-    os.path.join(os.path.dirname(__file__), "best_model.pt")))
+    os.path.join(os.path.dirname(__file__), "best_model.pt"), map_location=device))
 piece_detection_model = piece_detection_model.to(device)
 
 

@@ -11,6 +11,8 @@ import os
 model_path = os.path.join(os.path.dirname(__file__), 'bd_yolo.pt')
 default_conf = 0.7
 
+device = "cuda" if torch.cuda.is_available() else "cpu"
+
 
 class BoardDetector_YOLO:
     def __init__(self, model_path=model_path, conf=default_conf):
@@ -37,7 +39,7 @@ class BoardDetector_YOLO:
             self.process()
 
     def load_model(self, model_path=model_path):
-        self.model = YOLO(model_path)
+        self.model = YOLO(model_path).to(device)
 
     def set_img(self, img):
         self.img = img

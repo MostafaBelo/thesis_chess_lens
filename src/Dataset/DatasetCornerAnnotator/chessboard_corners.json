@@ -1,0 +1,140 @@
+{
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_1.JPG": {
+		"top-left": [1089, 795],
+		"top-right": [2849, 831],
+		"bottom-right": [3477, 2504],
+		"bottom-left": [553, 2519]
+	},
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_2.JPG": {
+		"top-left": [1040, 701],
+		"top-right": [2822, 757],
+		"bottom-right": [3270, 2552],
+		"bottom-left": [556, 2533]
+	},
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_3.JPG": {
+		"top-left": [1240, 702],
+		"top-right": [2850, 769],
+		"bottom-right": [3222, 2289],
+		"bottom-left": [857, 2225]
+	},
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_4.JPG": {
+		"top-left": [1203, 808],
+		"top-right": [2826, 866],
+		"bottom-right": [3245, 2418],
+		"bottom-left": [746, 2357]
+	},
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_5.JPG": {
+		"top-left": [1045, 746],
+		"top-right": [2649, 764],
+		"bottom-right": [2993, 2293],
+		"bottom-left": [611, 2298]
+	},
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_6.JPG": {
+		"top-left": [1268, 890],
+		"top-right": [2766, 975],
+		"bottom-right": [3134, 2381],
+		"bottom-left": [890, 2303]
+	},
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_7.JPG": {
+		"top-left": [1114, 864],
+		"top-right": [2778, 888],
+		"bottom-right": [3322, 2437],
+		"bottom-left": [599, 2446]
+	},
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_8.JPG": {
+		"top-left": [1186, 820],
+		"top-right": [2833, 847],
+		"bottom-right": [3237, 2505],
+		"bottom-left": [777, 2483]
+	},
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_9.JPG": {
+		"top-left": [1097, 731],
+		"top-right": [3010, 793],
+		"bottom-right": [3869, 2601],
+		"bottom-left": [298, 2531]
+	},
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_10.JPG": {
+		"top-left": [1023, 829],
+		"top-right": [2966, 885],
+		"bottom-right": [3885, 2707],
+		"bottom-left": [86, 2658]
+	},
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_11.JPG": {
+		"top-left": [1028, 892],
+		"top-right": [2926, 942],
+		"bottom-right": [3855, 2720],
+		"bottom-left": [186, 2704]
+	},
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_12.JPG": {
+		"top-left": [1050, 731],
+		"top-right": [3088, 814],
+		"bottom-right": [3986, 2902],
+		"bottom-left": [128, 2771]
+	},
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_13.JPG": {
+		"top-left": [988, 538],
+		"top-right": [3017, 601],
+		"bottom-right": [3893, 2489],
+		"bottom-left": [19, 2392]
+	},
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_14.JPG": {
+		"top-left": [1033, 570],
+		"top-right": [3046, 641],
+		"bottom-right": [3938, 2540],
+		"bottom-left": [105, 2413]
+	},
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_15.JPG": {
+		"top-left": [1016, 934],
+		"top-right": [2967, 893],
+		"bottom-right": [3973, 2812],
+		"bottom-left": [144, 2892]
+	},
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_16.JPG": {
+		"top-left": [995, 745],
+		"top-right": [2957, 749],
+		"bottom-right": [3866, 2573],
+		"bottom-left": [91, 2590]
+	},
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_17.JPG": {
+		"top-left": [1001, 593],
+		"top-right": [3023, 646],
+		"bottom-right": [3951, 2538],
+		"bottom-left": [103, 2494]
+	},
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_18.JPG": {
+		"top-left": [891, 805],
+		"top-right": [2806, 805],
+		"bottom-right": [3722, 2450],
+		"bottom-left": [3, 2556]
+	},
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_19.JPG": {
+		"top-left": [989, 736],
+		"top-right": [2955, 815],
+		"bottom-right": [3897, 2582],
+		"bottom-left": [1, 2484]
+	},
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_20.JPG": {
+		"top-left": [1005, 791],
+		"top-right": [2874, 823],
+		"bottom-right": [3853, 2294],
+		"bottom-left": [103, 2316]
+	},
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_21.JPG": {
+		"top-left": [1054, 768],
+		"top-right": [3013, 849],
+		"bottom-right": [3939, 2697],
+		"bottom-left": [74, 2560]
+	},
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_22.JPG": {
+		"top-left": [999, 763],
+		"top-right": [2992, 845],
+		"bottom-right": [3930, 2792],
+		"bottom-left": [26, 2714]
+	},
+	"/mnt/D/University/Thesis_Dataset/Tryouts/Images/image_23.JPG": {
+		"top-left": [1054, 777],
+		"top-right": [2946, 840],
+		"bottom-right": [3805, 2468],
+		"bottom-left": [30, 2353]
+	}
+}

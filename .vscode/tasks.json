@@ -1,0 +1,25 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "build test",
+			"type": "shell",
+			"command": "g++",
+			"args": [
+				"-Wall",
+				"-Wextra",
+				"-g3",
+				"src/HMM/cpp/test.cpp",
+				"src/HMM/cpp/ChessGameState.cpp",
+				"src/HMM/cpp/ChessHMM.cpp",
+				"-o",
+				"src/HMM/cpp/output/test"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": ["$gcc"]
+		}
+	]
+}

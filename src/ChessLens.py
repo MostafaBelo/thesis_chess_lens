@@ -12,11 +12,18 @@ from PieceDetection import PieceDetection
 
 from Utils import ChessUtils
 
+from typing import Literal
+
 
 class ChessLensImage:
-    def __init__(self, img: str | torch.Tensor | np.ndarray | None = None):
+    def __init__(self, img: str | torch.Tensor | np.ndarray | None = None, piece_detector: Literal["cnn", "yolo"] | None = None):
         self.clear()
         self.load_image(img)
+
+        if piece_detector is None:
+            self.piece_detector = PieceDetection.piece_detector
+        else:
+            self.piece_detector = PieceDetection.PieceDetector(piece_detector)
 
     def clear(self):
         self.img = None
@@ -69,9 +76,9 @@ class ChessLensImage:
         if not self.is_board_detected():
             raise Exception("No board detected")
 
-        PieceDetection.piece_detector.set_img(self.img, self.board_detection)
-        PieceDetection.piece_detector.preprocess()
-        self.piece_matrix = PieceDetection.piece_detector.predict()
+        self.piece_detector.set_img(self.img, self.board_detection)
+        self.piece_detector.preprocess()
+        self.piece_matrix = self.piece_detector.predict()
 
         # convert piece matrix to fen
         self.fen = ChessUtils.ChessTensorUtils().tensorToFEN_MAX(

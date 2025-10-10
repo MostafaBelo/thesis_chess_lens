@@ -4,6 +4,50 @@ import torch
 import cv2
 
 
+def extrinsics_from_planar_points(image_pts, K, L=1.0):
+    """
+    image_pts: (4,2) image coordinates in pixels, in known order (clockwise or ccw)
+    K: 3x3 camera intrinsics
+    L: side length of the square in world coordinates (any unit)
+    Returns:
+        R: 3x3 rotation matrix (world→camera)
+        t: 3x1 translation vector (world→camera)
+        H: 3x3 homography (plane→image)
+    """
+    # Define square points on the world plane Z=0
+    world_pts = np.array([
+        [0, 0],
+        [L, 0],
+        [L, L],
+        [0, L]
+    ], dtype=np.float64)
+
+    # Find homography (plane -> image)
+    H, _ = cv2.findHomography(world_pts, image_pts)
+
+    # Decompose using intrinsics
+    K_inv = np.linalg.inv(K)
+    h1, h2, h3 = H[:, 0], H[:, 1], H[:, 2]
+
+    # Normalize rotation columns
+    lam = 1.0 / np.linalg.norm(K_inv @ h1)
+    r1 = lam * (K_inv @ h1)
+    r2 = lam * (K_inv @ h2)
+    r3 = np.cross(r1, r2)
+
+    R = np.column_stack((r1, r2, r3))
+    # Enforce orthonormality via SVD
+    U, _, Vt = np.linalg.svd(R)
+    R = U @ Vt
+
+    # Ensure a right-handed coordinate system
+    if np.linalg.det(R) < 0:
+        R[:, 2] *= -1
+
+    t = lam * (K_inv @ h3)
+    return R, t.reshape(3, 1), H
+
+
 class CameraMapper:
     cam_default = np.array([0, 0, .5])
 
@@ -30,7 +74,7 @@ class CameraMapper:
         return normal_points
 
     @staticmethod
-    def get_K_R(current_size: tuple[float, float], cam_point: np.ndarray = cam_default, f: float = 2739.79, original_size: tuple[float, float] = (3024, 4032)):
+    def get_K_R(current_size: tuple[float, float], cam_point: np.ndarray = cam_default, f: float = 2739.79, original_size: tuple[float, float] = (3024, 4032), cam_angle: float | np.ndarray = -45):
         H, W = current_size
         H_o, W_o = original_size
 
@@ -47,19 +91,26 @@ class CameraMapper:
             [0,  0,  1]
         ])  # K: intrinsics of 3d -> 2d
 
-        r_val = 1/np.sqrt(2)
-        R_ = np.array([
-            [1, 0, 0],
-            [0, -r_val, -r_val],
-            [0, r_val, -r_val],
-        ])
+        if type(cam_angle) == float:
+            r_val = 1/np.sqrt(2)
+            R_ = np.array([
+                [1, 0, 0],
+                [0, -r_val, -r_val],
+                [0, r_val, -r_val],
+            ])
+            pitch = cam_angle
+        else:
+            R_, t, H = extrinsics_from_planar_points(cam_angle, K, 1)
+            pitch = np.degrees(np.arctan2(R_[2, 1], R_[1, 1]))
+            # print(pitch)
+
         t = (-R_) @ cam_point.reshape((3, 1))
 
         R = np.concat([R_, t], axis=1)
         # R: extrinsics of World -> Camera
         R = np.concat([R, np.array([[0, 0, 0, 1]])], axis=0)
 
-        return K, R
+        return K, R, pitch
 
     @staticmethod
     def from_3d_to_2d(points: np.ndarray, K: np.ndarray, R: np.ndarray):
@@ -125,10 +176,11 @@ class PieceCropper:
         grid = np.stack([X, Y], axis=2)
 
         if original_img_size is None:
-            K, R = CameraMapper.get_K_R(self.img.shape[1:])
+            K, R, self.cam_pitch = CameraMapper.get_K_R(
+                self.img.shape[1:], cam_angle=self.corners.numpy())
         else:
-            K, R = CameraMapper.get_K_R(
-                self.img.shape[1:], original_size=original_img_size)
+            K, R, self.cam_pitch = CameraMapper.get_K_R(
+                self.img.shape[1:], original_size=original_img_size, cam_angle=self.corners.numpy())
 
         grid_2d = CameraMapper.from_warp_to_normal(grid.reshape(-1, 2), self.M)
         grid_3d = CameraMapper.trace_ray(

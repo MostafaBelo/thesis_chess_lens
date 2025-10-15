@@ -8,7 +8,7 @@ from matplotlib import pyplot as plt
 
 import os
 
-model_path = os.path.join(os.path.dirname(__file__), 'bd_yolo.pt')
+model_path = os.path.join(os.environ['WEIGHTS'], 'bd_yolo.pt')
 default_conf = 0.7
 
 device = "cuda" if torch.cuda.is_available() else "cpu"

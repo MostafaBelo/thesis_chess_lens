@@ -194,8 +194,10 @@ class PieceDetectorCNNModel(nn.Module):
 
 
 piece_detection_model = PieceDetectorCNNModel()
+# piece_detection_model.load_state_dict(torch.load(
+#     os.path.join(os.path.dirname(__file__), "best_model.pt"), map_location=device))
 piece_detection_model.load_state_dict(torch.load(
-    os.path.join(os.path.dirname(__file__), "best_model.pt"), map_location=device))
+    os.path.join(os.environ['WEIGHTS'], "piece_cnn.pt"), map_location=device))
 piece_detection_model = piece_detection_model.to(device)
 
 
@@ -255,6 +257,10 @@ class PieceDetector:
         occupancy = occupancy.sigmoid()
         piece_color = piece_color.sigmoid()
         piece_type = piece_type.softmax(dim=3)
+
+        self.occupancy = occupancy
+        self.piece_color = piece_color
+        self.piece_type = piece_type
 
         res = torch.zeros(1, 8, 8, 13)
         res[:, :, :, 12] = 1-occupancy

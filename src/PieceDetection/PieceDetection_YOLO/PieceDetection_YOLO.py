@@ -8,8 +8,9 @@ from PIL import Image
 import os
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-model = YOLO(os.path.join(os.path.dirname(
-    os.path.abspath(__file__)), "best6(11x).pt")).to(device)
+# model = YOLO(os.path.join(os.path.dirname(
+#     os.path.abspath(__file__)), "best_piece_yolo.pt")).to(device)
+model = YOLO(os.path.join(os.environ['WEIGHTS'], "piece_yolo.pt")).to(device)
 
 
 def detect_pieces_img(img: torch.Tensor):
@@ -21,8 +22,9 @@ def detect_pieces_img(img: torch.Tensor):
 
 
 def conv_boxes(boxes):
-    class_names = {0: 'black-bishop', 1: 'black-king', 2: 'black-knight', 3: 'black-pawn', 4: 'black-queen', 5: 'black-rook',
-                   6: 'white-bishop', 7: 'white-king', 8: 'white-knight', 9: 'white-pawn', 10: 'white-queen', 11: 'white-rook'}
+    # class_names = {0: 'black-bishop', 1: 'black-king', 2: 'black-knight', 3: 'black-pawn', 4: 'black-queen', 5: 'black-rook',
+    #                6: 'white-bishop', 7: 'white-king', 8: 'white-knight', 9: 'white-pawn', 10: 'white-queen', 11: 'white-rook'}
+    class_names = model.names
     class_ids = boxes.cls.cpu().numpy().astype(int)
     coords = boxes.xyxy.cpu().numpy()  # (x1, y1, x2, y2) for each detection
 

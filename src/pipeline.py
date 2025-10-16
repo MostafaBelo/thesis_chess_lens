@@ -35,4 +35,5 @@ img.recognize_pieces()
 end_time = time.perf_counter()
 print(f"Piece Recognition: {(end_time-start_time)*1e3:.6f} ms")
 
-img.save_fen_image()
+print(img.fen)
+# img.save_fen_image()

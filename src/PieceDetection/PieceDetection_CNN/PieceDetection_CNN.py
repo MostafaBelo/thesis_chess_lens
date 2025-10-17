@@ -2,6 +2,7 @@ import math
 
 import torch
 from torch import nn
+from torch.nn import functional as F
 from torchvision import models
 import numpy as np
 import cv2
@@ -14,8 +15,12 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 class PieceDetectorCNNModel(nn.Module):
-    def __init__(self):
+    def __init__(self, avg_embeds=None):
         super().__init__()
+
+        self.avg_embeds = None
+        if avg_embeds is not None:
+            self.avg_embeds = avg_embeds
 
         self.latent_dim = 512
 
@@ -178,19 +183,39 @@ class PieceDetectorCNNModel(nn.Module):
         # attentioned_embeds = embeds.reshape(B, 10,10, 128).permute(0,3,1,2)
         attentioned_embeds = self.conv2(positioned_embeds)
         # cropped_attentioned_embeds = attentioned_embeds[:,:,1:9,1:9]
-        res = self.classifier(attentioned_embeds.permute(
-            0, 2, 3, 1).reshape(-1, self.latent_dim))
-        res_occupancy = self.occupancy_classifier_heads(res).reshape(B, 8, 8)
-        res_piece_color = self.piece_color_classifier_heads(
-            res).reshape(B, 8, 8)
-        res_piece_type = self.piece_type_classifier_heads(
-            res).reshape(B, 8, 8, 6)
+        attentioned_embeds = attentioned_embeds.permute(
+            0, 2, 3, 1).reshape(-1, self.latent_dim)
+        attentioned_embeds = F.normalize(attentioned_embeds)
 
-        return {
-            "occupancy": res_occupancy,
-            "piece_color": res_piece_color,
-            "piece_type": res_piece_type,
-        }
+        if self.avg_embeds is None:
+            res = self.classifier(attentioned_embeds)
+            res_occupancy = self.occupancy_classifier_heads(
+                res).reshape(B, 8, 8)
+            res_piece_color = self.piece_color_classifier_heads(
+                res).reshape(B, 8, 8)
+            res_piece_type = self.piece_type_classifier_heads(
+                res).reshape(B, 8, 8, 6)
+
+            return {
+                "occupancy": res_occupancy,
+                "piece_color": res_piece_color,
+                "piece_type": res_piece_type,
+                "square_embedings": attentioned_embeds
+            }
+        else:
+            res = (-10*torch.cdist(attentioned_embeds,
+                   self.avg_embeds)).softmax(dim=1)
+            res_occupancy = (1-res[:, 12]).reshape(B, 8, 8)
+            res_piece_color = (res[:, :6].sum(
+                dim=1)/(1-res[:, 12])).reshape(B, 8, 8)
+            res_piece_type = (
+                res[:, :12].reshape(-1, 2, 6).sum(dim=1)/(1-res[:, [12]])).reshape(B, 8, 8, 6)
+            return {
+                "occupancy": res_occupancy,
+                "piece_color": res_piece_color,
+                "piece_type": res_piece_type,
+                "square_embedings": attentioned_embeds
+            }
 
 
 piece_detection_model = PieceDetectorCNNModel()

@@ -11,7 +11,10 @@ import os
 model_path = os.path.join(os.environ['WEIGHTS'], 'bd_yolo.pt')
 default_conf = 0.7
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
+if "device" in os.environ:
+    device = os.environ["device"]
+else:
+    device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 class BoardDetector_YOLO:

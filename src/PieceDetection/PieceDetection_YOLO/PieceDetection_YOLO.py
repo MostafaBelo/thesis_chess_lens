@@ -7,7 +7,10 @@ from PIL import Image
 
 import os
 
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
+if "device" in os.environ:
+    device = os.environ["device"]
+else:
+    device = "cuda" if torch.cuda.is_available() else "cpu"
 # model = YOLO(os.path.join(os.path.dirname(
 #     os.path.abspath(__file__)), "best_piece_yolo.pt")).to(device)
 model = YOLO(os.path.join(os.environ['WEIGHTS'], "piece_yolo.pt")).to(device)

@@ -11,7 +11,10 @@ import os
 
 from PieceDetection.PieceCropper_3D import PieceCropper
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
+if "device" in os.environ:
+    device = os.environ["device"]
+else:
+    device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 class PieceDetectorCNNModel(nn.Module):

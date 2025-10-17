@@ -21,6 +21,7 @@ from Utils.ChessUtils import ChessTensorUtils
 load_dotenv()
 
 env_root_key = "CHESSDATASET_ROOT"
+env_root_game_key = "CHESSGAMEDATASET_ROOT"
 
 
 def convert_labels_txt_to_pkl(txt_data: str):
@@ -54,6 +55,16 @@ def convert_labels_txt_to_pkl(txt_data: str):
             "corners": corners,
             "board_tensor": board_tensor,
         })
+    return pkl_data
+
+
+def convert__pgn_labels_txt_to_pkl(txt_data: str):
+    imgs, pgn = txt_data.strip().split("\n\n")
+    pkl_data = {
+        "img_paths": imgs.split("\n"),
+        "pgn": pgn
+    }
+
     return pkl_data
 
 
@@ -270,6 +281,163 @@ class ChessDataset(Dataset):
                     "transforms": dataset.transforms,
                     "target_transforms": dataset.target_transforms,
                     "img_label_transforms": dataset.img_label_transforms,
+                    "labels": test_labels
+                }
+            }
+        )
+
+        return train_dataset, valid_dataset, test_dataset
+
+
+class GameDataset(Dataset):
+    def __init__(self, root_dirs: None | str | list[str] = None, img_transforms=None, force_build_pkl=False, config={}):
+        if "custom_dataset" in config:
+            data = config["custom_dataset"]
+
+            if "root_dirs" not in data:
+                raise Exception("Invalid Custom Dataset")
+            self.root_dirs = data["root_dirs"]
+
+            if "transforms" not in data:
+                raise Exception("Invalid Custom Dataset")
+            self.transforms = data["transforms"]
+
+            if "target_transforms" not in data:
+                raise Exception("Invalid Custom Dataset")
+            self.target_transforms = data["target_transforms"]
+
+            if "labels" not in data:
+                raise Exception("Invalid Custom Dataset")
+            self.labels = data["labels"]
+            return
+
+        if root_dirs is None:
+            if not os.environ.get(env_root_key):
+                raise Exception("CHESSDATASET_ROOT not found in .env")
+            root_dirs = os.environ.get(env_root_game_key).split(";")
+        elif type(root_dirs) == str:
+            root_dirs = [root_dirs]
+        elif type(root_dirs) != list:
+            raise Exception("Invalid root_dirs")
+
+        self.root_dirs = root_dirs
+        for root_dir in self.root_dirs:
+            if not os.path.isdir(root_dir):
+                raise Exception(f"Invalid root_dir: {root_dir}")
+
+        self.transforms = transforms.Compose([
+            transforms.Resize(
+                (480, 640) if ("img_size" not in config) else config["img_size"]),
+            *([transforms.Grayscale()]
+              if ("gray" in config and config["gray"]) else []),
+            transforms.ToTensor(),
+            *([lambda img: (img*255).to(torch.uint8)]
+              if ("is_int" in config and config["is_int"]) else []),
+            *([img_transforms] if img_transforms is not None else [])
+        ])
+
+        self.labels = []
+
+        for root_dir in self.root_dirs:
+            if (not os.path.exists(os.path.join(root_dir, "labels.pkl"))) or (force_build_pkl):
+                if not os.path.exists(os.path.join(root_dir, "labels.txt")):
+                    raise Exception(
+                        f"labels.txt not found for dir: {root_dir}")
+                with open(os.path.join(root_dir, "labels.txt"), "r") as f:
+                    txt_data = f.read()
+                pkl_data = convert__pgn_labels_txt_to_pkl(txt_data)
+                with open(os.path.join(root_dir, "labels.pkl"), "wb") as f:
+                    pickle.dump(pkl_data, f)
+
+            with open(os.path.join(root_dir, "labels.pkl"), "rb") as f:
+                labels = pickle.load(f)
+
+            for i in range(len(labels["img_paths"])):
+                try:
+                    labels["img_paths"][i] = os.path.join(
+                        root_dir, labels["img_paths"][i])
+                except Exception as e:
+                    print(labels["img_paths"][i])
+                    raise e
+            self.labels = labels
+
+    def __len__(self):
+        return len(self.labels["img_paths"])
+
+    def __getitem__(self, index):
+        img_path = self.labels["img_paths"][index]
+
+        img = Image.open(img_path).convert("RGB")
+
+        img = self.transforms(img)
+
+        return img
+
+    def get_pgn(self):
+        return self.labels["pgn"]
+
+    @staticmethod
+    def getLoader(dataset: 'ChessDataset', batch_size=4, num_worders=4):
+        if num_worders == 0:
+            return DataLoader(
+                dataset,
+                batch_size=batch_size,
+                shuffle=True,
+                pin_memory=True,     # Set True if using GPU
+                num_workers=0,      # Adjust depending on your CPU cores
+            )
+        else:
+            return DataLoader(
+                dataset,
+                batch_size=batch_size,
+                shuffle=True,
+                pin_memory=True,     # Set True if using GPU
+                num_workers=4,      # Adjust depending on your CPU cores
+                prefetch_factor=2,
+                persistent_workers=True,
+            )
+
+    @staticmethod
+    def train_valid_test_split(dataset: 'ChessDataset', sizes=(.8, .1, .1), random_state=42):
+        random.seed(random_state)
+        tmp_labels = dataset.labels
+        random.shuffle(tmp_labels)
+        train_size = sizes[0]
+        valid_size = sizes[1]
+
+        train_idx = int(len(tmp_labels) * train_size)
+        train_labels = tmp_labels[:train_idx]
+
+        valid_idx = int(len(tmp_labels) * valid_size)
+        valid_labels = tmp_labels[train_idx:train_idx+valid_idx]
+
+        test_labels = tmp_labels[train_idx+valid_idx:]
+
+        train_dataset = ChessDataset(
+            config={
+                "custom_dataset": {
+                    "root_dirs": dataset.root_dirs,
+                    "transforms": dataset.transforms,
+                    "labels": train_labels
+                }
+            }
+        )
+
+        valid_dataset = ChessDataset(
+            config={
+                "custom_dataset": {
+                    "root_dirs": dataset.root_dirs,
+                    "transforms": dataset.transforms,
+                    "labels": valid_labels
+                }
+            }
+        )
+
+        test_dataset = ChessDataset(
+            config={
+                "custom_dataset": {
+                    "root_dirs": dataset.root_dirs,
+                    "transforms": dataset.transforms,
                     "labels": test_labels
                 }
             }

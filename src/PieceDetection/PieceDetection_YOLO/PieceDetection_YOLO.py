@@ -68,7 +68,7 @@ def detect_pieces_img(img: torch.Tensor):
         return conv_boxes_onnx(results), None
     else:
         results = model(img.unsqueeze(0), verbose=False)
-        results[0].show()
+        # results[0].show()
         return conv_boxes(results[0].boxes), results[0]
 
 

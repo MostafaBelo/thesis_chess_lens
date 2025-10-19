@@ -281,24 +281,20 @@ class PieceDetector:
     def load_model(self, model_type: Literal["torch", "onnx", "onnx_dynamic", "onnx_static"] = "torch"):
         global piece_detection_model
         if model_type == "torch":
-            print("using pytorch")
             piece_detection_model = PieceDetectorCNNModel()
             piece_detection_model.load_state_dict(torch.load(
                 os.path.join(os.environ['WEIGHTS'], "piece_cnn.pt"), map_location=device))
             piece_detection_model = piece_detection_model.to(device)
 
         elif model_type == "onnx":
-            print("using onnx")
             piece_detection_model = PieceDetectorCNNModelOnnx(
                 os.path.join(os.environ['WEIGHTS'], "piece_cnn.onnx"))
 
         elif model_type == "onnx_dynamic":
-            print("using onnx dynamic")
             piece_detection_model = PieceDetectorCNNModelOnnx(
                 os.path.join(os.environ['WEIGHTS'], "piece_cnn_quantized_dynamic.onnx"))
 
         elif model_type == "onnx_static":
-            print("using onnx static")
             piece_detection_model = PieceDetectorCNNModelOnnx(
                 os.path.join(os.environ['WEIGHTS'], "piece_cnn_quantized_static.onnx"))
 

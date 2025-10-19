@@ -18,7 +18,8 @@ import time
 
 dataset = GameDataset(
     config={
-        "img_size": (640, 640)
+        "img_size": (640, 640),
+        "include_only": "valid"
     }
 )
 
@@ -36,7 +37,7 @@ def prep_probs(piece_matrix: torch.Tensor):
     return -np.log(torch.rot90(probs, k=-1, dims=(2, 3)).squeeze().permute(1, 2, 0).numpy()[::-1]+(1e-7))
 
 
-print(f"Devices | Board Detection: {ChessLens.BoardDetection.bd.model.device} | Piece Recognition (CNN): {next(ChessLens.PieceDetection.PieceDetection_CNN.piece_detection_model.parameters()).device} | Piece Recognition (YOLO): {ChessLens.PieceDetection.PieceDetection_YOLO.model.device}")
+print(f"Devices | Board Detection: {ChessLens.BoardDetection.bd.model.device} | Piece Recognition (CNN): {"None" if ChessLens.PieceDetection.PieceDetection_CNN.piece_detection_model is None else next(ChessLens.PieceDetection.PieceDetection_CNN.piece_detection_model.parameters()).device} | Piece Recognition (YOLO): {ChessLens.PieceDetection.PieceDetection_YOLO.model.device}")
 
 avg_times = {
     "load": 0,
@@ -46,7 +47,7 @@ avg_times = {
 }
 for t in tqdm(range(len(dataset))):
     t1 = time.perf_counter()
-    img.load_image(dataset[t])
+    img.load_image(dataset[t][0])
     t2 = time.perf_counter()
     img.detect_board()
     t3 = time.perf_counter()

@@ -9,16 +9,31 @@ from typing import Literal
 
 
 class PieceDetector:
-    def __init__(self, method: Literal["cnn", "yolo"] = "cnn"):
+    def __init__(self, method: Literal["cnn", "yolo", "cnn_onnx", "cnn_onnx_dynamic", "cnn_onnx_static"] = "yolo"):
         self.img = None
         self.corners = None
 
-        if method == "cnn":
-            self.piece_detector = PieceDetection_CNN.PieceDetector()
-        elif method == "yolo":
-            self.piece_detector = PieceDetection_YOLO.PieceDetector()
-        else:
-            raise Exception("Piece Detection Method not found")
+        match method:
+            case "cnn":
+                self.piece_detector = PieceDetection_CNN.PieceDetector("torch")
+
+            case "yolo":
+                self.piece_detector = PieceDetection_YOLO.PieceDetector()
+
+            case "cnn_onnx":
+                self.piece_detector = PieceDetection_CNN.PieceDetector("onnx")
+
+            case "cnn_onnx_dynamic":
+                self.piece_detector = PieceDetection_CNN.PieceDetector(
+                    "onnx_dynamic")
+
+            case "cnn_onnx_static":
+                self.piece_detector = PieceDetection_CNN.PieceDetector(
+                    "onnx_static")
+
+        # elif method == "yolo":
+        # else:
+        #     raise Exception("Piece Detection Method not found")
 
     def set_img(self, img: torch.Tensor, corners: torch.Tensor):
         self.img = img  # 3, H, W

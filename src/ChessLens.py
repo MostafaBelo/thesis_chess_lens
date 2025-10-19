@@ -16,12 +16,12 @@ from typing import Literal
 
 
 class ChessLensImage:
-    def __init__(self, img: str | torch.Tensor | np.ndarray | None = None, piece_detector: Literal["cnn", "yolo"] | None = None):
+    def __init__(self, img: str | torch.Tensor | np.ndarray | None = None, piece_detector: Literal["cnn", "yolo", "cnn_onnx", "cnn_onnx_dynamic", "cnn_onnx_static"] | None = None):
         self.clear()
         self.load_image(img)
 
         if piece_detector is None:
-            self.piece_detector = PieceDetection.piece_detector
+            self.piece_detector = PieceDetection.PieceDetector()
         else:
             self.piece_detector = PieceDetection.PieceDetector(piece_detector)
 

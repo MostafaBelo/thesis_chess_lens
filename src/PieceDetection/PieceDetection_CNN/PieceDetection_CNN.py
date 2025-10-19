@@ -7,7 +7,12 @@ from torchvision import models
 import numpy as np
 import cv2
 
+import onnx
+import onnxruntime as ort
+
 import os
+
+from typing import Literal
 
 from PieceDetection.PieceCropper_3D import PieceCropper
 
@@ -221,16 +226,48 @@ class PieceDetectorCNNModel(nn.Module):
             }
 
 
-piece_detection_model = PieceDetectorCNNModel()
+class PieceDetectorCNNModelOnnx():
+    def __init__(self, model_path: str):
+        self.session = ort.InferenceSession(
+            model_path,
+        )
+
+        self.input_name = self.session.get_inputs()[0].name
+        self.output_names = [self.session.get_outputs()[i].name for i in range(
+            len(self.session.get_outputs()))]
+
+    def __call__(self, *args):
+        return self.forward(*args)
+
+    def forward(self, x: torch.Tensor):
+        x = x.cpu().numpy()
+        outputs = self.session.run(self.output_names, {self.input_name: x})
+
+        for i in range(len(outputs)):
+            outputs[i] = torch.tensor(outputs[i])
+
+        res = {
+            "occupancy": outputs[0],
+            "piece_color": outputs[1],
+            "piece_type": outputs[2],
+            "square_embedings": outputs[3],
+        }
+        return res
+
+
+# piece_detection_model = PieceDetectorCNNModel()
 # piece_detection_model.load_state_dict(torch.load(
-#     os.path.join(os.path.dirname(__file__), "best_model.pt"), map_location=device))
-piece_detection_model.load_state_dict(torch.load(
-    os.path.join(os.environ['WEIGHTS'], "piece_cnn.pt"), map_location=device))
-piece_detection_model = piece_detection_model.to(device)
+#     os.path.join(os.environ['WEIGHTS'], "piece_cnn.pt"), map_location=device))
+# piece_detection_model = piece_detection_model.to(device)
+
+# piece_detection_model = PieceDetectorCNNModelOnnx(
+#     os.path.join(os.environ['WEIGHTS'], "piece_cnn_quantized_static.onnx"))
+
+piece_detection_model = None
 
 
 class PieceDetector:
-    def __init__(self):
+    def __init__(self, model_type: Literal["torch", "onnx", "onnx_dynamic", "onnx_static"] = "torch"):
         self.img = None
         self.corners = None
 
@@ -238,6 +275,32 @@ class PieceDetector:
 
         self.warpped_img = None
         self.M = None
+
+        self.load_model(model_type)
+
+    def load_model(self, model_type: Literal["torch", "onnx", "onnx_dynamic", "onnx_static"] = "torch"):
+        global piece_detection_model
+        if model_type == "torch":
+            print("using pytorch")
+            piece_detection_model = PieceDetectorCNNModel()
+            piece_detection_model.load_state_dict(torch.load(
+                os.path.join(os.environ['WEIGHTS'], "piece_cnn.pt"), map_location=device))
+            piece_detection_model = piece_detection_model.to(device)
+
+        elif model_type == "onnx":
+            print("using onnx")
+            piece_detection_model = PieceDetectorCNNModelOnnx(
+                os.path.join(os.environ['WEIGHTS'], "piece_cnn.onnx"))
+
+        elif model_type == "onnx_dynamic":
+            print("using onnx dynamic")
+            piece_detection_model = PieceDetectorCNNModelOnnx(
+                os.path.join(os.environ['WEIGHTS'], "piece_cnn_quantized_dynamic.onnx"))
+
+        elif model_type == "onnx_static":
+            print("using onnx static")
+            piece_detection_model = PieceDetectorCNNModelOnnx(
+                os.path.join(os.environ['WEIGHTS'], "piece_cnn_quantized_static.onnx"))
 
     def set_img(self, img: torch.Tensor, corners: torch.Tensor):
         self.img = img  # 3, H, W
@@ -273,7 +336,8 @@ class PieceDetector:
         self.board_split = PieceCropper.piece_cropper.process_img()
 
     def predict(self):
-        piece_detection_model.eval()
+        if isinstance(piece_detection_model, PieceDetectorCNNModel):
+            piece_detection_model.eval()
         with torch.inference_mode():
             preds = piece_detection_model(
                 self.board_split.unsqueeze(0).to(device))

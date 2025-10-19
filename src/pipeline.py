@@ -1,10 +1,13 @@
 import sys
 import os
+from dotenv import load_dotenv
 
 import numpy as np
 import ChessLens
 
 import time
+
+load_dotenv()
 
 img_path = sys.argv[1]
 if len(sys.argv) >= 3:

@@ -16,7 +16,9 @@ from typing import Literal
 
 
 class ChessLensImage:
-    def __init__(self, img: str | torch.Tensor | np.ndarray | None = None, piece_detector: Literal["cnn", "yolo", "cnn_onnx", "cnn_onnx_dynamic", "cnn_onnx_static"] | None = None):
+    def __init__(self, img: str | torch.Tensor | np.ndarray | None = None, piece_detector: Literal["cnn", "yolo",
+                                                                                                   "cnn_onnx", "cnn_onnx_dynamic", "cnn_onnx_static"
+                                                                                                   "yolo_onnx", "yolo_onnx_dynamic", "yolo_onnx_static"] | None = None):
         self.clear()
         self.load_image(img)
 

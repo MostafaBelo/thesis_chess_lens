@@ -9,7 +9,9 @@ from typing import Literal
 
 
 class PieceDetector:
-    def __init__(self, method: Literal["cnn", "yolo", "cnn_onnx", "cnn_onnx_dynamic", "cnn_onnx_static"] = "yolo"):
+    def __init__(self, method: Literal["cnn", "yolo",
+                                       "cnn_onnx", "cnn_onnx_dynamic", "cnn_onnx_static",
+                                       "yolo_onnx", "yolo_onnx_dynamic", "yolo_onnx_static"] = "yolo"):
         self.img = None
         self.corners = None
 
@@ -31,7 +33,17 @@ class PieceDetector:
                 self.piece_detector = PieceDetection_CNN.PieceDetector(
                     "onnx_static")
 
-        # elif method == "yolo":
+            case "yolo_onnx":
+                self.piece_detector = PieceDetection_YOLO.PieceDetector("onnx")
+
+            case "yolo_onnx_dynamic":
+                self.piece_detector = PieceDetection_YOLO.PieceDetector(
+                    "onnx_dynamic")
+
+            case "yolo_onnx_static":
+                self.piece_detector = PieceDetection_YOLO.PieceDetector(
+                    "onnx_static")
+
         # else:
         #     raise Exception("Piece Detection Method not found")
 

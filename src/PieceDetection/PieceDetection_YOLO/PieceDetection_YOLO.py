@@ -68,7 +68,7 @@ def detect_pieces_img(img: torch.Tensor):
         return conv_boxes_onnx(results), None
     else:
         results = model(img.unsqueeze(0), verbose=False)
-        # results[0].show()
+        results[0].show()
         return conv_boxes(results[0].boxes), results[0]
 
 
@@ -87,6 +87,7 @@ def conv_boxes_onnx(boxes):
                    11: 'black-pawn'}
     # class_names = model.names
     class_ids = boxes[4].numpy().astype(int)
+    confs = boxes[5]
     # (x1, y1, x2, y2) for each detection
     cx = boxes[0]
     cy = boxes[1]
@@ -102,12 +103,13 @@ def conv_boxes_onnx(boxes):
 
     # Combine class name and coordinates
     detections = []
-    for cls_id, box in zip(class_ids, coords):
+    for cls_id, conf, box in zip(class_ids, confs, coords):
         class_name = class_names[cls_id]
         x1, y1, x2, y2 = box
         detections.append({
             "class": class_name,
             "class_id": cls_id,
+            "conf": conf,
             "x1": float(x1),
             "y1": float(y1),
             "x2": float(x2),
@@ -123,15 +125,17 @@ def conv_boxes(boxes):
     class_names = model.names
     class_ids = boxes.cls.cpu().numpy().astype(int)
     coords = boxes.xyxy.cpu().numpy()  # (x1, y1, x2, y2) for each detection
+    confs = boxes.conf
 
     # Combine class name and coordinates
     detections = []
-    for cls_id, box in zip(class_ids, coords):
+    for cls_id, conf, box in zip(class_ids, confs, coords):
         class_name = class_names[cls_id]
         x1, y1, x2, y2 = box
         detections.append({
             "class": class_name,
             "class_id": cls_id,
+            "conf": conf,
             "x1": float(x1),
             "y1": float(y1),
             "x2": float(x2),
@@ -161,23 +165,28 @@ def apply_transform(points: torch.Tensor, M: torch.Tensor) -> torch.Tensor:
 
 def align_boxes_to_board(boxes, M):
     sqs = []
-    board = torch.ones(1, 8, 8, dtype=torch.int8) * 12
+    board = torch.zeros(1, 8, 8, 2, dtype=torch.float32)
+    board[:, :, :, 0] = 12
 
     det_classes = [det["class"] for det in boxes]
+    det_confs = [det["conf"] for det in boxes]
     boxes_xyxy = torch.tensor(
         [[det["x1"], det["y1"], det["x2"], det["y2"]] for det in boxes])
     anchors: torch.Tensor = get_anchor(boxes_xyxy)
     warpped_anchors: torch.Tensor = apply_transform(anchors, M)
     sqs = (warpped_anchors // 32).to(torch.int32)
-    sqs = [(sq, det_cls) for sq, det_cls in zip(sqs.tolist(), det_classes)]
+    sqs = [(sq, det_cls, det_conf)
+           for sq, det_cls, det_conf in zip(sqs.tolist(), det_classes, det_confs)]
 
     channels = ['white-pawn', 'white-knight', 'white-bishop', 'white-rook', 'white-queen', 'white-king',
                 'black-pawn', 'black-knight', 'black-bishop', 'black-rook', 'black-queen', 'black-king']
-    for sq, piece in sqs:
+    for sq, piece, conf in sqs:
         if (sq[0] >= 0 and sq[0] < 8 and sq[1] >= 0 and sq[1] < 8):
-            board[0, sq[1], sq[0]] = channels.index(piece)
+            if board[0, sq[1], sq[0], 1] < conf:
+                board[0, sq[1], sq[0], 0] = channels.index(piece)
+                board[0, sq[1], sq[0], 1] = conf
 
-    return sqs, board
+    return sqs, board[:, :, :, 0].to(torch.int)
 
 
 class PieceDetector:
@@ -211,8 +220,8 @@ class PieceDetector:
 
     def set_img(self, img: torch.Tensor, corners: torch.Tensor):
         self.img = Image.fromarray(
-            (img.clone().detach().permute(1, 2, 0).cpu().numpy()[:, :, ::-1]*255).astype(np.uint8)).resize((640, 480))
-        self.img = transforms.ToTensor()(self.img)  # 3, H, W
+            (img.clone().detach().permute(1, 2, 0).cpu().numpy()*255).astype(np.uint8)).resize((640, 480))
+        self.img = transforms.ToTensor()(self.img).flip((0,))  # 3, H, W
         self.corners = corners.clone().detach()  # 4, 2
 
         self.corners[:, 0] *= 640/640

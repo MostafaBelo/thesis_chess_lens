@@ -1,6 +1,7 @@
 **/.env
 **/__pycache__
 **/*.pt
+**/*.onnx
 **/.venv/*
 
 # Byte-compiled / optimized / DLL files

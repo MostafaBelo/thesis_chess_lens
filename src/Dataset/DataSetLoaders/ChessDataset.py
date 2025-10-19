@@ -60,8 +60,25 @@ def convert_labels_txt_to_pkl(txt_data: str):
 
 def convert__pgn_labels_txt_to_pkl(txt_data: str):
     imgs, pgn = txt_data.strip().split("\n\n")
+    img_objs = []
+
+    for line in imgs.split("\n"):
+        index = line.find(".#")
+        id = line[:index]
+        rest_of_line = line[index+2:]
+
+        data = re.findall(r"\((.*?)\)", rest_of_line)
+        if len(data) != 2:
+            raise Exception(f"Invalid labels.txt record at: {line}")
+        image_path, frame_validity = data
+        img_objs.append({
+            "id": int(id),
+            "image_path": image_path,
+            "frame_validity": frame_validity
+        })
+
     pkl_data = {
-        "img_paths": imgs.split("\n"),
+        "imgs": img_objs,
         "pgn": pgn
     }
 
@@ -336,6 +353,9 @@ class GameDataset(Dataset):
             *([img_transforms] if img_transforms is not None else [])
         ])
 
+        self.include_only = ["valid", "occlusion"]
+        if "include_only" in config:
+            self.include_only = config["include_only"].split(";")
         self.labels = []
 
         for root_dir in self.root_dirs:
@@ -352,26 +372,30 @@ class GameDataset(Dataset):
             with open(os.path.join(root_dir, "labels.pkl"), "rb") as f:
                 labels = pickle.load(f)
 
-            for i in range(len(labels["img_paths"])):
+            labels["imgs"] = [
+                lbl for lbl in labels["imgs"] if lbl["frame_validity"] in self.include_only
+            ]
+            for i in range(len(labels["imgs"])):
                 try:
-                    labels["img_paths"][i] = os.path.join(
-                        root_dir, labels["img_paths"][i])
+                    labels["imgs"][i]["image_path"] = os.path.join(
+                        root_dir, labels["imgs"][i]["image_path"])
                 except Exception as e:
-                    print(labels["img_paths"][i])
+                    print(labels["imgs"][i]["image_path"])
                     raise e
-            self.labels = labels
+            self.labels = labels  # TODO:
 
     def __len__(self):
-        return len(self.labels["img_paths"])
+        return len(self.labels["imgs"])
 
     def __getitem__(self, index):
-        img_path = self.labels["img_paths"][index]
+        label = self.labels["imgs"][index]
+        img_path = label["image_path"]
 
         img = Image.open(img_path).convert("RGB")
 
         img = self.transforms(img)
 
-        return img
+        return img, label
 
     def get_pgn(self):
         return self.labels["pgn"]

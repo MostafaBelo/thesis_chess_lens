@@ -26,42 +26,43 @@ class BoardExtractor:
         self.img_gray = None
 
     def set_img(self, img: str | np.ndarray | torch.Tensor):
-        if type(img) == str:
-            img = transform(Image.open(img).convert("RGB").resize((640, 640)))
-        elif type(img) == np.ndarray:
-            if len(img.shape) != 3:
-                raise InvalidImage("Invalid Image")
-            if img.shape[0] == 3:
-                self.img = torch.tensor(img).permute(1, 2, 0)
-                if self.img.max() > 1.5:
-                    self.img = self.img.to(torch.float32) / 255
-            elif img.shape[2] == 3:
-                self.img = torch.tensor(img)
-                if self.img.max() > 1.5:
-                    self.img = self.img.to(torch.float32) / 255
-            else:
-                raise InvalidImage("Invalid Image")
-        elif type(img) == torch.Tensor:
-            if len(img.shape) != 3:
-                raise InvalidImage("Invalid Image")
-            if img.shape[0] == 3:
-                self.img = img.permute(1, 2, 0)
-                if self.img.max() > 1.5:
-                    self.img = self.img.to(torch.float32) / 255
-            elif img.shape[2] == 3:
-                self.img = img
-                if self.img.max() > 1.5:
-                    self.img = self.img.to(torch.float32) / 255
-            else:
-                raise InvalidImage("Invalid Image")
-        else:
-            raise InvalidImage("Invalid Image")
+        # if type(img) == str:
+        #     img = transform(Image.open(img).convert("RGB").resize((640, 640)))
+        # elif type(img) == np.ndarray:
+        #     if len(img.shape) != 3:
+        #         raise InvalidImage("Invalid Image")
+        #     if img.shape[0] == 3:
+        #         self.img = torch.tensor(img).permute(1, 2, 0)
+        #         if self.img.max() > 1.5:
+        #             self.img = self.img.to(torch.float32) / 255
+        #     elif img.shape[2] == 3:
+        #         self.img = torch.tensor(img)
+        #         if self.img.max() > 1.5:
+        #             self.img = self.img.to(torch.float32) / 255
+        #     else:
+        #         raise InvalidImage("Invalid Image")
+        # elif type(img) == torch.Tensor:
+        #     if len(img.shape) != 3:
+        #         raise InvalidImage("Invalid Image")
+        #     if img.shape[0] == 3:
+        #         # self.img = img.permute(1, 2, 0)
+        #         if self.img.max() > 1.5:
+        #             self.img = self.img.to(torch.float32) / 255
+        #     elif img.shape[2] == 3:
+        #         self.img = img
+        #         if self.img.max() > 1.5:
+        #             self.img = self.img.to(torch.float32) / 255
+        #     else:
+        #         raise InvalidImage("Invalid Image")
+        # else:
+        #     raise InvalidImage("Invalid Image")
 
-        self.img_gray = self.img.mean(dim=2)
+        self.img = img
+        self.img_gray = self.img.mean(dim=0)
 
     def _detect_board_img(self):
-        img = (self.img * 255).to(torch.uint8)
-        bd.set_img(img)
+        # img = (self.img * 255).to(torch.uint8)
+        bd.set_img(self.img)
         mask, conf = bd.predict()
         return mask, conf
 

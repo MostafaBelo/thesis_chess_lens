@@ -50,20 +50,19 @@ class BoardDetector_YOLO:
 
     def preprocess(self):
         self.check_img()
-        img = self.img
+        # img = self.img
 
-        img = Image.fromarray(img.numpy()).resize((640, 640))
-        img = np.array(img).astype(np.float32) / 255.0
-        img = torch.tensor(img).permute(2, 0, 1).unsqueeze(0)
+        # img = Image.fromarray(img.numpy()).resize((640, 640))
+        # img = np.array(img).astype(np.float32) / 255.0
+        # img = torch.tensor(img).permute(2, 0, 1).unsqueeze(0)
 
-        self.img = img
+        # self.img = img
 
     def process(self):
         self.check_model()
         self.check_img()
 
-        img = self.img
-        r = self.model(img, conf=0.7, verbose=False)
+        r = self.model(self.img.unsqueeze(0), conf=0.7, verbose=False)
 
         mask = r[0].masks.data.squeeze().cpu()
         if (len(mask.shape) >= 3):

@@ -23,21 +23,22 @@ dataset = GameDataset(
     }
 )
 
-img = ChessLens.ChessLensImage(piece_detector="yolo")
+img = ChessLens.ChessLensImage(piece_detector="cnn")
 hmm = ChessHMM.ChessHMM(20)
 
 
 def prep_probs(piece_matrix: torch.Tensor):
-    probs = torch.zeros(1, 13, 8, 8, dtype=torch.float32) + .1
+    probs = piece_matrix
+    # probs = torch.zeros(1, 13, 8, 8, dtype=torch.float32) + .1
 
-    i = torch.arange(8).unsqueeze(1).expand(8, 8)
-    j = torch.arange(8).unsqueeze(0).expand(8, 8)
-    probs[0, piece_matrix.squeeze().to(torch.int32), i, j] = .9
+    # i = torch.arange(8).unsqueeze(1).expand(8, 8)
+    # j = torch.arange(8).unsqueeze(0).expand(8, 8)
+    # probs[0, piece_matrix.squeeze().to(torch.int32), i, j] = .9
 
     return -np.log(torch.rot90(probs, k=-1, dims=(2, 3)).squeeze().permute(1, 2, 0).numpy()[::-1]+(1e-7))
 
 
-print(f"Devices | Board Detection: {ChessLens.BoardDetection.bd.model.device} | Piece Recognition (CNN): {"None" if ChessLens.PieceDetection.PieceDetection_CNN.piece_detection_model is None else next(ChessLens.PieceDetection.PieceDetection_CNN.piece_detection_model.parameters()).device} | Piece Recognition (YOLO): {ChessLens.PieceDetection.PieceDetection_YOLO.model.device}")
+print(f"Devices | Board Detection: {ChessLens.BoardDetection.bd.model.device} | Piece Recognition (CNN): {"None" if ChessLens.PieceDetection.PieceDetection_CNN.piece_detection_model is None else next(ChessLens.PieceDetection.PieceDetection_CNN.piece_detection_model.parameters()).device} | Piece Recognition (YOLO): {"None" if ChessLens.PieceDetection.PieceDetection_YOLO.model is None else ChessLens.PieceDetection.PieceDetection_YOLO.model.device}")
 
 avg_times = {
     "load": 0,

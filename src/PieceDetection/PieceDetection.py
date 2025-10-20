@@ -20,7 +20,8 @@ class PieceDetector:
                 self.piece_detector = PieceDetection_CNN.PieceDetector("torch")
 
             case "yolo":
-                self.piece_detector = PieceDetection_YOLO.PieceDetector()
+                self.piece_detector = PieceDetection_YOLO.PieceDetector(
+                    "torch")
 
             case "cnn_onnx":
                 self.piece_detector = PieceDetection_CNN.PieceDetector("onnx")
@@ -61,4 +62,4 @@ class PieceDetector:
 
 
 # piece_detector = PieceDetector()
-piece_detector = PieceDetector("yolo")
+# piece_detector = PieceDetector("yolo")

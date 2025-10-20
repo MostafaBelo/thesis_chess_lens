@@ -196,31 +196,62 @@ class PieceCropper:
         grid_bottom[:, :, 0] = np.clip(grid_bottom[:, :, 0], 0, W-1)
         grid_bottom[:, :, 1] = np.clip(grid_bottom[:, :, 1], 0, H-1)
 
-        sq_size = (64, 64)
+        sq_size = (128, 64)
 
         res = torch.zeros(8, 8, sq_size[0], sq_size[1], 3)
 
         for r in range(8):
             for c in range(8):
                 mask = np.zeros(self.img.shape[1:], dtype=np.uint8)
-                points = np.concat(
-                    [grid_bottom[r:r+2, c:c+2], grid_top[r:r+2, c:c+2]], axis=0).astype(np.int32).reshape(-1, 1, 2)
-                hull = cv2.convexHull(points)
-                # cv2.fillPoly(mask, hull, 255)
-                cv2.fillConvexPoly(mask, hull, 255)
 
-                x, y, w, h = cv2.boundingRect(points)
-                roi = self.numpy_img[y:y+h, x:x+w]
-                roi_mask = mask[y:y+h, x:x+w]
+                square_top = grid_top[r:r+2, c:c+2]
+                square_bottom = grid_bottom[r:r+2, c:c+2]
+                crop_corners = torch.tensor([
+                    [square_top[:, :, 0].min(), square_top[:, :, 1].min()],
+                    [square_top[:, :, 0].max(), square_top[:, :, 1].min()],
+                    [square_bottom[:, :, 0].max(), square_bottom[:, :, 1].max()],
+                    [square_bottom[:, :, 0].min(), square_bottom[:, :, 1].max()],
+                ]).numpy().astype(np.float32)
 
-                # roi_masked = cv2.bitwise_and(roi, roi, mask=roi_mask)
-                roi_masked = np.zeros_like(roi)
-                roi_masked = np.where(roi_mask[..., None], roi, roi_masked)
+                dst_corners = np.array([
+                    [0, 0],
+                    [sq_size[1], 0],
+                    [sq_size[1], sq_size[0]],
+                    [0, sq_size[0]],
+                ], dtype=np.float32)
 
-                resized = cv2.resize(roi_masked, sq_size,
-                                     interpolation=cv2.INTER_AREA)
+                # if r == 5 and c == 2:
+                #     plt.imshow(self.numpy_img)
+                #     plt.scatter(square_top.reshape(-1, 2)
+                #                 [:, 0], square_top.reshape(-1, 2)[:, 1])
+                #     plt.scatter(square_bottom.reshape(-1, 2)
+                #                 [:, 0], square_bottom.reshape(-1, 2)[:, 1])
+                #     plt.scatter(crop_corners[:, 0], crop_corners[:, 1])
 
-                res[r, c] = torch.tensor(resized)
+                #     raise Exception("stop")
+
+                M_tmp = cv2.getPerspectiveTransform(crop_corners, dst_corners)
+                res[r, c] = torch.tensor(cv2.warpPerspective(
+                    self.numpy_img, M_tmp, (sq_size[1], sq_size[0])))
+
+                # points = np.concat(
+                #     [grid_bottom[r:r+2, c:c+2], grid_top[r:r+2, c:c+2]], axis=0).astype(np.int32).reshape(-1, 1, 2)
+                # hull = cv2.convexHull(points)
+                # # cv2.fillPoly(mask, hull, 255)
+                # cv2.fillConvexPoly(mask, hull, 255)
+
+                # x, y, w, h = cv2.boundingRect(points)
+                # roi = self.numpy_img[y:y+h, x:x+w]
+                # roi_mask = mask[y:y+h, x:x+w]
+
+                # # roi_masked = cv2.bitwise_and(roi, roi, mask=roi_mask)
+                # roi_masked = np.zeros_like(roi)
+                # roi_masked = np.where(roi_mask[..., None], roi, roi_masked)
+
+                # resized = cv2.resize(roi_masked, sq_size,
+                #                      interpolation=cv2.INTER_AREA)
+
+                # res[r, c] = torch.tensor(resized)
 
         res = res.permute(0, 1, 4, 2, 3).to(torch.float32) / 255
         return res

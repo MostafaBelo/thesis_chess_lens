@@ -3,7 +3,11 @@ import numpy as np
 
 import chess
 import chess.svg
-# import cairosvg
+
+import os
+
+if "svg" in os.environ and os.environ["svg"] == "TRUE":
+    import cairosvg
 
 
 class ChessTensorUtils():
@@ -102,4 +106,5 @@ def fen_to_png(fen: str, folder_path: str, file_name: str):
     f.write(boardsvg)
     f.close()
     png_file_path = f"{folder_path}/{file_name}"
-    # cairosvg.svg2png(url=svg_file_path, write_to=png_file_path, scale=7)
+    if "svg" in os.environ and os.environ["svg"] == "TRUE":
+        cairosvg.svg2png(url=svg_file_path, write_to=png_file_path, scale=7)

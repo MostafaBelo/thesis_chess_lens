@@ -14,6 +14,7 @@ class PieceDetector:
                                        "yolo_onnx", "yolo_onnx_dynamic", "yolo_onnx_static"] = "yolo"):
         self.img = None
         self.corners = None
+        self.res = None
 
         match method:
             case "cnn":
@@ -58,8 +59,20 @@ class PieceDetector:
         self.piece_detector.preprocess()
 
     def predict(self):
-        return self.piece_detector.predict()
+        self.res = self.piece_detector.predict()
+        return self.res
 
+    def guess_orientation(self):
+        if self.res is None:
+            raise Exception("Pieces not recognized")
+
+        return None
+
+
+# def upper_prob(piece_matrix: torch.Tensor):
+#     piece_matrix = piece_matrix.clone().detach()
+#     if len(piece_matrix.shape) == 4:  # cnn
+#         piece_matrix[]
 
 # piece_detector = PieceDetector()
 # piece_detector = PieceDetector("yolo")

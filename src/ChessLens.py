@@ -33,6 +33,7 @@ class ChessLensImage:
         self.board_detection = None
         self.clock_time = None
         self.piece_matrix = None
+        self.orientation = None
         self.fen = None
 
     def is_img_loaded(self) -> bool:
@@ -64,6 +65,7 @@ class ChessLensImage:
         BoardDetection.board_extractor.set_img(self.img)
         self.board_detection, conf = BoardDetection.board_extractor.extract_board()
         self.board_detection = torch.tensor(self.board_detection)
+        return self.board_detection, conf
 
     def recognize_clock(self):
         if not self.is_img_loaded():
@@ -81,6 +83,7 @@ class ChessLensImage:
         self.piece_detector.set_img(self.img, self.board_detection)
         self.piece_detector.preprocess()
         self.piece_matrix = self.piece_detector.predict()
+        self.orientation = self.piece_detector.guess_orientation()
 
         # convert piece matrix to fen
         self.fen = ChessUtils.ChessTensorUtils().tensorToFEN_MAX(

@@ -2,6 +2,7 @@ import torch
 import numpy as np
 
 import chess
+import chess.pgn
 import chess.svg
 
 import os
@@ -95,6 +96,45 @@ class ChessTensorUtils():
     @staticmethod
     def randFEN(seed: int = -1) -> str:
         return ChessTensorUtils.tensorToFEN_MAX(ChessTensorUtils.randOneHot(seed))
+
+    @staticmethod
+    def fens_to_pgn(fen_list):
+        if not fen_list:
+            return ""
+        result = [fen_list[0]]
+        for item in fen_list[1:]:
+            if item != result[-1]:
+                result.append(item)
+
+        # Create a new game
+        game = chess.pgn.Game()
+
+        # Start from the first FEN
+        board = chess.Board(result[0] + " w KQkq - 0 1")
+        node = game
+
+        for next_fen in result[1:]:
+            # Compute the move that leads from current to next position
+            move = None
+            for candidate in board.legal_moves:
+                board.push(candidate)
+                if board.fen().split(' ', 1)[0] == next_fen:
+                    move = candidate
+                    board.pop()
+                    break
+                board.pop()
+
+            if move is None:
+                # raise ValueError(
+                print(
+                    f"Could not find a valid move to reach next FEN! - Current FEN: {board.fen()} - Next FEN: {next_fen}")
+                break
+
+            # Push the move to the game
+            node = node.add_variation(move)
+            board.push(move)
+
+        return game
 
 
 def fen_to_png(fen: str, folder_path: str, file_name: str):

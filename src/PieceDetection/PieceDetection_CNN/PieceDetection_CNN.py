@@ -32,7 +32,8 @@ class PieceDetectorCNNModel(nn.Module):
 
         self.latent_dim = 512
 
-        self.resnet = models.resnet18(pretrained=True)
+        # self.resnet = models.resnet18(pretrained=True)
+        self.resnet = models.resnet18(weights="ResNet18_Weights.DEFAULT")
         for param in self.resnet.parameters():
             param.requires_grad = False
         # Remove the last FC layer and avgpool

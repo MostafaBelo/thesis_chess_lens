@@ -1,3 +1,7 @@
+import os
+from dotenv import load_dotenv
+load_dotenv()  # noqa
+
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -23,17 +27,20 @@ dataset = GameDataset(
     }
 )
 
-img = ChessLens.ChessLensImage(piece_detector="yolo")
-hmm = ChessHMM.ChessHMM(20)
+algorithm = "cnn"
+img = ChessLens.ChessLensImage(piece_detector=algorithm)
+hmm = ChessHMM.ChessHMM(30)
 
 
 def prep_probs(piece_matrix: torch.Tensor):
-    # probs = piece_matrix
-    probs = torch.zeros(1, 13, 8, 8, dtype=torch.float32) + .1
+    probs = piece_matrix
 
-    i = torch.arange(8).unsqueeze(1).expand(8, 8)
-    j = torch.arange(8).unsqueeze(0).expand(8, 8)
-    probs[0, piece_matrix.squeeze().to(torch.int32), i, j] = .9
+    if algorithm == "yolo":
+        probs = torch.zeros(1, 13, 8, 8, dtype=torch.float32) + .1
+
+        i = torch.arange(8).unsqueeze(1).expand(8, 8)
+        j = torch.arange(8).unsqueeze(0).expand(8, 8)
+        probs[0, piece_matrix.squeeze().to(torch.int32), i, j] = .9
 
     return -np.log(torch.rot90(probs, k=-1, dims=(2, 3)).squeeze().permute(1, 2, 0).numpy()[::-1]+(1e-7))
 
@@ -85,7 +92,8 @@ fens = []
 for i in tqdm(range(history.shape[0])):
     fens.append(ChessUtils.ChessTensorUtils.tensorToFEN_MAX(
         history[[i], ::-1]))
-    ChessUtils.fen_to_png(fens[-1], "Game", f"game_{i}.png")
+    # ChessUtils.fen_to_png(fens[-1], "Game", f"game_{i}.png")
 
 with open("Game/game_out.txt", "w") as f:
-    f.write("\n".join(fens))
+    pgn = ChessUtils.ChessTensorUtils.fens_to_pgn(fens)
+    f.write(f"{'\n'.join(fens)}\n\n{pgn}")

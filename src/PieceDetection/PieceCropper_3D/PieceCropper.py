@@ -231,8 +231,29 @@ class PieceCropper:
                 #     raise Exception("stop")
 
                 M_tmp = cv2.getPerspectiveTransform(crop_corners, dst_corners)
+                # tmp_img = np.ascontiguousarray(self.numpy_img.copy())
+                # for x, y in square_bottom.reshape(-1, 2):
+                #     tmp_img = cv2.circle(tmp_img, (int(x), int(y)),
+                #                          radius=6, color=(0, 0, 255), thickness=-1)
+                # for x, y in square_top.reshape(-1, 2):
+                #     tmp_img = cv2.circle(tmp_img, (int(x), int(y)),
+                #                          radius=6, color=(255, 0, 0), thickness=-1)
                 res[r, c] = torch.tensor(cv2.warpPerspective(
                     self.numpy_img, M_tmp, (sq_size[1], sq_size[0])))
+                # warped_corners = cv2.perspectiveTransform(np.concat(
+                #     [square_bottom.reshape(-1, 2), square_top.reshape(-1, 2)], axis=0).reshape(-1, 1, 2), M_tmp).reshape(-1, 2)
+                warped_corners = cv2.perspectiveTransform(
+                    square_bottom.reshape(-1, 1, 2), M_tmp).reshape(-1, 2)
+                for x, y in warped_corners:
+                    lower_y, upper_y = int(max(y-5, 0)), int(min(y+5, 128))
+                    lower_x, upper_x = int(max(x-5, 0)), int(min(x+5, 64))
+                    res[r, c, lower_y:upper_y, lower_x:upper_x,
+                        :] = torch.tensor([0, 0, 255])
+                # for x, y in warped_corners[4:]:
+                #     lower_y, upper_y = int(max(y-5, 0)), int(min(y+5, 128))
+                #     lower_x, upper_x = int(max(x-5, 0)), int(min(x+5, 64))
+                #     res[r, c, lower_y:upper_y, lower_x:upper_x,
+                #         :] = torch.tensor([255, 0, 0])
 
                 # points = np.concat(
                 #     [grid_bottom[r:r+2, c:c+2], grid_top[r:r+2, c:c+2]], axis=0).astype(np.int32).reshape(-1, 1, 2)

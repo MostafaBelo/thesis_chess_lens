@@ -227,6 +227,7 @@ class BoardExtractor:
         ], dtype=np.float32)
 
         M = cv2.getPerspectiveTransform(quad, dst)
-        warpped = cv2.warpPerspective(self.img.numpy(), M, img_size)
+        img_numpy = (self.img * 255).permute(1, 2, 0).numpy().astype(np.uint8)
+        warpped = cv2.warpPerspective(img_numpy, M, img_size)
 
         return warpped, M

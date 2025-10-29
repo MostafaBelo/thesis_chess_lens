@@ -67,6 +67,14 @@ class ChessLensImage:
         self.board_detection = torch.tensor(self.board_detection)
         return self.board_detection, conf
 
+    def warp(self):
+        if not self.is_board_detected():
+            raise Exception("Board not detected")
+
+        warpped_img, M = BoardDetection.board_extractor.warp(
+            self.board_detection.numpy())
+        return warpped_img, M
+
     def recognize_clock(self):
         if not self.is_img_loaded():
             raise Exception("No image loaded")

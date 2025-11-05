@@ -42,7 +42,10 @@ def prep_probs(piece_matrix: torch.Tensor):
         j = torch.arange(8).unsqueeze(0).expand(8, 8)
         probs[0, piece_matrix.squeeze().to(torch.int32), i, j] = .9
 
-    return -np.log(torch.rot90(probs, k=-1, dims=(2, 3)).squeeze().permute(1, 2, 0).numpy()[::-1]+(1e-7))
+    k = -1  # r
+    # k = 1  # l
+
+    return -np.log(torch.rot90(probs, k=k, dims=(2, 3)).squeeze().permute(1, 2, 0).numpy()[::-1]+(1e-7))
 
 
 print(f"Devices | Board Detection: {ChessLens.BoardDetection.Bounded_Saddle_Yolo.bd.model.device} | Piece Recognition (CNN): {"None" if ChessLens.PieceDetection.PieceDetection_CNN.piece_detection_model is None else next(ChessLens.PieceDetection.PieceDetection_CNN.piece_detection_model.parameters()).device} | Piece Recognition (YOLO): {"None" if ChessLens.PieceDetection.PieceDetection_YOLO.model is None else ChessLens.PieceDetection.PieceDetection_YOLO.model.device}")
@@ -53,6 +56,7 @@ avg_times = {
     "piece_recognition": 0,
     "HMM": 0
 }
+bind_period = 20
 for t in tqdm(range(len(dataset))):
     t1 = time.perf_counter()
     img.load_image(dataset[t][0])
@@ -64,8 +68,8 @@ for t in tqdm(range(len(dataset))):
 
     hmm.set_probs(t+1, prep_probs(img.piece_matrix))
 
-    if (t % 5 == 0 and t >= 5):
-        hmm.bind(t-4)
+    if (t % bind_period == 0 and t >= bind_period):
+        hmm.bind(t-bind_period+1)
     t5 = time.perf_counter()
 
     avg_times["load"] += t2-t1

@@ -185,6 +185,7 @@ class ChessDataset(Dataset):
             *([img_label_transforms] if img_label_transforms is not None else [])
         ])
 
+        self.dir_labels = []
         self.labels = []
 
         for root_dir in self.root_dirs:
@@ -209,6 +210,7 @@ class ChessDataset(Dataset):
                 except Exception as e:
                     print(labels[i])
                     raise e
+            self.dir_labels.append(labels)
             self.labels += labels
 
     def __len__(self):
@@ -253,19 +255,24 @@ class ChessDataset(Dataset):
 
     @staticmethod
     def train_valid_test_split(dataset: 'ChessDataset', sizes=(.8, .1, .1), random_state=42):
-        random.seed(random_state)
-        tmp_labels = dataset.labels
-        random.shuffle(tmp_labels)
-        train_size = sizes[0]
-        valid_size = sizes[1]
+        train_labels = []
+        valid_labels = []
+        test_labels = []
 
-        train_idx = int(len(tmp_labels) * train_size)
-        train_labels = tmp_labels[:train_idx]
+        for dir_labels in dataset.dir_labels:
+            random.seed(random_state)
+            tmp_labels = dir_labels
+            random.shuffle(tmp_labels)
+            train_size = sizes[0]
+            valid_size = sizes[1]
 
-        valid_idx = int(len(tmp_labels) * valid_size)
-        valid_labels = tmp_labels[train_idx:train_idx+valid_idx]
+            train_idx = int(len(tmp_labels) * train_size)
+            train_labels += tmp_labels[:train_idx]
 
-        test_labels = tmp_labels[train_idx+valid_idx:]
+            valid_idx = int(len(tmp_labels) * valid_size)
+            valid_labels += tmp_labels[train_idx:train_idx+valid_idx]
+
+            test_labels += tmp_labels[train_idx+valid_idx:]
 
         train_dataset = ChessDataset(
             config={

@@ -114,3 +114,10 @@ class ChessLensImage:
         self.detect_board()
         self.recognize_clock()
         self.recognize_pieces()
+
+
+class ChessLensGame:
+    def __init__(self, piece_detector: Literal["cnn", "yolo",
+                                               "cnn_onnx", "cnn_onnx_dynamic", "cnn_onnx_static"
+                                               "yolo_onnx", "yolo_onnx_dynamic", "yolo_onnx_static"] | None = None):
+        pass

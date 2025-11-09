@@ -10,7 +10,7 @@ from typing import Literal
 
 class PieceDetector:
     def __init__(self, method: Literal["cnn", "yolo",
-                                       "cnn_onnx", "cnn_onnx_dynamic", "cnn_onnx_static",
+                                       "cnn_onnx", "cnn_onnx_dynamic", "cnn_onnx_static", "cnn_prunned",
                                        "yolo_onnx", "yolo_onnx_dynamic", "yolo_onnx_static"] = "yolo"):
         self.img = None
         self.corners = None
@@ -34,6 +34,10 @@ class PieceDetector:
             case "cnn_onnx_static":
                 self.piece_detector = PieceDetection_CNN.PieceDetector(
                     "onnx_static")
+
+            case "cnn_prunned":
+                self.piece_detector = PieceDetection_CNN.PieceDetector(
+                    "prunned_torch")
 
             case "yolo_onnx":
                 self.piece_detector = PieceDetection_YOLO.PieceDetector("onnx")

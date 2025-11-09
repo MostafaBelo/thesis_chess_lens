@@ -259,6 +259,160 @@ class PieceDetectorCNNModelOnnx():
         return res
 
 
+class PrunnedPieceDetectorCNN(nn.Module):
+    def __init__(self, avg_embeds=None, pruned_config=None):
+        super().__init__()
+
+        self.avg_embeds = avg_embeds
+
+        # Use pruned dimensions if provided, otherwise defaults
+        if pruned_config is not None:
+            self.latent_dim = pruned_config.get('latent_dim', 512)
+            conv2_channels = pruned_config.get(
+                'conv2_channels', self.latent_dim)
+            occ_hidden = pruned_config.get('occupancy_hidden', 128)
+            color_hidden = pruned_config.get('color_hidden', 128)
+            type_hidden = pruned_config.get('type_hidden', 128)
+        else:
+            self.latent_dim = 512
+            conv2_channels = 512
+            occ_hidden = 128
+            color_hidden = 128
+            type_hidden = 128
+
+        # ResNet18 backbone (frozen except last 2 layers)
+        self.resnet = models.resnet18(weights="ResNet18_Weights.DEFAULT")
+        for param in self.resnet.parameters():
+            param.requires_grad = False
+        self.resnet = nn.Sequential(*list(self.resnet.children())[:-1])
+        for param in self.resnet[-2:].parameters():
+            param.requires_grad = True
+
+        dropporb = 0.2
+
+        # Conv1: Flatten + Linear + LeakyReLU
+        self.conv1 = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(512, self.latent_dim),
+            nn.LeakyReLU(),
+        )
+
+        # Conv2: two conv layers with dropout + LeakyReLU + AdaptiveAvgPool
+        self.conv2 = nn.Sequential(
+            nn.Conv2d(self.latent_dim, conv2_channels, 3, padding=1),
+            nn.LeakyReLU(),
+            nn.Dropout(dropporb),
+            nn.Conv2d(conv2_channels, conv2_channels, 3, padding=1),
+            nn.LeakyReLU(),
+            nn.Dropout(dropporb),
+            nn.AdaptiveAvgPool2d((8, 8))
+        )
+
+        self.classifier = nn.Sequential()
+
+        # Classifier heads
+        self.occupancy_classifier_heads = nn.Sequential(
+            nn.Linear(conv2_channels, occ_hidden),
+            nn.LeakyReLU(),
+            nn.Dropout(dropporb),
+            nn.Linear(occ_hidden, 1)
+        )
+        self.piece_color_classifier_heads = nn.Sequential(
+            nn.Linear(conv2_channels, color_hidden),
+            nn.LeakyReLU(),
+            nn.Dropout(dropporb),
+            nn.Linear(color_hidden, 1)
+        )
+        self.piece_type_classifier_heads = nn.Sequential(
+            nn.Linear(conv2_channels, type_hidden),
+            nn.LeakyReLU(),
+            nn.Dropout(dropporb),
+            nn.Linear(type_hidden, 6)
+        )
+
+        # Positional embeddings
+        self.pos_emb = nn.Parameter(torch.zeros(self.latent_dim, 8, 8))
+        self.sin_pos_emb = None
+
+    def sinusoidal_embeddings_2d(self, height=10, width=10):
+        """
+        Create 2D sinusoidal positional embeddings for an (H, W) grid.
+        """
+        d_model = self.latent_dim
+        if self.sin_pos_emb is not None and (tuple(self.sin_pos_emb.shape) == (d_model, height, width)):
+            return self.sin_pos_emb
+
+        if d_model % 4 != 0:
+            raise ValueError("d_model must be divisible by 4 for 2D sin/cos.")
+
+        y_pos = torch.arange(height, dtype=torch.float32).unsqueeze(1)
+        x_pos = torch.arange(width, dtype=torch.float32).unsqueeze(1)
+
+        d_model_half = d_model // 2
+        div_term = torch.exp(torch.arange(
+            0, d_model_half, 2).float() * (-math.log(10000.0) / d_model_half))
+
+        pe_y = torch.zeros(height, d_model_half)
+        pe_y[:, 0::2] = torch.sin(y_pos * div_term)
+        pe_y[:, 1::2] = torch.cos(y_pos * div_term)
+
+        pe_x = torch.zeros(width, d_model_half)
+        pe_x[:, 0::2] = torch.sin(x_pos * div_term)
+        pe_x[:, 1::2] = torch.cos(x_pos * div_term)
+
+        pe = torch.zeros(height, width, d_model)
+        for i in range(height):
+            for j in range(width):
+                pe[i, j] = torch.cat([pe_y[i], pe_x[j]], dim=0)
+
+        device = self.pos_emb.device
+        self.sin_pos_emb = pe.permute(2, 0, 1).to(device)
+        return self.sin_pos_emb
+
+    def forward(self, x: torch.Tensor):
+        B = x.shape[0]
+        C = x.shape[3]
+        sq_size = (x.shape[4], x.shape[5])
+        if C != 3:
+            raise Exception("Invalid Image")
+
+        embeds = self.conv1(self.resnet(x.reshape(-1, C, sq_size[0], sq_size[1]))).squeeze(
+            -1).squeeze(-1).reshape(B, 8, 8, self.latent_dim).permute(0, 3, 1, 2)
+
+        # sin_pos_emb = self.sinusoidal_embeddings_2d(8, 8)
+        positioned_embeds = embeds
+        attentioned_embeds = self.conv2(positioned_embeds)
+
+        final_channels = attentioned_embeds.shape[1]
+        attentioned_embeds = attentioned_embeds.permute(
+            0, 2, 3, 1).reshape(-1, final_channels)
+        attentioned_embeds = torch.nn.functional.normalize(attentioned_embeds)
+
+        if self.avg_embeds is None:
+            res = self.classifier(attentioned_embeds)
+            res_occupancy = self.occupancy_classifier_heads(
+                res).reshape(B, 8, 8)
+            res_piece_color = self.piece_color_classifier_heads(
+                res).reshape(B, 8, 8)
+            res_piece_type = self.piece_type_classifier_heads(
+                res).reshape(B, 8, 8, 6)
+        else:
+            res = (-10 * torch.cdist(attentioned_embeds,
+                   self.avg_embeds)).softmax(dim=1)
+            res_occupancy = (1 - res[:, 12]).reshape(B, 8, 8)
+            res_piece_color = (res[:, :6].sum(dim=1) /
+                               (1 - res[:, 12])).reshape(B, 8, 8)
+            res_piece_type = (
+                res[:, :12].reshape(-1, 2, 6).sum(dim=1) / (1 - res[:, [12]])).reshape(B, 8, 8, 6)
+
+        return {
+            "occupancy": res_occupancy,
+            "piece_color": res_piece_color,
+            "piece_type": res_piece_type,
+            "square_embedings": attentioned_embeds
+        }
+
+
 # piece_detection_model = PieceDetectorCNNModel()
 # piece_detection_model.load_state_dict(torch.load(
 #     os.path.join(os.environ['WEIGHTS'], "piece_cnn.pt"), map_location=device))
@@ -271,7 +425,7 @@ piece_detection_model = None
 
 
 class PieceDetector:
-    def __init__(self, model_type: Literal["torch", "onnx", "onnx_dynamic", "onnx_static"] = "torch"):
+    def __init__(self, model_type: Literal["torch", "onnx", "onnx_dynamic", "onnx_static", "prunned_torch"] = "torch"):
         self.img = None
         self.corners = None
 
@@ -282,7 +436,7 @@ class PieceDetector:
 
         self.load_model(model_type)
 
-    def load_model(self, model_type: Literal["torch", "onnx", "onnx_dynamic", "onnx_static"] = "torch"):
+    def load_model(self, model_type: Literal["torch", "onnx", "onnx_dynamic", "onnx_static", "prunned_torch"] = "torch"):
         global piece_detection_model
         if model_type == "torch":
             piece_detection_model = PieceDetectorCNNModel()
@@ -301,6 +455,15 @@ class PieceDetector:
         elif model_type == "onnx_static":
             piece_detection_model = PieceDetectorCNNModelOnnx(
                 os.path.join(os.environ['WEIGHTS'], "piece_cnn_quantized_static.onnx"))
+
+        elif model_type == "prunned_torch":
+            checkpoint = torch.load(os.path.join(
+                os.environ["WEIGHTS"], "piece_cnn_prunned.pth"))
+
+            piece_detection_model = PrunnedPieceDetectorCNN(
+                avg_embeds=checkpoint['avg_embeds'],
+                pruned_config=checkpoint['config']  # This is the key!
+            )
 
     def set_img(self, img: torch.Tensor, corners: torch.Tensor):
         self.img = img  # 3, H, W
@@ -336,7 +499,7 @@ class PieceDetector:
         self.board_split = PieceCropper.piece_cropper.process_img()
 
     def predict(self):
-        if isinstance(piece_detection_model, PieceDetectorCNNModel):
+        if isinstance(piece_detection_model, PieceDetectorCNNModel) or isinstance(piece_detection_model, PrunnedPieceDetectorCNN):
             piece_detection_model.eval()
         with torch.inference_mode():
             preds = piece_detection_model(

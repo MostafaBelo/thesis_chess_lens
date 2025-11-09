@@ -14,6 +14,7 @@ from tqdm import tqdm
 import os
 from Dataset.data import DataPath
 from Dataset.DataSetLoaders.ChessDataset import ChessDataset, GameDataset
+from WakeupDetection.WakeupModule import WakeupModule
 from HMM import ChessHMM
 from Utils import ChessUtils
 import ChessLens
@@ -30,6 +31,7 @@ dataset = GameDataset(
 algorithm = "cnn"
 img = ChessLens.ChessLensImage(piece_detector=algorithm)
 hmm = ChessHMM.ChessHMM(30)
+wakeup = WakeupModule()
 
 
 def prep_probs(piece_matrix: torch.Tensor):
@@ -42,8 +44,8 @@ def prep_probs(piece_matrix: torch.Tensor):
         j = torch.arange(8).unsqueeze(0).expand(8, 8)
         probs[0, piece_matrix.squeeze().to(torch.int32), i, j] = .9
 
-    k = -1  # r
-    # k = 1  # l
+    # k = -1  # r
+    k = 1  # l
 
     return -np.log(torch.rot90(probs, k=k, dims=(2, 3)).squeeze().permute(1, 2, 0).numpy()[::-1]+(1e-7))
 
@@ -57,11 +59,24 @@ avg_times = {
     "HMM": 0
 }
 bind_period = 20
+board_period = 20
+current_board = None
 for t in tqdm(range(len(dataset))):
     t1 = time.perf_counter()
     img.load_image(dataset[t][0])
     t2 = time.perf_counter()
-    img.detect_board()
+
+    if (current_board is None) or (t % board_period == 0):
+        img.detect_board()
+        current_board = img.board_detection
+
+    img.board_detection = current_board
+    img_np, _ = img.warp()
+    if not wakeup.is_wakeup(img_np):
+        continue
+
+    t = hmm.top_t()
+
     t3 = time.perf_counter()
     img.recognize_pieces()
     t4 = time.perf_counter()
@@ -77,7 +92,7 @@ for t in tqdm(range(len(dataset))):
     avg_times["piece_recognition"] += t4-t3
     avg_times["HMM"] += t5-t4
 
-hmm.bind(len(dataset))
+hmm.bind(hmm.top_t())
 
 history = hmm.get_history()
 

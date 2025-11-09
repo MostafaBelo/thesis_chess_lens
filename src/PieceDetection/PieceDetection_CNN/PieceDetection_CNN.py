@@ -16,6 +16,9 @@ from typing import Literal
 
 from PieceDetection.PieceCropper_3D import PieceCropper
 
+from dotenv import load_dotenv
+load_dotenv()
+
 if "device" in os.environ:
     device = os.environ["device"]
 else:

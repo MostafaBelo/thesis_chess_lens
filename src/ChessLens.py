@@ -9,6 +9,7 @@ from PIL import Image
 
 from BoardDetection import BoardDetection
 from PieceDetection import PieceDetection
+from ContextAwareModels.HMM import ChessHMM
 
 from Utils import ChessUtils
 
@@ -119,5 +120,110 @@ class ChessLensImage:
 class ChessLensGame:
     def __init__(self, piece_detector: Literal["cnn", "yolo",
                                                "cnn_onnx", "cnn_onnx_dynamic", "cnn_onnx_static"
-                                               "yolo_onnx", "yolo_onnx_dynamic", "yolo_onnx_static"] | None = None):
+                                               "yolo_onnx", "yolo_onnx_dynamic", "yolo_onnx_static"] | None = None, config=None):
+
+        if (config is not None) and ("bd_period" in config):
+            self.bd_period = config["bd_period"]
+        else:
+            self.bd_period = 1
+
+        if (config is not None) and ("is_detect_occlusion" in config):
+            self.is_detect_occlusion = config["is_detect_occlusion"]
+        else:
+            self.is_detect_occlusion = True
+
+        if (config is not None) and ("is_detect_wakeup" in config):
+            self.is_detect_wakeup = config["is_detect_wakeup"]
+        else:
+            self.is_detect_wakeup = True
+
+        if (config is not None) and ("context_bredth" in config):
+            self.context_bredth = config["context_bredth"]
+        else:
+            self.context_bredth = 30
+
+        if (config is not None) and ("context_bind_period" in config):
+            self.context_bind_period = config["context_bind_period"]
+        else:
+            self.context_bind_period = 20
+
+        self.current_img = ChessLensImage(piece_detector=piece_detector)
+        self.clear()
+        self.piece_detector = piece_detector
+
+    def clear(self):
+        self.board_detection = None
+        self.orientation = None
+
+        self.context_model = ChessHMM(
+            self.context_bredth, self.context_bind_period)
+        self.pgn = None
+
+        self.t = 0
+
+    def set_img(self, img: str | torch.Tensor | np.ndarray):
+        self.current_img.load_image(img)
+        img = self.current_img
+        self.process_img()
+        self.t += 1
+
+    def calc_orientation(self):
+        self.orientation = "r"
+
+    def detect_occlusion(self) -> bool:
         pass
+
+    def detect_wakeup(self) -> bool:
+        pass
+
+    def prep_probs(self) -> np.ndarray:
+        probs = self.current_img.piece_matrix
+
+        if "yolo" in self.piece_detector:
+            probs = torch.zeros(1, 13, 8, 8, dtype=torch.float32) + .1
+
+            i = torch.arange(8).unsqueeze(1).expand(8, 8)
+            j = torch.arange(8).unsqueeze(0).expand(8, 8)
+            probs[0, self.current_img.piece_matrix.squeeze().to(
+                torch.int32), i, j] = .9
+
+        if self.orientation == "r":
+            k = -1  # r
+        elif self.orientation == "l":
+            k = 1  # l
+        elif self.orientation == "t":
+            k = 2
+        elif self.orientation == "b":
+            k = 0
+        else:
+            raise Exception("Invalid Orientation")
+
+        return -np.log(torch.rot90(probs, k=k, dims=(2, 3)).squeeze().permute(1, 2, 0).numpy()[::-1]+(1e-7))
+
+    def process_img(self):
+        img = self.current_img
+
+        # Board Detection
+        if self.t % self.bd_period == 0:
+            img.detect_board()
+            self.board_detection = img.board_detection
+        img.board_detection = self.board_detection
+
+        # Occlusion Detection
+        if self.is_detect_occlusion:
+            is_occluded = self.detect_occlusion()
+            if is_occluded:
+                return
+
+        # Wakup Detection
+        if self.is_detect_wakeup:
+            is_wakeup = self.detect_wakeup()
+            if not is_wakeup:
+                return
+
+        # Frame Processing
+        img.recognize_pieces()
+
+        # Context Awareness
+        self.context_model.set_probs(
+            self.t+1, self.prep_probs(img.piece_matrix))

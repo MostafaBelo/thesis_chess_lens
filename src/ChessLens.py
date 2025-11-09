@@ -15,6 +15,8 @@ from Utils import ChessUtils
 
 from typing import Literal
 
+import time
+
 
 class ChessLensImage:
     def __init__(self, img: str | torch.Tensor | np.ndarray | None = None, piece_detector: Literal["cnn", "yolo",
@@ -82,7 +84,7 @@ class ChessLensImage:
 
         # run clock recognition
 
-    def recognize_pieces(self):
+    def recognize_pieces(self, verbose=False):
         if not self.is_img_loaded():
             raise Exception("No image loaded")
 
@@ -90,8 +92,22 @@ class ChessLensImage:
             raise Exception("No board detected")
 
         self.piece_detector.set_img(self.img, self.board_detection)
+
+        if verbose:
+            start_time = time.perf_counter()
         self.piece_detector.preprocess()
+        if verbose:
+            end_time = time.perf_counter()
+            print(
+                f"Piece Recognition - Preprocessing {(end_time-start_time)*1e3:.6f} ms")
+
+        if verbose:
+            start_time = time.perf_counter()
         self.piece_matrix = self.piece_detector.predict()
+        if verbose:
+            end_time = time.perf_counter()
+            print(
+                f"Piece Recognition - Processing {(end_time-start_time)*1e3:.6f} ms")
         self.orientation = self.piece_detector.guess_orientation()
 
         # convert piece matrix to fen

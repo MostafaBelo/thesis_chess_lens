@@ -34,7 +34,7 @@ print(f"Board Detection: {(end_time-start_time)*1e3:.6f} ms")
 # img.recognize_clock()
 
 start_time = time.perf_counter()
-img.recognize_pieces()
+img.recognize_pieces(verbose=True)
 end_time = time.perf_counter()
 print(f"Piece Recognition: {(end_time-start_time)*1e3:.6f} ms")
 

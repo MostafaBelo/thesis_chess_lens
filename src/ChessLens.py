@@ -161,7 +161,7 @@ class ChessLensGame:
         if (config is not None) and ("context_bind_period" in config):
             self.context_bind_period = config["context_bind_period"]
         else:
-            self.context_bind_period = 20
+            self.context_bind_period = 5
 
         self.current_img = ChessLensImage(piece_detector=piece_detector)
         self.clear()
@@ -184,16 +184,33 @@ class ChessLensGame:
         self.t += 1
 
     def calc_orientation(self):
-        self.orientation = "r"
+        piece_matrix = self.current_img.piece_matrix.clone().detach().squeeze()
+
+        if not ("yolo" in self.piece_detector):
+            piece_matrix = piece_matrix.argmax(dim=0)
+
+        whites = (piece_matrix < 6).float()
+
+        correct_r: int = (whites[:, 4:]).sum().item() - \
+            (whites[:, :4]).sum().item()
+        correct_l: int = -correct_r
+
+        correct_t: int = (whites[:4, :]).sum().item() - \
+            (whites[4:, :]).sum().item()
+        correct_b: int = -correct_t
+
+        vals = [correct_r, correct_l, correct_t, correct_b]
+        orientations = ["r", "l", "t", "b"]
+        self.orientation = orientations[vals.index(max(vals))]
 
     def detect_occlusion(self) -> bool:
-        pass
+        return False
 
     def detect_wakeup(self) -> bool:
-        pass
+        return True
 
-    def prep_probs(self) -> np.ndarray:
-        probs = self.current_img.piece_matrix
+    def prep_probs(self, probs) -> np.ndarray:
+        # probs = self.current_img.piece_matrix
 
         if "yolo" in self.piece_detector:
             probs = torch.zeros(1, 13, 8, 8, dtype=torch.float32) + .1
@@ -240,6 +257,16 @@ class ChessLensGame:
         # Frame Processing
         img.recognize_pieces()
 
+        # Orientation
+        if self.orientation is None:
+            self.calc_orientation()
+
         # Context Awareness
         self.context_model.set_probs(
             self.t+1, self.prep_probs(img.piece_matrix))
+
+    def bind(self):
+        self.context_model.bind()
+
+    def get_history(self):
+        return self.context_model.get_history()

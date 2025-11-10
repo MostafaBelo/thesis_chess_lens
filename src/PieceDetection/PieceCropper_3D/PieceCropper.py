@@ -3,6 +3,15 @@ import numpy as np
 import torch
 import cv2
 
+from PieceDetection.PieceCropper_3D import PieceCropperCPP
+
+import time
+
+xs = np.linspace(0, 256, 9)
+ys = np.linspace(0, 256, 9)
+X, Y = np.meshgrid(xs, ys)
+grid_original = np.stack([X, Y], axis=2)
+
 
 def extrinsics_from_planar_points(image_pts, K, L=1.0):
     """
@@ -170,10 +179,10 @@ class PieceCropper:
             corners.numpy().astype(np.float32), dst_pts)
 
     def process_img(self, original_img_size=None):
-        xs = np.linspace(0, 256, 9)
-        ys = np.linspace(0, 256, 9)
-        X, Y = np.meshgrid(xs, ys)
-        grid = np.stack([X, Y], axis=2)
+        global grid_original
+        # start_time = time.perf_counter()
+
+        grid = grid_original.copy()
 
         if original_img_size is None:
             K, R, self.cam_pitch = CameraMapper.get_K_R(
@@ -198,83 +207,95 @@ class PieceCropper:
 
         sq_size = (128, 64)
 
-        res = torch.zeros(8, 8, sq_size[0], sq_size[1], 3)
+        # end_time = time.perf_counter()
+        # print(f"Preprocessing Step 1: {(end_time-start_time)*1e3:.6f} ms")
 
-        for r in range(8):
-            for c in range(8):
-                mask = np.zeros(self.img.shape[1:], dtype=np.uint8)
+        # start_time = time.perf_counter()
 
-                square_top = grid_top[r:r+2, c:c+2]
-                square_bottom = grid_bottom[r:r+2, c:c+2]
-                crop_corners = torch.tensor([
-                    [square_top[:, :, 0].min(), square_top[:, :, 1].min()],
-                    [square_top[:, :, 0].max(), square_top[:, :, 1].min()],
-                    [square_bottom[:, :, 0].max(), square_bottom[:, :, 1].max()],
-                    [square_bottom[:, :, 0].min(), square_bottom[:, :, 1].max()],
-                ]).numpy().astype(np.float32)
+        res = np.zeros((8, 8, sq_size[0], sq_size[1], 3), dtype=np.uint8)
+        PieceCropperCPP.extract_warped_squares(
+            grid_top, grid_bottom, self.numpy_img.copy(), res)
+        res = torch.tensor(res).permute(0, 1, 4, 2, 3).to(torch.float32) / 255
 
-                dst_corners = np.array([
-                    [0, 0],
-                    [sq_size[1], 0],
-                    [sq_size[1], sq_size[0]],
-                    [0, sq_size[0]],
-                ], dtype=np.float32)
+        # res = torch.zeros(8, 8, sq_size[0], sq_size[1], 3)
+        # for r in range(8):
+        #     for c in range(8):
+        #         # mask = np.zeros(self.img.shape[1:], dtype=np.uint8)
 
-                # if r == 5 and c == 2:
-                #     plt.imshow(self.numpy_img)
-                #     plt.scatter(square_top.reshape(-1, 2)
-                #                 [:, 0], square_top.reshape(-1, 2)[:, 1])
-                #     plt.scatter(square_bottom.reshape(-1, 2)
-                #                 [:, 0], square_bottom.reshape(-1, 2)[:, 1])
-                #     plt.scatter(crop_corners[:, 0], crop_corners[:, 1])
+        #         square_top = grid_top[r:r+2, c:c+2]
+        #         square_bottom = grid_bottom[r:r+2, c:c+2]
+        #         crop_corners = torch.tensor([
+        #             [square_top[:, :, 0].min(), square_top[:, :, 1].min()],
+        #             [square_top[:, :, 0].max(), square_top[:, :, 1].min()],
+        #             [square_bottom[:, :, 0].max(), square_bottom[:, :, 1].max()],
+        #             [square_bottom[:, :, 0].min(), square_bottom[:, :, 1].max()],
+        #         ]).numpy().astype(np.float32)
 
-                #     raise Exception("stop")
+        #         dst_corners = np.array([
+        #             [0, 0],
+        #             [sq_size[1], 0],
+        #             [sq_size[1], sq_size[0]],
+        #             [0, sq_size[0]],
+        #         ], dtype=np.float32)
 
-                M_tmp = cv2.getPerspectiveTransform(crop_corners, dst_corners)
-                # tmp_img = np.ascontiguousarray(self.numpy_img.copy())
-                # for x, y in square_bottom.reshape(-1, 2):
-                #     tmp_img = cv2.circle(tmp_img, (int(x), int(y)),
-                #                          radius=6, color=(0, 0, 255), thickness=-1)
-                # for x, y in square_top.reshape(-1, 2):
-                #     tmp_img = cv2.circle(tmp_img, (int(x), int(y)),
-                #                          radius=6, color=(255, 0, 0), thickness=-1)
-                res[r, c] = torch.tensor(cv2.warpPerspective(
-                    self.numpy_img, M_tmp, (sq_size[1], sq_size[0])))
-                # warped_corners = cv2.perspectiveTransform(np.concat(
-                #     [square_bottom.reshape(-1, 2), square_top.reshape(-1, 2)], axis=0).reshape(-1, 1, 2), M_tmp).reshape(-1, 2)
-                warped_corners = cv2.perspectiveTransform(
-                    square_bottom.reshape(-1, 1, 2), M_tmp).reshape(-1, 2)
-                for x, y in warped_corners:
-                    lower_y, upper_y = int(max(y-5, 0)), int(min(y+5, 128))
-                    lower_x, upper_x = int(max(x-5, 0)), int(min(x+5, 64))
-                    res[r, c, lower_y:upper_y, lower_x:upper_x,
-                        :] = torch.tensor([0, 0, 255])
-                # for x, y in warped_corners[4:]:
-                #     lower_y, upper_y = int(max(y-5, 0)), int(min(y+5, 128))
-                #     lower_x, upper_x = int(max(x-5, 0)), int(min(x+5, 64))
-                #     res[r, c, lower_y:upper_y, lower_x:upper_x,
-                #         :] = torch.tensor([255, 0, 0])
+        #         # if r == 5 and c == 2:
+        #         #     plt.imshow(self.numpy_img)
+        #         #     plt.scatter(square_top.reshape(-1, 2)
+        #         #                 [:, 0], square_top.reshape(-1, 2)[:, 1])
+        #         #     plt.scatter(square_bottom.reshape(-1, 2)
+        #         #                 [:, 0], square_bottom.reshape(-1, 2)[:, 1])
+        #         #     plt.scatter(crop_corners[:, 0], crop_corners[:, 1])
 
-                # points = np.concat(
-                #     [grid_bottom[r:r+2, c:c+2], grid_top[r:r+2, c:c+2]], axis=0).astype(np.int32).reshape(-1, 1, 2)
-                # hull = cv2.convexHull(points)
-                # # cv2.fillPoly(mask, hull, 255)
-                # cv2.fillConvexPoly(mask, hull, 255)
+        #         #     raise Exception("stop")
 
-                # x, y, w, h = cv2.boundingRect(points)
-                # roi = self.numpy_img[y:y+h, x:x+w]
-                # roi_mask = mask[y:y+h, x:x+w]
+        #         M_tmp = cv2.getPerspectiveTransform(crop_corners, dst_corners)
+        #         # tmp_img = np.ascontiguousarray(self.numpy_img.copy())
+        #         # for x, y in square_bottom.reshape(-1, 2):
+        #         #     tmp_img = cv2.circle(tmp_img, (int(x), int(y)),
+        #         #                          radius=6, color=(0, 0, 255), thickness=-1)
+        #         # for x, y in square_top.reshape(-1, 2):
+        #         #     tmp_img = cv2.circle(tmp_img, (int(x), int(y)),
+        #         #                          radius=6, color=(255, 0, 0), thickness=-1)
+        #         res[r, c] = torch.tensor(cv2.warpPerspective(
+        #             self.numpy_img, M_tmp, (sq_size[1], sq_size[0])))
+        #         # warped_corners = cv2.perspectiveTransform(np.concat(
+        #         #     [square_bottom.reshape(-1, 2), square_top.reshape(-1, 2)], axis=0).reshape(-1, 1, 2), M_tmp).reshape(-1, 2)
+        #         warped_corners = cv2.perspectiveTransform(
+        #             square_bottom.reshape(-1, 1, 2), M_tmp).reshape(-1, 2)
+        #         for x, y in warped_corners:
+        #             lower_y, upper_y = int(max(y-5, 0)), int(min(y+5, 128))
+        #             lower_x, upper_x = int(max(x-5, 0)), int(min(x+5, 64))
+        #             res[r, c, lower_y:upper_y, lower_x:upper_x,
+        #                 :] = torch.tensor([0, 0, 255])
+        #         # for x, y in warped_corners[4:]:
+        #         #     lower_y, upper_y = int(max(y-5, 0)), int(min(y+5, 128))
+        #         #     lower_x, upper_x = int(max(x-5, 0)), int(min(x+5, 64))
+        #         #     res[r, c, lower_y:upper_y, lower_x:upper_x,
+        #         #         :] = torch.tensor([255, 0, 0])
 
-                # # roi_masked = cv2.bitwise_and(roi, roi, mask=roi_mask)
-                # roi_masked = np.zeros_like(roi)
-                # roi_masked = np.where(roi_mask[..., None], roi, roi_masked)
+        #         # points = np.concat(
+        #         #     [grid_bottom[r:r+2, c:c+2], grid_top[r:r+2, c:c+2]], axis=0).astype(np.int32).reshape(-1, 1, 2)
+        #         # hull = cv2.convexHull(points)
+        #         # # cv2.fillPoly(mask, hull, 255)
+        #         # cv2.fillConvexPoly(mask, hull, 255)
 
-                # resized = cv2.resize(roi_masked, sq_size,
-                #                      interpolation=cv2.INTER_AREA)
+        #         # x, y, w, h = cv2.boundingRect(points)
+        #         # roi = self.numpy_img[y:y+h, x:x+w]
+        #         # roi_mask = mask[y:y+h, x:x+w]
 
-                # res[r, c] = torch.tensor(resized)
+        #         # # roi_masked = cv2.bitwise_and(roi, roi, mask=roi_mask)
+        #         # roi_masked = np.zeros_like(roi)
+        #         # roi_masked = np.where(roi_mask[..., None], roi, roi_masked)
 
-        res = res.permute(0, 1, 4, 2, 3).to(torch.float32) / 255
+        #         # resized = cv2.resize(roi_masked, sq_size,
+        #         #                      interpolation=cv2.INTER_AREA)
+
+        #         # res[r, c] = torch.tensor(resized)
+        # res = res.permute(0, 1, 4, 2, 3).to(torch.float32) / 255
+
+        # end_time = time.perf_counter()
+        # print(f"Preprocessing Step 2: {(end_time-start_time)*1e3:.6f} ms")
+
         return res
 
 

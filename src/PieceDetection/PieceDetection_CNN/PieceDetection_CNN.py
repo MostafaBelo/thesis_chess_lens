@@ -234,6 +234,7 @@ class PieceDetectorCNNModelOnnx():
     def __init__(self, model_path: str):
         self.session = ort.InferenceSession(
             model_path,
+            providers=["OpenVINOExecutionProvider"]
         )
 
         self.input_name = self.session.get_inputs()[0].name

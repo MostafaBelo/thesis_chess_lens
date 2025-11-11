@@ -141,7 +141,7 @@ class ChessLensGame:
         if (config is not None) and ("bd_period" in config):
             self.bd_period = config["bd_period"]
         else:
-            self.bd_period = 1
+            self.bd_period = 20
 
         if (config is not None) and ("is_detect_occlusion" in config):
             self.is_detect_occlusion = config["is_detect_occlusion"]
@@ -161,11 +161,18 @@ class ChessLensGame:
         if (config is not None) and ("context_bind_period" in config):
             self.context_bind_period = config["context_bind_period"]
         else:
-            self.context_bind_period = 5
+            self.context_bind_period = 20
 
         self.current_img = ChessLensImage(piece_detector=piece_detector)
         self.clear()
         self.piece_detector = piece_detector
+
+        self.avg_times = {
+            "load": 0,
+            "board_detection": 0,
+            "piece_recognition": 0,
+            "HMM": 0
+        }
 
     def clear(self):
         self.board_detection = None
@@ -178,10 +185,14 @@ class ChessLensGame:
         self.t = 0
 
     def set_img(self, img: str | torch.Tensor | np.ndarray):
+        t1 = time.perf_counter()
         self.current_img.load_image(img)
         img = self.current_img
         self.process_img()
         self.t += 1
+        t2 = time.perf_counter()
+
+        self.avg_times["load"] += t2-t1
 
     def calc_orientation(self):
         piece_matrix = self.current_img.piece_matrix.clone().detach().squeeze()
@@ -234,6 +245,7 @@ class ChessLensGame:
         return -np.log(torch.rot90(probs, k=k, dims=(2, 3)).squeeze().permute(1, 2, 0).numpy()[::-1]+(1e-7))
 
     def process_img(self):
+        t2 = time.perf_counter()
         img = self.current_img
 
         # Board Detection
@@ -253,6 +265,7 @@ class ChessLensGame:
             is_wakeup = self.detect_wakeup()
             if not is_wakeup:
                 return
+        t3 = time.perf_counter()
 
         # Frame Processing
         img.recognize_pieces()
@@ -260,10 +273,16 @@ class ChessLensGame:
         # Orientation
         if self.orientation is None:
             self.calc_orientation()
+        t4 = time.perf_counter()
 
         # Context Awareness
         self.context_model.set_probs(
             self.t+1, self.prep_probs(img.piece_matrix))
+        t5 = time.perf_counter()
+
+        self.avg_times["board_detection"] += t3-t2
+        self.avg_times["piece_recognition"] += t4-t3
+        self.avg_times["HMM"] += t5-t4
 
     def bind(self):
         self.context_model.bind()

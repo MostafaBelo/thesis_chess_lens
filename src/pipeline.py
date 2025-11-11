@@ -34,7 +34,7 @@ end_time = time.perf_counter()
 print(f"Image Loading: {(end_time-start_time)*1e3:.6f} ms")
 
 start_time = time.perf_counter()
-img.detect_board()
+img.detect_board(True)
 end_time = time.perf_counter()
 print(f"Board Detection: {(end_time-start_time)*1e3:.6f} ms")
 

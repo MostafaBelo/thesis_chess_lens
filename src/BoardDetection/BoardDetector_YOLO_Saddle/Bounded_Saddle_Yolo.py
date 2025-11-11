@@ -8,7 +8,7 @@ import cv2
 import torch
 from torchvision import transforms
 
-# import time
+import time
 
 bd = BoardDetector_YOLO()
 transform = transforms.Compose([
@@ -190,10 +190,12 @@ class BoardExtractor:
 
         return intersection.sum() / union.sum()
 
-    def extract_board(self):
+    def extract_board(self, verbose=False):
         # start = time.time()
 
+        t1 = time.perf_counter()
         mask, conf = self._detect_board_img()
+        t2 = time.perf_counter()
         mask = self._remove_small_components(mask)
 
         if len(self.img_gray.shape) != 2 or len(mask.shape) != 2 or self.img_gray.shape[0] != mask.shape[0] or self.img_gray.shape[1] != mask.shape[1]:
@@ -213,6 +215,12 @@ class BoardExtractor:
         iou = self._iou(quad_ordered, mask)
         # print(conf, iou)
         conf *= iou
+
+        t3 = time.perf_counter()
+
+        if (verbose):
+            print(f"Board Detection YOLO - {(t2-t1)*1e3:.6f} ms")
+            print(f"Board Detection Postprocessing - {(t3-t2)*1e3:.6f} ms")
 
         return quad_ordered, conf
 

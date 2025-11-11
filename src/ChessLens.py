@@ -59,14 +59,15 @@ class ChessLensImage:
 
         self.img = img
 
-    def detect_board(self):
+    def detect_board(self, verbose=False):
         if not self.is_img_loaded():
             raise Exception("No image loaded")
 
         # run board detection
 
         BoardDetection.board_extractor.set_img(self.img)
-        self.board_detection, conf = BoardDetection.board_extractor.extract_board()
+        self.board_detection, conf = BoardDetection.board_extractor.extract_board(
+            verbose)
         self.board_detection = torch.tensor(self.board_detection)
         return self.board_detection, conf
 

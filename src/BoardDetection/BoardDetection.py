@@ -246,9 +246,9 @@ class BoardExtractor:
     def set_img(self, img: torch.Tensor):
         self.img = img
 
-    def extract_board(self):
+    def extract_board(self, verbose=False):
         bd.set_img(self.img)
-        return bd.extract_board()
+        return bd.extract_board(verbose)
 
     def warp(self, quad, padding=(0, 0)):
         return bd.warp(quad)

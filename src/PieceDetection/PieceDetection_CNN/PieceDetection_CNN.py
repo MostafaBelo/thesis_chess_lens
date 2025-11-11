@@ -11,6 +11,7 @@ import onnx
 import onnxruntime as ort
 
 import os
+import sys
 
 from typing import Literal
 
@@ -457,13 +458,17 @@ class PieceDetector:
                 os.path.join(os.environ['WEIGHTS'], "piece_cnn_quantized_static.onnx"))
 
         elif model_type == "prunned_torch":
-            checkpoint = torch.load(os.path.join(
-                os.environ["WEIGHTS"], "piece_cnn_prunned.pth"))
+            # checkpoint = torch.load(os.path.join(
+            #     os.environ["WEIGHTS"], "piece_cnn_prunned.pth"))
 
-            piece_detection_model = PrunnedPieceDetectorCNN(
-                avg_embeds=checkpoint['avg_embeds'],
-                pruned_config=checkpoint['config']  # This is the key!
-            )
+            # piece_detection_model = PrunnedPieceDetectorCNN(
+            #     avg_embeds=checkpoint['avg_embeds'],
+            #     pruned_config=checkpoint['config']  # This is the key!
+            # )
+
+            sys.modules['__main__'].PieceDetectorCNNModel = PieceDetectorCNNModel
+            piece_detection_model = torch.load(os.path.join(
+                os.environ["WEIGHTS"], "piece_cnn_prunned_model.pth"), weights_only=False)
 
     def set_img(self, img: torch.Tensor, corners: torch.Tensor):
         self.img = img  # 3, H, W

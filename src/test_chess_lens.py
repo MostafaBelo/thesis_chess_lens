@@ -17,7 +17,7 @@ dataset = GameDataset(
     }
 )
 
-algorithm = "cnn"
+algorithm = "cnn_onnx_static"
 game = ChessLens.ChessLensGame(algorithm)
 frame_times = []
 for t in tqdm(range(len(dataset))):

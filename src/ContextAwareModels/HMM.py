@@ -2,10 +2,11 @@ from HMM import ChessHMM as context_model
 
 
 class ChessHMM:
-    def __init__(self, bredth=30, bind_period=20):
+    def __init__(self, bredth=30, delay=120, bind_period=20):
         self.model = context_model.ChessHMM(bredth)
         self.bredth = bredth
         self.bind_period = bind_period
+        self.delay = delay
 
     def bind(self):
         self.model.bind(self.model.top_t())
@@ -13,8 +14,8 @@ class ChessHMM:
     def set_probs(self, timestep, piece_matrix):
         self.model.set_probs(timestep, piece_matrix)
 
-        if (((self.model.top_t() % self.bind_period) == 0) and (self.model.top_t() >= self.bind_period) and (self.model.top_t()-self.bind_period+1 > self.model.top_bind_t())):
-            self.model.bind(self.model.top_t()-self.bind_period+1)
+        if (((self.model.top_t() % self.bind_period) == 0) and (self.model.top_t() >= self.bind_period+self.delay) and (self.model.top_t()-self.delay-self.bind_period+1 > self.model.top_bind_t())):
+            self.model.bind(self.model.top_t()-self.delay+1)
 
     def print(self, timestep: int) -> str:
         return self.model.print(timestep)

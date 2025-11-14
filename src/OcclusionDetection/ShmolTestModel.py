@@ -1,24 +1,36 @@
-import torch, cv2
+import torch
+import cv2
 import torch.nn as nn
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 
-IMG_PATH = "7ot makan el soora hena"
-MODEL_PATH = "shoof enta 7atet el best_tiny_occlusion_cnn.pt fein we7ot el path hena"
+import ChessLens
+
+# IMG_PATH = "/mnt/D/University/Thesis_Dataset/Temp/video_2/video_14/testpic_55.jpg"
+IMG_PATH = "/mnt/D/University/Thesis_Dataset/Temp/video_2/video_14/testpic_27.jpg"
+MODEL_PATH = "/mnt/D/University/Thesis_Dataset/weights/occlusion_cnn.pt"
+
+img = ChessLens.ChessLensImage(IMG_PATH)
+img.detect_board()
+warped, _ = img.warp()
+cv2.imwrite("tmp.jpg", warped[:, :, ::-1])
+
+IMG_PATH = "tmp.jpg"
 
 
 class TinyOcclusionCNN(nn.Module):
     def __init__(self):
         super().__init__()
         self.net = nn.Sequential(
-            nn.Conv2d(3,16,3,padding=1), nn.ReLU(), nn.MaxPool2d(2),
-            nn.Conv2d(16,32,3,padding=1), nn.ReLU(), nn.MaxPool2d(2),
-            nn.Conv2d(32,64,3,padding=1), nn.ReLU(),
+            nn.Conv2d(3, 16, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
+            nn.Conv2d(16, 32, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
+            nn.Conv2d(32, 64, 3, padding=1), nn.ReLU(),
             nn.AdaptiveAvgPool2d(1),
             nn.Flatten(),
-            nn.Linear(64,2)
+            nn.Linear(64, 2)
         )
-    def forward(self,x): return self.net(x)
+
+    def forward(self, x): return self.net(x)
 
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"

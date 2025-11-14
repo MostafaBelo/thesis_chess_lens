@@ -11,8 +11,10 @@ HMMState::HMMState(ChessGameState* position) : parent(nullptr) {
     HMMState::observartion_prob = 0;
 
     HMMState::is_children_computed = false;
+
+    HMMState::is_self_loop = false;
 }
-HMMState::HMMState(HMMState& parent, ChessGameState* position) : parent(&parent) {
+HMMState::HMMState(HMMState& parent, ChessGameState* position, bool is_selfloop) : parent(&parent) {
     HMMState::game_state = position;
 
     HMMState::timestep = parent.timestep+1;
@@ -20,6 +22,8 @@ HMMState::HMMState(HMMState& parent, ChessGameState* position) : parent(&parent)
     HMMState::observartion_prob = 0;
 
     HMMState::is_children_computed = false;
+
+    HMMState::is_self_loop = is_selfloop;
 }
 
 namespace {
@@ -134,7 +138,11 @@ bool HMMState::operator==(const HMMState& other) const {
 }
 
 double HMMState::transition_prob() {
-    return HMMState::parent->get_child_transition_prob();
+    double prob = HMMState::parent->get_child_transition_prob();
+    if (!(HMMState::is_self_loop)) {
+        prob += 20;
+    }
+    return prob;
 }
 double HMMState::parent_prob() {
     return HMMState::parent->prob;
@@ -147,7 +155,7 @@ double HMMState::get_child_transition_prob(bool is_legal) const {
 }
 
 void HMMState::compute_children() {
-    HMMState::children.push_back(HMMStateFactory::create_state(this, HMMState::game_state)); // self loop
+    HMMState::children.push_back(HMMStateFactory::create_state(this, HMMState::game_state, true)); // self loop
 
     for (ChessGameState* positions : HMMState::game_state->get_children()) {
         HMMState::children.push_back(HMMStateFactory::create_state(this, positions)); // follow up legal moves
@@ -160,10 +168,10 @@ void HMMState::compute_children() {
 HMMStateFactory::Registry HMMStateFactory::registry = {
     vector<HMMState*>(0)
 };
-HMMState* HMMStateFactory::create_state(HMMState* parent, ChessGameState* position) {
+HMMState* HMMStateFactory::create_state(HMMState* parent, ChessGameState* position, bool is_selfloop) {
     HMMState* new_state;
     if (parent == nullptr) new_state = new HMMState(position);
-    else new_state = new HMMState(*parent, position);
+    else new_state = new HMMState(*parent, position, is_selfloop);
 
     HMMStateFactory::registry.states.push_back(new_state);
     return new_state;

@@ -17,7 +17,7 @@ class HMMState {
 
     public:
         HMMState(ChessGameState* position);
-        HMMState(HMMState& parent, ChessGameState* position);
+        HMMState(HMMState& parent, ChessGameState* position, bool is_selfloop = false);
         double eval_prob(py::array_t<float, py::array::c_style | py::array::forcecast> obs_probs);
 
         vector<HMMState*> get_children();
@@ -33,6 +33,8 @@ class HMMState {
         int timestep;
         double prob;
 
+        bool is_self_loop;
+
         double observartion_prob;
         double transition_prob();
         double parent_prob();
@@ -46,7 +48,7 @@ class HMMState {
 
 class HMMStateFactory {
     public:
-        static HMMState* create_state(HMMState* parent, ChessGameState* position);
+        static HMMState* create_state(HMMState* parent, ChessGameState* position, bool is_selfloop = false);
 
     private:
         struct Registry {

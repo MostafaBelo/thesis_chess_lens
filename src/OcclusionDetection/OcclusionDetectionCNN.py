@@ -53,4 +53,4 @@ class OcclusionDetectorCNN:
             out: torch.Tensor = model(self.img)
         pred = out.softmax(dim=1)
 
-        return (pred > .5)[:, 1].item(), pred[:, 1].item()
+        return (pred > .5)[:, 0].item(), pred[:, 0].item()

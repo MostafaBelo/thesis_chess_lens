@@ -17,23 +17,28 @@ dataset = GameDataset(
     }
 )
 
-algorithm = "cnn_onnx_static"
-game = ChessLens.ChessLensGame(algorithm)
+algorithm = "cnn"
+game = ChessLens.ChessLensGame(algorithm, config={
+    # "is_detect_occlusion": False,
+    # "is_detect_wakeup": False
+})
 frame_times = []
 for t in tqdm(range(len(dataset))):
     img, _ = dataset[t]
-    game.set_img(img)
     t1 = time.perf_counter()
-    game.process_img()
+    # game.set_img(img, verbose=True)
+    game.set_img(img)
     t2 = time.perf_counter()
+    # game.process_img(True)
 
     frame_times.append(t2-t1)
 
 avg_frame = sum(frame_times)/len(frame_times)
 total_time = sum(frame_times)
 game.bind()
-history = game.get_history()
+history = game.get_history(True)
 
+print(f"Avg Image Loading: {game.avg_times["load"]*1e3:.4f}ms | Avg Board Detection: {game.avg_times["board_detection"]*1e3:.4f}ms | Avg Piece Recognition: {game.avg_times["piece_recognition"]*1e3:.4f}ms | Avg HMM: {game.avg_times["HMM"]*1e3:.4f}ms")
 print(
     f"Avg Frame: {avg_frame*1e3:.4f}ms | Frame Count: {len(dataset)} | Total Time: {total_time*1e3:.4f}ms")
 

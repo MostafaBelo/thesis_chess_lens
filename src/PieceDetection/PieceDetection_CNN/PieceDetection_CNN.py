@@ -469,6 +469,9 @@ class PieceDetector:
             sys.modules['__main__'].PieceDetectorCNNModel = PieceDetectorCNNModel
             piece_detection_model = torch.load(os.path.join(
                 os.environ["WEIGHTS"], "piece_cnn_prunned_model.pth"), weights_only=False)
+            _ = piece_detection_model(torch.randn(1, 8, 8, 3, 128, 64))
+        # print(piece_detection_model)
+        # print("\n"*5)
 
     def set_img(self, img: torch.Tensor, corners: torch.Tensor):
         self.img = img  # 3, H, W

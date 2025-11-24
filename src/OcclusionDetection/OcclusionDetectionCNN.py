@@ -50,7 +50,7 @@ class OcclusionDetectorCNN:
 
     def is_occluded(self):
         with torch.no_grad():
-            out: torch.Tensor = model(self.img)
+            out: torch.Tensor = model(self.img.to(device))
         pred = out.softmax(dim=1)
 
         return (pred > .5)[:, 0].item(), pred[:, 0].item()

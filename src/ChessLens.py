@@ -174,6 +174,11 @@ class ChessLensGame:
         else:
             self.is_detect_wakeup = True
 
+        if (config is not None) and ("wakeup_period" in config):
+            self.wakeup_period = config["wakeup_period"]
+        else:
+            self.wakeup_period = 10
+
         if (config is not None) and ("context_bredth" in config):
             self.context_bredth = config["context_bredth"]
         else:
@@ -189,6 +194,11 @@ class ChessLensGame:
         else:
             self.context_bind_period = 1
 
+        if (config is not None) and ("game_out_path" in config):
+            self.game_out_path = config["game_out_path"]
+        else:
+            self.game_out_path = None
+
         self.current_img = ChessLensImage(piece_detector=piece_detector)
         self.clear()
         self.piece_detector = piece_detector
@@ -201,6 +211,8 @@ class ChessLensGame:
             "HMM": 0
         }
 
+        self.broadcasted_fens = []
+
     def clear(self):
         self.board_detection = None
         self.orientation = None
@@ -210,6 +222,7 @@ class ChessLensGame:
         self.pgn = None
 
         self.t = 0
+        self.last_wakeup = 0
 
     def set_img(self, img: str | torch.Tensor | np.ndarray, verbose=False):
         t1 = time.perf_counter()
@@ -293,9 +306,14 @@ class ChessLensGame:
 
         # Wakup Detection
         if self.is_detect_wakeup:
-            is_wakeup = self.detect_wakeup()
+            if self.last_wakeup - self.t >= self.wakeup_period:
+                is_wakeup = True
+            else:
+                is_wakeup = self.detect_wakeup()
             if not is_wakeup:
                 return
+            else:
+                self.last_wakeup = self.t
 
         # Occlusion Detection
         if self.is_detect_occlusion:
@@ -317,8 +335,10 @@ class ChessLensGame:
             img.save_fen_image(f"game_fens/fen_{self.t}.png")
 
         # Context Awareness
-        self.context_model.set_probs(
+        isbound = self.context_model.set_probs(
             self.context_model.model.top_t()+1, self.prep_probs(img.piece_matrix))
+        if isbound:
+            self.get_latest_fens()
         t5 = time.perf_counter()
 
         self.avg_times["board_detection"] += t3-t2
@@ -331,3 +351,17 @@ class ChessLensGame:
 
     def get_history(self, include_non_bound: bool = False):
         return self.context_model.get_history(include_non_bound)
+
+    def get_latest_fens(self):
+        hist = self.get_history()
+        fens = []
+        for i in range(hist.shape[0]):
+            fens.append(
+                ChessUtils.ChessTensorUtils.tensorToFEN_MAX(hist[[i], ::-1]))
+
+        fens = [fen for fen in fens if not (fen in self.broadcasted_fens)]
+
+        self.broadcasted_fens += fens
+        if (self.game_out_path is not None) and len(fens) > 0:
+            with open(self.game_out_path, "a") as f:
+                f.write("\n" + "\n".join(fens))

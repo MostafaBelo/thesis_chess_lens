@@ -19,6 +19,7 @@ dataset = GameDataset(
 
 algorithm = "cnn"
 game = ChessLens.ChessLensGame(algorithm, config={
+    "game_out_path": "game_fens.csv",
     # "is_detect_occlusion": False,
     # "is_detect_wakeup": False
 })

@@ -11,11 +11,15 @@ class ChessHMM:
     def bind(self):
         self.model.bind(self.model.top_t())
 
-    def set_probs(self, timestep, piece_matrix):
+    def set_probs(self, timestep, piece_matrix) -> bool:
         self.model.set_probs(timestep, piece_matrix)
 
         if (((self.model.top_t() % self.bind_period) == 0) and (self.model.top_t() >= self.bind_period+self.delay) and (self.model.top_t()-self.delay-self.bind_period+1 > self.model.top_bind_t())):
             self.model.bind(self.model.top_t()-self.delay+1)
+
+            return True
+
+        return False
 
     def print(self, timestep: int) -> str:
         return self.model.print(timestep)

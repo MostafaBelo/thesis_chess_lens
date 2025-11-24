@@ -95,7 +95,7 @@ class ChessLensImage:
         warped, _ = self.warp()
         warped_tensor = torch.from_numpy(warped).permute(
             2, 0, 1).unsqueeze(0).float() / 255.0
-        self.occlusion_model.set_img(warped_tensor.to("cuda"))
+        self.occlusion_model.set_img(warped_tensor)
         pred, conf = self.occlusion_model.is_occluded()
         return pred
 

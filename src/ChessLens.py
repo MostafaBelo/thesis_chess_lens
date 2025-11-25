@@ -228,11 +228,13 @@ class ChessLensGame:
         t1 = time.perf_counter()
         self.current_img.load_image(img)
         img = self.current_img
-        self.process_img(verbose)
+        is_wake_up = self.process_img(verbose)
         self.t += 1
         t2 = time.perf_counter()
 
         self.avg_times["load"] += t2-t1
+
+        return (is_wake_up == True)
 
     def calc_orientation(self):
         piece_matrix = self.current_img.piece_matrix.clone().detach().squeeze()
@@ -344,6 +346,8 @@ class ChessLensGame:
         self.avg_times["board_detection"] += t3-t2
         self.avg_times["piece_recognition"] += t4-t3
         self.avg_times["HMM"] += t5-t4
+
+        return True
 
     def bind(self):
         if self.context_model.model.top_t() != self.context_model.model.top_bind_t():

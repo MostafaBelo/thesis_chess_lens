@@ -2,23 +2,19 @@ import os
 from dotenv import load_dotenv
 load_dotenv()  # noqa
 
-from tqdm import tqdm
-
-from Dataset.DataSetLoaders.ChessDataset import GameDataset
 from Utils import ChessUtils
 import ChessLens
 
+import torch
+
 import time
 
-dataset = GameDataset(
-    config={
-        "img_size": (640, 640),
-        "include_only": "valid;occlusion"
-    }
-)
 
-# algorithm = "cnn_onnx_static"
-algorithm = "cnn"
+def take_image() -> torch.Tensor:
+    pass
+
+
+algorithm = "cnn_onnx_static"
 game = ChessLens.ChessLensGame(algorithm, config={
     "game_out_path": "game_fens.csv",
     "is_detect_occlusion": False,
@@ -26,13 +22,13 @@ game = ChessLens.ChessLensGame(algorithm, config={
 })
 frame_times = []
 frame_paths = []
-for t in tqdm(range(len(dataset))):
-    img, y = dataset[t]
+# while True:
+for t in range(5000):
+    img = take_image()
     t1 = time.perf_counter()
     # game.set_img(img, verbose=True)
     is_wake_up = game.set_img(img)
     t2 = time.perf_counter()
-    # game.process_img(True)
 
     frame_times.append(t2-t1)
 
@@ -43,7 +39,7 @@ history = game.get_history(True)
 
 print(f"Avg Image Loading: {game.avg_times["load"]*1e3:.4f}ms | Avg Board Detection: {game.avg_times["board_detection"]*1e3:.4f}ms | Avg Piece Recognition: {game.avg_times["piece_recognition"]*1e3:.4f}ms | Avg HMM: {game.avg_times["HMM"]*1e3:.4f}ms")
 print(
-    f"Avg Frame: {avg_frame*1e3:.4f}ms | Frame Count: {len(dataset)} | Total Time: {total_time*1e3:.4f}ms")
+    f"Avg Frame: {avg_frame*1e3:.4f}ms | Frame Count: {len(frame_times)} | Total Time: {total_time*1e3:.4f}ms")
 
 fens = []
 for i in range(history.shape[0]):

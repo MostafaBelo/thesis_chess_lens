@@ -6,9 +6,13 @@ from Utils import ChessUtils
 import ChessLens
 
 import torch
+from torchvision import transforms
+
+from PIL import Image
 
 import time
-
+import sys
+sys.path.append("/usr/lib/python3/dist-packages")
 from picamera2 import Picamera2, Preview
 picam2 = Picamera2()
 camera_config = picam2.create_still_configuration()
@@ -20,18 +24,25 @@ picam2.start()
 interval = 0.5
 
 
+transform_pil = transforms.ToTensor()
 def take_image() -> torch.Tensor:
     img = picam2.capture_array()
-    img = torch.tensor(img[:, :, ::-1]).permute(2,
-                                                0, 1).to(torch.float32) / 255
+    img = Image.fromarray(img).resize((640,640))
+    #img.save("test.jpg")
+    img = transform_pil(img)
+    #print(img.shape, img.dtype)
     return img
 
 
 algorithm = "cnn_onnx_static"
+filename = "game_fens.csv"
+with open(filename, "w") as f:
+    f.write("")
 game = ChessLens.ChessLensGame(algorithm, config={
-    "game_out_path": "game_fens.csv",
-    "is_detect_occlusion": False,
-    "is_detect_wakeup": False
+    "game_out_path": filename,
+    # "is_detect_occlusion": False,
+    # "is_detect_wakeup": False,
+    "context_delay": 1
 })
 try:
     frame_times = []

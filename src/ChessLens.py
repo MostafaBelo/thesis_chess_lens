@@ -212,6 +212,7 @@ class ChessLensGame:
         }
 
         self.broadcasted_fens = []
+        self.last_num = 0
 
     def clear(self):
         self.board_detection = None
@@ -306,8 +307,10 @@ class ChessLensGame:
                     self.board_detection = new_detection
                 else:
                     self.board_detection = (new_detection + old_detection) / 2
-            except:
+            except Exception as e:
                 pass
+                # raise e
+                # print(f"Failed to detect board - {e}")
         img.board_detection = self.board_detection
 
         # Wakup Detection
@@ -365,7 +368,12 @@ class ChessLensGame:
             fens.append(
                 ChessUtils.ChessTensorUtils.tensorToFEN_MAX(hist[[i], ::-1]))
 
-        fens = [fen for fen in fens if not (fen in self.broadcasted_fens)]
+        fens = [
+            f"{fen} w - - 0 " for fen in fens if not (fen in self.broadcasted_fens)]
+        for i in range(len(fens)):
+            fens[i] += f"{self.last_num+i}"
+        self.last_num += len(fens)
+        print(fens)
 
         self.broadcasted_fens += fens
         if (self.game_out_path is not None) and len(fens) > 0:

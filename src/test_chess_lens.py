@@ -10,6 +10,10 @@ import ChessLens
 
 import time
 
+# is_simulate_time_delay = True
+is_simulate_time_delay = False
+spf = 0.5
+
 dataset = GameDataset(
     config={
         "img_size": (640, 640),
@@ -26,7 +30,7 @@ game = ChessLens.ChessLensGame(algorithm, config={
     "game_out_path": fens_out_file,
     # "is_detect_occlusion": False,
     # "is_detect_wakeup": False,
-    # "context_delay": 120
+    # "context_delay": 4
 })
 frame_times = []
 frame_paths = []
@@ -39,6 +43,9 @@ for t in tqdm(range(len(dataset))):
     # game.process_img(True)
 
     frame_times.append(t2-t1)
+
+    if is_simulate_time_delay and (t2-t1 < spf):
+        time.sleep(spf - (t2-t1))
 
 avg_frame = sum(frame_times)/len(frame_times)
 total_time = sum(frame_times)

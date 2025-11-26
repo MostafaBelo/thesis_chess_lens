@@ -9,9 +9,22 @@ import torch
 
 import time
 
+from picamera2 import Picamera2, Preview
+picam2 = Picamera2()
+camera_config = picam2.create_still_configuration()
+picam2.configure(camera_config)
+picam2.start_preview(Preview.NULL)
+picam2.start()
+
+
+interval = 0.5
+
 
 def take_image() -> torch.Tensor:
-    pass
+    img = picam2.capture_array()
+    img = torch.tensor(img[:, :, ::-1]).permute(2,
+                                                0, 1).to(torch.float32) / 255
+    return img
 
 
 algorithm = "cnn_onnx_static"
@@ -20,36 +33,42 @@ game = ChessLens.ChessLensGame(algorithm, config={
     "is_detect_occlusion": False,
     "is_detect_wakeup": False
 })
-frame_times = []
-frame_paths = []
-# while True:
-for t in range(5000):
-    img = take_image()
-    t1 = time.perf_counter()
-    # game.set_img(img, verbose=True)
-    is_wake_up = game.set_img(img)
-    t2 = time.perf_counter()
+try:
+    frame_times = []
+    frame_paths = []
+    # while True:
+    for t in range(500):
+        img = take_image()
+        t1 = time.perf_counter()
+        # game.set_img(img, verbose=True)
+        is_wake_up = game.set_img(img)
+        t2 = time.perf_counter()
 
-    frame_times.append(t2-t1)
+        frame_times.append(t2-t1)
 
-avg_frame = sum(frame_times)/len(frame_times)
-total_time = sum(frame_times)
-game.bind()
-history = game.get_history(True)
+        time.sleep(interval)
 
-print(f"Avg Image Loading: {game.avg_times["load"]*1e3:.4f}ms | Avg Board Detection: {game.avg_times["board_detection"]*1e3:.4f}ms | Avg Piece Recognition: {game.avg_times["piece_recognition"]*1e3:.4f}ms | Avg HMM: {game.avg_times["HMM"]*1e3:.4f}ms")
-print(
-    f"Avg Frame: {avg_frame*1e3:.4f}ms | Frame Count: {len(frame_times)} | Total Time: {total_time*1e3:.4f}ms")
+    avg_frame = sum(frame_times)/len(frame_times)
+    total_time = sum(frame_times)
+    game.bind()
+    history = game.get_history(True)
 
-fens = []
-for i in range(history.shape[0]):
-    fens.append(ChessUtils.ChessTensorUtils.tensorToFEN_MAX(
-        history[[i], ::-1]))
-    # ChessUtils.fen_to_png(fens[-1], "Game", f"game_{i}.png")
+    print(f"Avg Image Loading: {game.avg_times["load"]*1e3:.4f}ms | Avg Board Detection: {game.avg_times["board_detection"]*1e3:.4f}ms | Avg Piece Recognition: {game.avg_times["piece_recognition"]*1e3:.4f}ms | Avg HMM: {game.avg_times["HMM"]*1e3:.4f}ms")
+    print(
+        f"Avg Frame: {avg_frame*1e3:.4f}ms | Frame Count: {len(frame_times)} | Total Time: {total_time*1e3:.4f}ms")
 
-with open("Game/game_out.txt", "w") as f:
-    pgn = ChessUtils.ChessTensorUtils.fens_to_pgn(fens)
-    f.write(f"{'\n'.join(fens)}\n\n{pgn}")
+    fens = []
+    for i in range(history.shape[0]):
+        fens.append(ChessUtils.ChessTensorUtils.tensorToFEN_MAX(
+            history[[i], ::-1]))
+        # ChessUtils.fen_to_png(fens[-1], "Game", f"game_{i}.png")
 
+    with open("Game/game_out.txt", "w") as f:
+        pgn = ChessUtils.ChessTensorUtils.fens_to_pgn(fens)
+        f.write(f"{'\n'.join(fens)}\n\n{pgn}")
 
-print(pgn)
+    print(pgn)
+except KeyboardInterrupt:
+    print("Stopped Manually")
+finally:
+    picam2.stop()

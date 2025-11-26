@@ -291,6 +291,10 @@ class ChessLensGame:
         t2 = time.perf_counter()
         img = self.current_img
 
+        isbound = self.context_model.check_bind(self.t)
+        if isbound:
+            self.get_latest_fens()
+
         # Board Detection
         if self.t % self.bd_period == 0:
             try:
@@ -337,10 +341,8 @@ class ChessLensGame:
             img.save_fen_image(f"game_fens/fen_{self.t}.png")
 
         # Context Awareness
-        isbound = self.context_model.set_probs(
-            self.context_model.model.top_t()+1, self.prep_probs(img.piece_matrix))
-        if isbound:
-            self.get_latest_fens()
+        self.context_model.set_probs(
+            self.context_model.model.top_t()+1, self.prep_probs(img.piece_matrix), self.t)
         t5 = time.perf_counter()
 
         self.avg_times["board_detection"] += t3-t2

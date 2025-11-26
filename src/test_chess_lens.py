@@ -19,10 +19,14 @@ dataset = GameDataset(
 
 # algorithm = "cnn_onnx_static"
 algorithm = "cnn"
+fens_out_file = "game_fens.csv"
+with open(fens_out_file, "w") as f:
+    f.write("")
 game = ChessLens.ChessLensGame(algorithm, config={
-    "game_out_path": "game_fens.csv",
-    "is_detect_occlusion": False,
-    "is_detect_wakeup": False
+    "game_out_path": fens_out_file,
+    # "is_detect_occlusion": False,
+    # "is_detect_wakeup": False,
+    # "context_delay": 120
 })
 frame_times = []
 frame_paths = []

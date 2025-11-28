@@ -1,3 +1,4 @@
+import torch
 import numpy as np
 
 
@@ -22,7 +23,11 @@ class WakeupModule:
     # img: np.ndarray, is a warped img (256,256,3)
     def is_wakeup(self, img: np.ndarray, past_img=None) -> bool:
         # compute img_hist
-        hist = self._get_hist(img)
+        hist = []
+        for i in range(8):
+            for j in range(8):
+                hist.append(self._get_hist(img[i*32:(i+1)*32, j*32:(j+1)*32]))
+        hist = np.stack(hist, axis=0)
 
         # mse to past hist
         if past_img is None:
@@ -33,8 +38,9 @@ class WakeupModule:
         if past_hist is None:
             ret = True
         else:
-            err = -np.log(((hist - past_hist)**2).mean().item() + 1e-7)
-            ret = (err < 10).item()
+            err = -np.log(((hist - past_hist) **
+                          2).mean(axis=1).max().item() + 1e-7)
+            ret = (err < 3.5).item()
 
         # update past_hist
         if ret:

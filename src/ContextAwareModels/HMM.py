@@ -25,6 +25,7 @@ class ChessHMM:
 
     def check_bind(self, frame_index):
         bind_at = -1
+        print("times", self.model.top_t(), self.model.top_bind_t())
 
         for i in range(self.model.top_bind_t()+1, self.model.top_t()):
             if (frame_index - self.timestamp_map[i]) >= self.delay:

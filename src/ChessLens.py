@@ -293,6 +293,7 @@ class ChessLensGame:
         img = self.current_img
 
         isbound = self.context_model.check_bind(self.t)
+        print("bound", isbound, self.t)
         if isbound:
             self.get_latest_fens()
 
@@ -320,15 +321,19 @@ class ChessLensGame:
             else:
                 is_wakeup = self.detect_wakeup()
             if not is_wakeup:
+                print("Not Awake")
                 return
             else:
                 self.last_wakeup = self.t
+        print("Awake")
 
         # Occlusion Detection
         if self.is_detect_occlusion:
             is_occluded = self.detect_occlusion()
             if is_occluded:
+                print(f"Occluded - {is_occluded}")
                 return
+        print("Not Occluded")
         t3 = time.perf_counter()
 
         # Frame Processing
@@ -369,13 +374,14 @@ class ChessLensGame:
                 ChessUtils.ChessTensorUtils.tensorToFEN_MAX(hist[[i], ::-1]))
 
         fens = [
-            f"{fen} w - - 0 " for fen in fens if not (fen in self.broadcasted_fens)]
+            f"{fen}" for fen in fens if not (fen in self.broadcasted_fens)]
         self.broadcasted_fens += fens
-        for i in range(len(fens)):
-            fens[i] += f"{self.last_num+i}"
+        #for i in range(len(fens)):
+         #   fens[i] += f"{self.last_num+i}"
         self.last_num += len(fens)
-        print(fens)
+        print("FENS:", fens)
 
+        #self.broadcasted_fens += fens
         if (self.game_out_path is not None) and len(fens) > 0:
             with open(self.game_out_path, "a") as f:
                 f.write("\n" + "\n".join(fens))

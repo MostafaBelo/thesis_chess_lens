@@ -20,7 +20,6 @@ picam2.configure(camera_config)
 picam2.start_preview(Preview.NULL)
 picam2.start()
 
-
 interval = 0.5
 
 
@@ -36,13 +35,13 @@ def take_image() -> torch.Tensor:
 
 algorithm = "cnn_onnx_static"
 filename = "game_fens.csv"
-with open(filename, "w") as f:
-    f.write("")
+#with open(filename, "w") as f:
+#    f.write("rnbqkbnr")
 game = ChessLens.ChessLensGame(algorithm, config={
     "game_out_path": filename,
-    # "is_detect_occlusion": False,
-    # "is_detect_wakeup": False,
-    "context_delay": 1
+    #"is_detect_occlusion": False,
+    #"is_detect_wakeup": False,
+    "context_delay": 2
 })
 try:
     frame_times = []
@@ -57,7 +56,8 @@ try:
 
         frame_times.append(t2-t1)
 
-        time.sleep(interval)
+        if (interval > t2-t1):
+                time.sleep(interval - (t2-t1))
 
     avg_frame = sum(frame_times)/len(frame_times)
     total_time = sum(frame_times)

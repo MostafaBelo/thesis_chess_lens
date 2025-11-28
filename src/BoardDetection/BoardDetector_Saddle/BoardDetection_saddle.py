@@ -528,3 +528,20 @@ def detect(img: np.ndarray, out_shape=(640, 640)):
     # %%
     # filename = "../data/image_0.jpg"
     # processSingle(filename)
+
+
+def warp(img: torch.Tensor, quad: np.ndarray):
+    img_size = (256, 256)
+    quad = quad.astype(np.float32)
+    dst = np.array([
+        [0, 0],
+        [img_size[0], 0],
+        [img_size[0], img_size[1]],
+        [0, img_size[1]]
+    ], dtype=np.float32)
+
+    M = cv2.getPerspectiveTransform(quad, dst)
+    img_numpy = (img * 255).permute(1, 2, 0).numpy().astype(np.uint8)
+    warpped = cv2.warpPerspective(img_numpy, M, img_size)
+
+    return warpped, M

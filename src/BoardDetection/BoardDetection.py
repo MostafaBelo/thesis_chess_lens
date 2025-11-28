@@ -277,7 +277,7 @@ class BoardExtractor:
         return corners, 1
 
     def warp(self, quad, padding=(0, 0)):
-        return bd.warp(quad)
+        return bd.warp(self.img, quad)
 
 
 board_extractor = BoardExtractor()

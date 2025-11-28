@@ -15,15 +15,16 @@ else:
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
-def apply_clahe(image):
-    lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)
-    l, a, b = cv2.split(lab)
+def correct_image(image):
+    b, g, r = cv2.split(image.astype(np.float32))
+    avg_b, avg_g, avg_r = np.mean(b), np.mean(g), np.mean(r)
+    avg_gray = (avg_b + avg_g + avg_r) / 3
 
-    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-    l2 = clahe.apply(l)
+    b = b * (avg_gray / avg_b)
+    g = g * (avg_gray / avg_g)
+    r = r * (avg_gray / avg_r)
 
-    lab2 = cv2.merge([l2, a, b])
-    return cv2.cvtColor(lab2, cv2.COLOR_LAB2BGR)
+    return cv2.merge([b, g, r]).clip(0, 255).astype(np.uint8)
 
 
 class TinyOcclusionCNN(nn.Module):
@@ -64,7 +65,7 @@ class OcclusionDetectorCNN:
     def is_occluded(self):
         img = (self.img.squeeze().permute(1, 2, 0).flip(dims=(2,)).cpu().numpy()
                * 255).astype(np.uint8)
-        img = apply_clahe(img)
+        img = correct_image(img)
         img = torch.tensor(
             img, dtype=torch.float32, device=device)/255
         img = img.permute(2, 0, 1).flip(dims=(0,)).unsqueeze(0)

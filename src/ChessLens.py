@@ -370,12 +370,12 @@ class ChessLensGame:
 
         fens = [
             f"{fen} w - - 0 " for fen in fens if not (fen in self.broadcasted_fens)]
+        self.broadcasted_fens += fens
         for i in range(len(fens)):
             fens[i] += f"{self.last_num+i}"
         self.last_num += len(fens)
         print(fens)
 
-        self.broadcasted_fens += fens
         if (self.game_out_path is not None) and len(fens) > 0:
             with open(self.game_out_path, "a") as f:
                 f.write("\n" + "\n".join(fens))

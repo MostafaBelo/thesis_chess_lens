@@ -61,6 +61,31 @@ ext_modules = [
         language="c++",
         extra_compile_args=["-std=c++17"],
     ),
+    Extension(
+        "BoardDetection.BoardDetector_Saddle._boardsaddlecpp",
+        sources=[
+            "src/BoardDetection/BoardDetector_Saddle/cpp/bindings.cpp",
+            "src/BoardDetection/BoardDetector_Saddle/cpp/BoardSaddle.cpp",
+        ],
+        include_dirs=[
+            pybind11.get_include(),
+            "src/BoardDetection/BoardDetector_Saddle/cpp",
+            # ✅ Add this if your header is there
+            # "src/PieceDetection/PieceCropper_3D/include",
+            opencv_include
+        ],
+        library_dirs=[
+            opencv_lib,  # ✅ add this
+        ],
+        libraries=[
+            "opencv_calib3d", "opencv_core", "opencv_imgproc", "opencv_highgui", "opencv_imgcodecs",
+        ],
+        extra_link_args=[
+            "-Wl,-rpath,/usr/lib/x86_64-linux-gnu",
+        ],
+        language="c++",
+        extra_compile_args=["-std=c++17"],
+    ),
 ]
 
 setup(

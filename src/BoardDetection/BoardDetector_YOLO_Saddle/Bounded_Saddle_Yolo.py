@@ -86,12 +86,14 @@ class BoardExtractor:
         return largest_component
 
     def _getSaddle(self, img: torch.Tensor):
+        d = 15
+        k = 31
         img = img.numpy().astype(np.float64)
-        gx = cv2.Sobel(img, cv2.CV_64F, 1, 0)
-        gy = cv2.Sobel(img, cv2.CV_64F, 0, 1)
-        gxx = cv2.Sobel(gx, cv2.CV_64F, 1, 0)
-        gyy = cv2.Sobel(gy, cv2.CV_64F, 0, 1)
-        gxy = cv2.Sobel(gx, cv2.CV_64F, 0, 1)
+        gx = cv2.Sobel(img, cv2.CV_64F, d, 0, ksize=k)
+        gy = cv2.Sobel(img, cv2.CV_64F, 0, d, ksize=k)
+        gxx = cv2.Sobel(gx, cv2.CV_64F, d, 0, ksize=k)
+        gyy = cv2.Sobel(gy, cv2.CV_64F, 0, d, ksize=k)
+        gxy = cv2.Sobel(gx, cv2.CV_64F, 0, d, ksize=k)
 
         S = gxx*gyy - gxy**2
         return S
@@ -204,7 +206,7 @@ class BoardExtractor:
         S = self._getSaddle((self.img_gray * mask))
         S = -S
         S[S < 0] = 0
-        pts, _ = self._nonmax_suppression(S, .01, 20)
+        pts, _ = self._nonmax_suppression(S, .01, 30)
 
         quad = self._best_fit_quad(pts)
         quad_ordered = self._order_points_rotation_proof(quad)

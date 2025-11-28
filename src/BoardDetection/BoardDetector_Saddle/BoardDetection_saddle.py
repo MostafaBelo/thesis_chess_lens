@@ -3,6 +3,8 @@
 
 # %%
 
+from BoardDetection.BoardDetector_Saddle import BoardSaddleCPP
+
 import PIL.Image
 import matplotlib.image as mpimg
 import scipy.ndimage
@@ -34,6 +36,7 @@ def getSaddle(gray_img):
 
 
 def nonmax_sup(img, win=10):
+    # print(img.shape)
     w, h = img.shape
     img_sup = np.zeros_like(img, dtype=np.float64)
     for i, j in np.argwhere(img):
@@ -466,58 +469,62 @@ def processSingle(filename='/content/2.jpg'):
 
 # %%
 
-def detect(img):
+def detect(img: np.ndarray, out_shape=(640, 640)):
+    corners = BoardSaddleCPP.detect_corners(img)
+    corners[:, 0] *= out_shape[0]/500
+    corners[:, 1] *= out_shape[1]/500
+    return corners
+
     # filename = "/content/2.jpg"  # Path to your single image
     # filename = "../data/data_manual/1741715439429.jpg"  # Path to your single image
 
     # print(f"Processing: {filename}")
 
     # img = loadImage(filename)  # Load the image
-    img = img.permute(1, 2, 0).numpy()
-    M, ideal_grid, grid_next, grid_good, spts = findChessboard(
-        img)  # Detect chessboard
+    # img = img.permute(1, 2, 0).numpy()
+    # M, ideal_grid, grid_next, grid_good, spts = findChessboard(
+    #     img)  # Detect chessboard
 
-    # fig = plt.figure(figsize=(10, 10))  # Smaller figure since only one image
+    # # fig = plt.figure(figsize=(10, 10))  # Smaller figure since only one image
 
-    if M is not None:
-        # Optimize grid alignment
-        M, _ = generateNewBestFit((ideal_grid+8)*32, grid_next, grid_good)
-        img_warp = cv2.warpPerspective(
-            img, M, (17*32, 17*32), flags=cv2.WARP_INVERSE_MAP)  # Warp image
+    # if M is not None:
+    #     # Optimize grid alignment
+    #     M, _ = generateNewBestFit((ideal_grid+8)*32, grid_next, grid_good)
+    #     img_warp = cv2.warpPerspective(
+    #         img, M, (17*32, 17*32), flags=cv2.WARP_INVERSE_MAP)  # Warp image
 
-        best_lines_x, best_lines_y = getBestLines(
-            img_warp)  # Get chessboard lines
-        xy_unwarp = getUnwarpedPoints(
-            best_lines_x, best_lines_y, M)  # Unwarp points
-        board_outline_unwarp = getBoardOutline(
-            best_lines_x, best_lines_y, M)  # Get outline
+    #     best_lines_x, best_lines_y = getBestLines(
+    #         img_warp)  # Get chessboard lines
+    #     xy_unwarp = getUnwarpedPoints(
+    #         best_lines_x, best_lines_y, M)  # Unwarp points
+    #     board_outline_unwarp = getBoardOutline(
+    #         best_lines_x, best_lines_y, M)  # Get outline
 
-        # plt.imshow(img, cmap='gray')  # Show original image
-        # plt.plot(xy_unwarp[:, 0], xy_unwarp[:, 1], 'r.')  # Plot detected points
-        # plt.plot(board_outline_unwarp[:, 0], board_outline_unwarp[:, 1], 'ro-', markersize=5, linewidth=3)  # Outline
-        # plt.title(f"{filename}: Matches = {np.sum(grid_good)}")
-        # plt.axis('off')
-        # print(f"Detected Good Points: {np.sum(grid_good)}")
-        # print(f"Corners: {board_outline_unwarp}")
-        return board_outline_unwarp
+    #     # plt.imshow(img, cmap='gray')  # Show original image
+    #     # plt.plot(xy_unwarp[:, 0], xy_unwarp[:, 1], 'r.')  # Plot detected points
+    #     # plt.plot(board_outline_unwarp[:, 0], board_outline_unwarp[:, 1], 'ro-', markersize=5, linewidth=3)  # Outline
+    #     # plt.title(f"{filename}: Matches = {np.sum(grid_good)}")
+    #     # plt.axis('off')
+    #     # print(f"Detected Good Points: {np.sum(grid_good)}")
+    #     # print(f"Corners: {board_outline_unwarp}")
+    #     return board_outline_unwarp
 
-    else:
-        # plt.imshow(img, cmap='gray')
-        # plt.title(f"{filename}: Chessboard Not Found")
-        # plt.axis('off')
-        raise Exception("Chessboard detection failed.")
+    # else:
+    #     # plt.imshow(img, cmap='gray')
+    #     # plt.title(f"{filename}: Chessboard Not Found")
+    #     # plt.axis('off')
+    #     raise Exception("Chessboard detection failed.")
 
     # plt.savefig('result.png', bbox_inches='tight')
     # plt.show()
 
-# if __name__ == '__main__':
+    # if __name__ == '__main__':
     # print("Start")
     # main()
 
-# %% [markdown]
-# ### Warped
+    # %% [markdown]
+    # ### Warped
 
-
-# %%
-# filename = "../data/image_0.jpg"
-# processSingle(filename)
+    # %%
+    # filename = "../data/image_0.jpg"
+    # processSingle(filename)

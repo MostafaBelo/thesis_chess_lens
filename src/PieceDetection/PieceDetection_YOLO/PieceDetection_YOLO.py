@@ -219,9 +219,10 @@ class PieceDetector:
                     os.environ["WEIGHTS"], "piece_yolo_quantized_static.onnx"))
 
     def set_img(self, img: torch.Tensor, corners: torch.Tensor):
-        self.img = Image.fromarray(
-            (img.clone().detach().permute(1, 2, 0).cpu().numpy()*255).astype(np.uint8)).resize((640, 480))
+        self.img = Image.fromarray((img.clone().detach().permute(
+            1, 2, 0).cpu().numpy()*255).astype(np.uint8)).resize((640, 480))
         self.img = transforms.ToTensor()(self.img).flip((0,))  # 3, H, W
+        # self.img = img.clone().detach()
         self.corners = corners.clone().detach()  # 4, 2
 
         self.corners[:, 0] *= 640/640

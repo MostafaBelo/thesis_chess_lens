@@ -198,9 +198,9 @@ class BoardDetector_YOLO:
             self.process()
 
     def load_model(self, model_path=model_path):
-        # self.model = YOLO(model_path).to(device)
+        self.model = YOLO(model_path).to(device)
 
-        self.model = YOLO_ONNX_Segmentation(model_onnx_path)
+        # self.model = YOLO_ONNX_Segmentation(model_onnx_path)
 
     def set_img(self, img):
         self.img = img
@@ -220,15 +220,15 @@ class BoardDetector_YOLO:
         self.check_model()
         self.check_img()
 
-        # r = self.model(self.img.unsqueeze(0), conf=0.7, verbose=False)
-        # mask = r[0].masks.data.squeeze().cpu()
-        # if (len(mask.shape) >= 3):
-        #     mask = mask[0]
-        # conf = r[0].boxes[0].conf.item()
+        r = self.model(self.img.unsqueeze(0), conf=0.7, verbose=False)
+        mask = r[0].masks.data.squeeze().cpu()
+        if (len(mask.shape) >= 3):
+            mask = mask[0]
+        conf = r[0].boxes[0].conf.item()
 
-        r = self.model(self.img.unsqueeze(0).cpu().numpy())
-        mask = r[0]["mask"]
-        conf = r[0]["score"]
+        # r = self.model(self.img.unsqueeze(0).cpu().numpy())
+        # mask = r[0]["mask"]
+        # conf = r[0]["score"]
 
         self.data = (mask, conf)
 
@@ -238,7 +238,7 @@ class BoardDetector_YOLO:
 
         # apply opening to remove small masks
         open_size = 10  # 6
-        dilate_size = 5
+        dilate_size = 20
         morph_open_mask = np.ones((open_size, open_size), np.uint8)
         morph_dilate_mask = np.ones((dilate_size, dilate_size), np.uint8)
         # print(mask.shape, mask.dtype, type(mask), mask.max(), mask.min())

@@ -40,7 +40,7 @@ class WakeupModule:
         else:
             err = -np.log(((hist - past_hist) **
                           2).mean(axis=1).max().item() + 1e-7)
-            ret = (err < 4.5).item()
+            ret = (err < 5).item()
 
         # update past_hist
         if ret:

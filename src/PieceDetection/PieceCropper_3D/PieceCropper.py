@@ -68,7 +68,7 @@ class CameraMapper:
     @staticmethod
     def from_normal_to_warp(points: np.ndarray, M: np.ndarray):
         N = points.shape[0]
-        points_ = np.concat([points, np.ones((N, 1))], axis=1)
+        points_ = np.concatenate([points, np.ones((N, 1))], axis=1)
         warpped_points = points_ @ M.T
         warpped_points = (warpped_points / warpped_points[:, [2]])[:, :2]
         return warpped_points
@@ -77,7 +77,7 @@ class CameraMapper:
     def from_warp_to_normal(points: np.ndarray, M: np.ndarray):
         N = points.shape[0]
         M_inv = np.linalg.inv(M)
-        points_ = np.concat([points, np.ones((N, 1))], axis=1)
+        points_ = np.concatenate([points, np.ones((N, 1))], axis=1)
         normal_points = points_ @ M_inv.T
         normal_points = (normal_points / normal_points[:, [2]])[:, :2]
         return normal_points
@@ -115,16 +115,16 @@ class CameraMapper:
 
         t = (-R_) @ cam_point.reshape((3, 1))
 
-        R = np.concat([R_, t], axis=1)
+        R = np.concatenate([R_, t], axis=1)
         # R: extrinsics of World -> Camera
-        R = np.concat([R, np.array([[0, 0, 0, 1]])], axis=0)
+        R = np.concatenate([R, np.array([[0, 0, 0, 1]])], axis=0)
 
         return K, R, pitch
 
     @staticmethod
     def from_3d_to_2d(points: np.ndarray, K: np.ndarray, R: np.ndarray):
         N = points.shape[0]
-        points_ = np.concat([points, np.ones((N, 1))], axis=1)
+        points_ = np.concatenate([points, np.ones((N, 1))], axis=1)
         res_points = points_ @ R.T
         res_points = (res_points / res_points[:, [3]])[:, :3]
         res_points = res_points @ K.T
@@ -134,10 +134,10 @@ class CameraMapper:
     @staticmethod
     def from_2d_to_3d(points: np.ndarray, K: np.ndarray, R: np.ndarray):
         N = points.shape[0]
-        points_ = np.concat([points, np.ones((N, 1))], axis=1)
+        points_ = np.concatenate([points, np.ones((N, 1))], axis=1)
         res_points = points_ @ np.linalg.inv(K).T
 
-        points_ = np.concat([res_points, np.ones((N, 1))], axis=1)
+        points_ = np.concatenate([res_points, np.ones((N, 1))], axis=1)
         res_points = points_ @ np.linalg.inv(R).T
         res_points = (res_points/res_points[:, [3]])[:, :3]
 
@@ -258,7 +258,7 @@ class PieceCropper:
         #         #                          radius=6, color=(255, 0, 0), thickness=-1)
         #         res[r, c] = torch.tensor(cv2.warpPerspective(
         #             self.numpy_img, M_tmp, (sq_size[1], sq_size[0])))
-        #         # warped_corners = cv2.perspectiveTransform(np.concat(
+        #         # warped_corners = cv2.perspectiveTransform(np.concatenate(
         #         #     [square_bottom.reshape(-1, 2), square_top.reshape(-1, 2)], axis=0).reshape(-1, 1, 2), M_tmp).reshape(-1, 2)
         #         warped_corners = cv2.perspectiveTransform(
         #             square_bottom.reshape(-1, 1, 2), M_tmp).reshape(-1, 2)
@@ -273,7 +273,7 @@ class PieceCropper:
         #         #     res[r, c, lower_y:upper_y, lower_x:upper_x,
         #         #         :] = torch.tensor([255, 0, 0])
 
-        #         # points = np.concat(
+        #         # points = np.concatenate(
         #         #     [grid_bottom[r:r+2, c:c+2], grid_top[r:r+2, c:c+2]], axis=0).astype(np.int32).reshape(-1, 1, 2)
         #         # hull = cv2.convexHull(points)
         #         # # cv2.fillPoly(mask, hull, 255)

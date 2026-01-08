@@ -15,7 +15,7 @@ class WakeupModule:
         hist_b, _ = np.histogram(
             img[:, :, 2].ravel(), bins=bins, range=[0, 256])
 
-        hist = np.concat([hist_r, hist_g, hist_b], axis=0)
+        hist = np.concatenate([hist_r, hist_g, hist_b], axis=0)
         hist = hist / (img.shape[0]*img.shape[1])
 
         return hist

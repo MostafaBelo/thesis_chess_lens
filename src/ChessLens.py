@@ -78,7 +78,8 @@ class ChessLensImage:
         # BoardDetection.board_extractor.set_img(self.img)
         self.board_detection, conf = BoardDetection.board_extractor.extract_board(
             verbose)
-        self.board_detection = torch.tensor(self.board_detection)
+        if type(self.board_detection) != torch.Tensor:
+            self.board_detection = torch.tensor(self.board_detection)
         return self.board_detection, conf
 
     def warp(self):
@@ -376,12 +377,12 @@ class ChessLensGame:
         fens = [
             f"{fen}" for fen in fens if not (fen in self.broadcasted_fens)]
         self.broadcasted_fens += fens
-        #for i in range(len(fens)):
-         #   fens[i] += f"{self.last_num+i}"
+        # for i in range(len(fens)):
+        #   fens[i] += f"{self.last_num+i}"
         self.last_num += len(fens)
         print("FENS:", fens)
 
-        #self.broadcasted_fens += fens
+        # self.broadcasted_fens += fens
         if (self.game_out_path is not None) and len(fens) > 0:
             with open(self.game_out_path, "a") as f:
                 f.write("\n" + "\n".join(fens))

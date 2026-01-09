@@ -487,7 +487,7 @@ tuple<Mat, Mat, Mat, Mat, vector<Point>> findChessboard(const Mat& img, int min_
             }
         }
     }
-    cout << "Number of saddle points: " << spts.size() << endl;
+    // cout << "Number of saddle points: " << spts.size() << endl;
 
     Mat edges;
     Canny(img, edges, 20, 250);
@@ -495,12 +495,12 @@ tuple<Mat, Mat, Mat, Mat, vector<Point>> findChessboard(const Mat& img, int min_
     vector<vector<Point>> contours_all;
     vector<Vec4i> hierarchy_all;
     getContours(img, edges, contours_all, hierarchy_all);
-    cout << "Number of contours found: " << contours_all.size() << endl;
+    // cout << "Number of contours found: " << contours_all.size() << endl;
 
     vector<vector<Point>> contours;
     vector<Vec4i> hierarchy;
     pruneContours(contours_all, hierarchy_all, saddle, contours, hierarchy);
-    cout << "Number of contours after pruning: " << contours.size() << endl;
+    // cout << "Number of contours after pruning: " << contours.size() << endl;
 
     int curr_num_good = 0;
     Mat curr_grid_next, curr_grid_good, curr_M;
@@ -549,7 +549,7 @@ tuple<Mat, Mat, Mat, Mat, vector<Point>> findChessboard(const Mat& img, int min_
             break;
     }
 
-    cout << "Current number of good points: " << curr_num_good << endl;
+    // cout << "Current number of good points: " << curr_num_good << endl;
 
     if (curr_num_good > min_pts_needed) {
         Mat final_ideal_grid = getIdentityGrid(2 + 2 * 7);
@@ -618,8 +618,6 @@ void processSingle(const string& filename) {
     vector<Point> spts;
 
     tie(M, ideal_grid, grid_next, grid_good, spts) = findChessboard(img);
-
-    cout << "Reached here safely" << endl;
 
     if (!M.empty()) {
         Mat scaled_ideal = ((ideal_grid + 8) * 32);

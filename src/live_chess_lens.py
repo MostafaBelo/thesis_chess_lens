@@ -12,35 +12,50 @@ from PIL import Image
 
 import time
 import sys
-sys.path.append("/usr/lib/python3/dist-packages")
-from picamera2 import Picamera2, Preview
-picam2 = Picamera2()
-camera_config = picam2.create_still_configuration()
-picam2.configure(camera_config)
-picam2.start_preview(Preview.NULL)
-picam2.start()
+
+camera = "pi"  # pi / cv2
+
+if camera == "pi":
+    sys.path.append("/usr/lib/python3/dist-packages")
+    from picamera2 import Picamera2, Preview
+    picam2 = Picamera2()
+    camera_config = picam2.create_still_configuration()
+    picam2.configure(camera_config)
+    picam2.start_preview(Preview.NULL)
+    picam2.start()
+elif camera == "cv2":
+    import cv2
+    cap = cv2.VideoCapture(0)
 
 interval = 0.5
 
 
 transform_pil = transforms.ToTensor()
+
+
 def take_image() -> torch.Tensor:
-    img = picam2.capture_array()
-    img = Image.fromarray(img).resize((640,640))
-    #img.save("test.jpg")
+    if camera == "pi":
+        img = picam2.capture_array()
+    elif camera == "cv2":
+        ret, img = cap.read()  # Read frame continuously for live preview
+        if not ret:
+            cap.release()
+            raise Exception("❌ Failed to capture image")
+    img = Image.fromarray(img).resize((640, 640))
+    # img.save("test.jpg")
     img = transform_pil(img)
-    #print(img.shape, img.dtype)
+    # print(img.shape, img.dtype)
     return img
 
 
 algorithm = "cnn_onnx_static"
 filename = "game_fens.csv"
-#with open(filename, "w") as f:
+# with open(filename, "w") as f:
 #    f.write("rnbqkbnr")
 game = ChessLens.ChessLensGame(algorithm, config={
     "game_out_path": filename,
-    #"is_detect_occlusion": False,
-    #"is_detect_wakeup": False,
+    # "is_detect_occlusion": False,
+    "is_detect_wakeup": False,
     "context_delay": 2
 })
 try:
@@ -57,7 +72,7 @@ try:
         frame_times.append(t2-t1)
 
         if (interval > t2-t1):
-                time.sleep(interval - (t2-t1))
+            time.sleep(interval - (t2-t1))
 
     avg_frame = sum(frame_times)/len(frame_times)
     total_time = sum(frame_times)
@@ -82,4 +97,8 @@ try:
 except KeyboardInterrupt:
     print("Stopped Manually")
 finally:
-    picam2.stop()
+    if camera == "pi":
+        picam2.stop()
+    elif camera == "cv2":
+        cap.release()
+        cv2.destroyAllWindows()

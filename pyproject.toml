@@ -9,10 +9,10 @@ description = "Chess board & piece detection tools"
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
-  "numpy",
+  "numpy==1.26.4",
   "opencv-python",
   "torch",            
-  "ultralytics",  
+  "ultralytics",
   "matplotlib", 
   "dotenv",   
   "chess",
@@ -40,7 +40,12 @@ include = [
   "Dataset*",
   "PieceDetection*",
   "Utils*",
-  
+  "compression*",
+  "ContextAwareModels*",
+  "Game*",
+  "HMM*",
+  "OcclusionDetection*",
+  "WakeupDetection*"
 ]
 
 # Package non-.py assets (png/svg etc.) inside those packages

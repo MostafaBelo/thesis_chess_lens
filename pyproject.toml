@@ -21,6 +21,8 @@ dependencies = [
   "tqdm",
   "scipy",
   "scikit-learn",
+  "onnx",
+  "onnxruntime",
 ]
 
 # Optional: create CLI commands (map command -> module:function)

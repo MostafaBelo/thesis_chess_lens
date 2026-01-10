@@ -35,8 +35,8 @@ HTML_PAGE = """
       position: relative;
     }
     
-    .light { background: #ffffff; }
-    .dark { background: #769656; }
+    .light { background: #f0d9b5; }
+    .dark { background: #b58863; }
     
     #fen { 
       font-size: 14px; 
@@ -114,7 +114,7 @@ HTML_PAGE = """
             if (square) {
               const piece = pieceSymbols[char] || '';
               square.textContent = piece;
-              square.style.color = char === char.toUpperCase() ? '#fff' : '#000';
+              square.style.color = char === char.toUpperCase() ? '#2c2c2c' : '#000';
             }
             colIdx++;
           }

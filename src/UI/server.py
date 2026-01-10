@@ -1,9 +1,6 @@
 import threading
-import asyncio
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
-from fastapi.responses import HTMLResponse
-import uvicorn
-
+from flask import Flask, Response
+from flask_sock import Sock
 
 HTML_PAGE = """
 <!DOCTYPE html>
@@ -157,70 +154,63 @@ class FenServer:
         self.host = host
         self.port = port
 
-        self.app = FastAPI()
-        self.clients = set()
+        self.app = Flask(__name__)
+        self.sock = Sock(self.app)
+
         self.current_fen = "startpos"
+        self.clients = set()
+        self.lock = threading.Lock()
 
         self._setup_routes()
 
-        self.loop = None
-
-    # -------------------------
+    # -------------------
     # Public API
-    # -------------------------
+    # -------------------
     def start(self):
-        """Start server in background thread."""
-        thread = threading.Thread(target=self._run_server, daemon=True)
-        thread.start()
+        """Run Flask server in background thread."""
+        t = threading.Thread(target=self._run, daemon=True)
+        t.start()
 
     def update_fen(self, fen: str):
-        """Update FEN and push to all clients."""
+        """Update FEN and push to all connected clients."""
         self.current_fen = fen
-        if self.loop:
-            asyncio.run_coroutine_threadsafe(
-                self._broadcast(fen),
-                self.loop
-            )
+        self._broadcast(fen)
 
-    # -------------------------
+    # -------------------
     # Internal
-    # -------------------------
+    # -------------------
     def _setup_routes(self):
-        @self.app.get("/")
-        async def index():
-            return HTMLResponse(HTML_PAGE)
+        @self.app.route("/")
+        def index():
+            return Response(HTML_PAGE, mimetype="text/html")
 
-        @self.app.websocket("/ws")
-        async def websocket_endpoint(ws: WebSocket):
-            await ws.accept()
-            self.clients.add(ws)
+        @self.sock.route("/ws")
+        def websocket(ws):
+            with self.lock:
+                self.clients.add(ws)
 
             # send current state immediately
-            await ws.send_text(self.current_fen)
+            ws.send(self.current_fen)
 
             try:
                 while True:
-                    await ws.receive_text()  # keep alive
-            except WebSocketDisconnect:
-                self.clients.remove(ws)
+                    ws.receive()  # keep connection alive
+            finally:
+                with self.lock:
+                    self.clients.discard(ws)
 
-    async def _broadcast(self, message: str):
+    def _broadcast(self, message: str):
         dead = []
-        for ws in self.clients:
-            try:
-                await ws.send_text(message)
-            except:
-                dead.append(ws)
+        with self.lock:
+            for ws in self.clients:
+                try:
+                    ws.send(message)
+                except:
+                    dead.append(ws)
 
-        for ws in dead:
-            self.clients.discard(ws)
+            for ws in dead:
+                self.clients.discard(ws)
 
-    def _run_server(self):
-        config = uvicorn.Config(self.app, host=self.host,
-                                port=self.port, log_level="info")
-        server = uvicorn.Server(config)
-
-        self.loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(self.loop)
-
-        self.loop.run_until_complete(server.serve())
+    def _run(self):
+        # Flask dev server is enough for LAN / Pi usage
+        self.app.run(host=self.host, port=self.port, threaded=True)

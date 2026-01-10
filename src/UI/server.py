@@ -2,6 +2,17 @@ import threading
 from flask import Flask, Response
 from flask_sock import Sock
 
+# .light {
+#         /*background: #f0d9b5;*/
+#         background: #bda37f;
+#     }
+#     .dark {
+#         /*background: #b58863;*/
+#         background: #7a583e;
+#     }
+#               square.style.color = char === char.toUpperCase() ? '#dbc9b4' : '#4e4743';
+
+
 HTML_PAGE = """
 <!DOCTYPE html>
 <html>
@@ -35,14 +46,21 @@ HTML_PAGE = """
       position: relative;
     }
     
-    .light {
-        /*background: #f0d9b5;*/
-        background: #bda37f;
+    .square::before {
+      content: attr(data-piece);
+      position: absolute;
+      -webkit-text-stroke: 2px #fff;
+      text-stroke: 2px #fff;
+      z-index: 0;
     }
-    .dark {
-        /*background: #b58863;*/
-        background: #7a583e;
+    
+    .piece {
+      position: relative;
+      z-index: 1;
     }
+    
+    .light { background: #f0d9b5; }
+    .dark { background: #b58863; }
     
     #fen { 
       font-size: 14px; 
@@ -107,7 +125,7 @@ HTML_PAGE = """
       
       // Clear all squares first
       document.querySelectorAll('.square').forEach(square => {
-        square.textContent = '';
+        square.innerHTML = '';
       });
       
       ranks.forEach((rank, rowIdx) => {
@@ -119,9 +137,8 @@ HTML_PAGE = """
             const square = document.querySelector(`[data-row="${rowIdx}"][data-col="${colIdx}"]`);
             if (square) {
               const piece = pieceSymbols[char] || '';
-              square.textContent = piece;
-              //square.style.color = char === char.toUpperCase() ? '#2c2c2c' : '#000';
-              square.style.color = char === char.toUpperCase() ? '#dbc9b4' : '#4e4743';
+              square.innerHTML = `<span class="piece" style="color: ${char === char.toUpperCase() ? '#2c2c2c' : '#000'}; text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;">${piece}</span>`;
+            }
             }
             colIdx++;
           }

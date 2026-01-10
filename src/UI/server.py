@@ -35,8 +35,14 @@ HTML_PAGE = """
       position: relative;
     }
     
-    .light { background: #f0d9b5; }
-    .dark { background: #b58863; }
+    .light {
+        /*background: #f0d9b5;*/
+        background: #bda37f;
+    }
+    .dark {
+        /*background: #b58863;*/
+        background: #7a583e;
+    }
     
     #fen { 
       font-size: 14px; 
@@ -114,7 +120,8 @@ HTML_PAGE = """
             if (square) {
               const piece = pieceSymbols[char] || '';
               square.textContent = piece;
-              square.style.color = char === char.toUpperCase() ? '#2c2c2c' : '#000';
+              //square.style.color = char === char.toUpperCase() ? '#2c2c2c' : '#000';
+              square.style.color = char === char.toUpperCase() ? '#dbc9b4' : '#4e4743';
             }
             colIdx++;
           }

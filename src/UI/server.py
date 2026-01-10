@@ -75,7 +75,7 @@ HTML_PAGE = """
 
   <script>
     const pieceSymbols = {
-      'K': '♔', 'Q': '♕', 'R': '♖', 'B': '♗', 'N': '♘', 'P': '♙',
+      'K': '♚', 'Q': '♛', 'R': '♜', 'B': '♝', 'N': '♞', 'P': '♟',
       'k': '♚', 'q': '♛', 'r': '♜', 'b': '♝', 'n': '♞', 'p': '♟'
     };
 
@@ -157,7 +157,7 @@ class FenServer:
         self.app = Flask(__name__)
         self.sock = Sock(self.app)
 
-        self.current_fen = "startpos"
+        self.current_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
         self.clients = set()
         self.lock = threading.Lock()
 

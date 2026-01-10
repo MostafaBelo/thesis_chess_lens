@@ -8,65 +8,42 @@ HTML_PAGE = """
 <head>
   <title>Live Chess Board</title>
 
-  <!-- chessboard.js CSS -->
   <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.css"/>
+        href="https://cdn.jsdelivr.net/npm/chessground@9.0.0/assets/chessground.base.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/chessground@9.0.0/assets/chessground.brown.css">
 
   <style>
-    body {
-      font-family: Arial;
-      text-align: center;
-      margin-top: 30px;
-    }
-    #board {
-      width: 400px;
-      margin: 20px auto;
-    }
-    #fen {
-      margin-top: 15px;
-      font-size: 14px;
-      word-break: break-all;
-      color: #555;
-    }
+    body { font-family: Arial; text-align: center; margin-top: 30px; }
+    #board { width: 420px; margin: 20px auto; }
+    #fen { font-size: 14px; color: #555; word-break: break-all; }
   </style>
 </head>
 <body>
 
-  <h1>Current Position</h1>
-  <div id="board"></div>
-  <div id="fen">Waiting...</div>
+<h1>Current Position</h1>
+<div id="board"></div>
+<div id="fen">Waiting...</div>
 
-  <!-- libs -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/1.0.0/chess.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chessground@9.0.0/dist/chessground.min.js"></script>
 
-  <script>
-    let board = Chessboard("board", {
-      position: "start",
-      draggable: false
-    });
+<script>
+  const boardEl = document.getElementById("board");
 
-    let game = new Chess();
+  const cg = Chessground(boardEl, {
+    viewOnly: true,
+    fen: "startpos"
+  });
 
-    const ws = new WebSocket(`ws://${location.host}/ws`);
+  const ws = new WebSocket(`ws://${location.host}/ws`);
 
-    ws.onmessage = e => {
-      const fen = e.data;
+  ws.onmessage = e => {
+    const fen = e.data;
+    document.getElementById("fen").innerText = fen;
 
-      document.getElementById("fen").innerText = fen;
-
-      const ok = game.load(fen);
-      if (ok) {
-        board.position(fen);
-      } else {
-        console.warn("Invalid FEN:", fen);
-      }
-    };
-
-    ws.onclose = () => {
-      document.getElementById("fen").innerText = "Disconnected";
-    };
-  </script>
+    cg.set({ fen });
+  };
+</script>
 
 </body>
 </html>
@@ -81,7 +58,7 @@ class FenServer:
         self.app = Flask(__name__)
         self.sock = Sock(self.app)
 
-        self.current_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
+        self.current_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
         self.clients = set()
         self.lock = threading.Lock()
 

@@ -2,17 +2,6 @@ import threading
 from flask import Flask, Response
 from flask_sock import Sock
 
-# .light {
-#         /*background: #f0d9b5;*/
-#         background: #bda37f;
-#     }
-#     .dark {
-#         /*background: #b58863;*/
-#         background: #7a583e;
-#     }
-#               square.style.color = char === char.toUpperCase() ? '#dbc9b4' : '#4e4743';
-
-
 HTML_PAGE = """
 <!DOCTYPE html>
 <html>
@@ -44,23 +33,22 @@ HTML_PAGE = """
       justify-content: center;
       font-size: 45px;
       position: relative;
+
+      -webkit-text-stroke-width: 1px; /* Sets the width of the outline */
+      -webkit-text-stroke-color: black; /* Sets the color of the outline */
+      /* For better cross-browser compatibility (optional but recommended) */
+      text-stroke-width: 1px;
+      text-stroke-color: black;
     }
     
-    .square::before {
-      content: attr(data-piece);
-      position: absolute;
-      -webkit-text-stroke: 2px #fff;
-      text-stroke: 2px #fff;
-      z-index: 0;
+    .light {
+        /*background: #f0d9b5;*/
+        background: #bda37f;
     }
-    
-    .piece {
-      position: relative;
-      z-index: 1;
+    .dark {
+        /*background: #b58863;*/
+        background: #7a583e;
     }
-    
-    .light { background: #f0d9b5; }
-    .dark { background: #b58863; }
     
     #fen { 
       font-size: 14px; 
@@ -125,7 +113,7 @@ HTML_PAGE = """
       
       // Clear all squares first
       document.querySelectorAll('.square').forEach(square => {
-        square.innerHTML = '';
+        square.textContent = '';
       });
       
       ranks.forEach((rank, rowIdx) => {
@@ -137,8 +125,9 @@ HTML_PAGE = """
             const square = document.querySelector(`[data-row="${rowIdx}"][data-col="${colIdx}"]`);
             if (square) {
               const piece = pieceSymbols[char] || '';
-              square.innerHTML = `<span class="piece" style="color: ${char === char.toUpperCase() ? '#2c2c2c' : '#000'}; text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;">${piece}</span>`;
-            }
+              square.textContent = piece;
+              square.style.color = char === char.toUpperCase() ? '#ddd' : '#222';
+              //square.style.color = char === char.toUpperCase() ? '#dbc9b4' : '#222';
             }
             colIdx++;
           }

@@ -59,8 +59,8 @@ filename = "game_fens.csv"
 #    f.write("rnbqkbnr")
 game = ChessLens.ChessLensGame(algorithm, config={
     "game_out_path": filename,
-    # "is_detect_occlusion": False,
-    "is_detect_wakeup": False,
+    "is_detect_occlusion": False,
+    # "is_detect_wakeup": False,
     "context_delay": 2,
 
     "fen_update": server.update_fen

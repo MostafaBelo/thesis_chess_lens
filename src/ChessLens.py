@@ -200,6 +200,11 @@ class ChessLensGame:
         else:
             self.game_out_path = None
 
+        if (config is not None) and ("fen_update" in config):
+            self.fen_update = config["fen_update"]
+        else:
+            self.fen_update = None
+
         self.current_img = ChessLensImage(piece_detector=piece_detector)
         self.clear()
         self.piece_detector = piece_detector
@@ -381,6 +386,9 @@ class ChessLensGame:
         #   fens[i] += f"{self.last_num+i}"
         self.last_num += len(fens)
         print("FENS:", fens)
+
+        if self.fen_update is not None:
+            self.fen_update(fens[-1])
 
         # self.broadcasted_fens += fens
         if (self.game_out_path is not None) and len(fens) > 0:

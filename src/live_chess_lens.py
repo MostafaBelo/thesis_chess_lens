@@ -13,6 +13,11 @@ from PIL import Image
 import time
 import sys
 
+from UI.server import FenServer
+
+server = FenServer(port=8000)
+server.start()
+
 camera = "pi"  # pi / cv2
 
 if camera == "pi":
@@ -56,7 +61,9 @@ game = ChessLens.ChessLensGame(algorithm, config={
     "game_out_path": filename,
     # "is_detect_occlusion": False,
     "is_detect_wakeup": False,
-    "context_delay": 2
+    "context_delay": 2,
+
+    "fen_update": server.update_fen
 })
 try:
     frame_times = []

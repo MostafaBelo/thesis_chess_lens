@@ -387,7 +387,7 @@ class ChessLensGame:
         self.last_num += len(fens)
         print("FENS:", fens)
 
-        if self.fen_update is not None:
+        if (self.fen_update is not None) and (len(fens) >= 1):
             self.fen_update(fens[-1])
 
         # self.broadcasted_fens += fens

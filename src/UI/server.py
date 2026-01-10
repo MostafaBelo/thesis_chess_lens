@@ -6,27 +6,68 @@ HTML_PAGE = """
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Live Chess FEN</title>
+  <title>Live Chess Board</title>
+
+  <!-- chessboard.js CSS -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.css"/>
+
   <style>
-    body { font-family: Arial; text-align: center; margin-top: 40px; }
-    #fen { font-size: 18px; margin-top: 20px; word-break: break-all; }
+    body {
+      font-family: Arial;
+      text-align: center;
+      margin-top: 30px;
+    }
+    #board {
+      width: 400px;
+      margin: 20px auto;
+    }
+    #fen {
+      margin-top: 15px;
+      font-size: 14px;
+      word-break: break-all;
+      color: #555;
+    }
   </style>
 </head>
 <body>
+
   <h1>Current Position</h1>
+  <div id="board"></div>
   <div id="fen">Waiting...</div>
 
+  <!-- libs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/1.0.0/chess.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.js"></script>
+
   <script>
+    let board = Chessboard("board", {
+      position: "start",
+      draggable: false
+    });
+
+    let game = new Chess();
+
     const ws = new WebSocket(`ws://${location.host}/ws`);
 
     ws.onmessage = e => {
-      document.getElementById("fen").innerText = e.data;
+      const fen = e.data;
+
+      document.getElementById("fen").innerText = fen;
+
+      const ok = game.load(fen);
+      if (ok) {
+        board.position(fen);
+      } else {
+        console.warn("Invalid FEN:", fen);
+      }
     };
 
     ws.onclose = () => {
       document.getElementById("fen").innerText = "Disconnected";
     };
   </script>
+
 </body>
 </html>
 """
@@ -40,7 +81,7 @@ class FenServer:
         self.app = Flask(__name__)
         self.sock = Sock(self.app)
 
-        self.current_fen = "startpos"
+        self.current_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
         self.clients = set()
         self.lock = threading.Lock()
 

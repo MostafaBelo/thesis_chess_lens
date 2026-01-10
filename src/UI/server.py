@@ -35,8 +35,8 @@ HTML_PAGE = """
       position: relative;
     }
     
-    .light { background: #f0d9b5; }
-    .dark { background: #b58863; }
+    .light { background: #ffffff; }
+    .dark { background: #769656; }
     
     #fen { 
       font-size: 14px; 
@@ -98,6 +98,11 @@ HTML_PAGE = """
       const fenParts = fen.split(' ');
       const position = fenParts[0];
       const ranks = position.split('/');
+      
+      // Clear all squares first
+      document.querySelectorAll('.square').forEach(square => {
+        square.textContent = '';
+      });
       
       ranks.forEach((rank, rowIdx) => {
         let colIdx = 0;

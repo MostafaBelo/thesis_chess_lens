@@ -59,4 +59,8 @@ try:
 except Exception as e:
     print(f"Exited due to error - {e}")
 finally:
-    picam2.stop()
+    if camera == "pi":
+        picam2.stop()
+    elif camera == "cv2":
+        cap.release()
+        cv2.destroyAllWindows()

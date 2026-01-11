@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Tournament Control</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- Chessboard.js -->
+    <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="ri-chess-line"></i>
+                    <h1>Chess Tournament Control</h1>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-card">
+                        <i class="ri-device-line"></i>
+                        <div>
+                            <span class="stat-label">Active Devices</span>
+                            <span class="stat-value" id="active-devices">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="ri-trophy-line"></i>
+                        <div>
+                            <span class="stat-label">Tournaments</span>
+                            <span class="stat-value" id="tournament-count">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sidebar - Pi Devices -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <h2><i class="ri-device-fill"></i> Pi Devices</h2>
+                    <span class="badge" id="device-badge">0</span>
+                </div>
+                <div class="device-list" id="device-list">
+                    <!-- Device cards will be inserted here -->
+                </div>
+            </aside>
+
+            <!-- Main Panel - Chess Board Viewer -->
+            <section class="chess-viewer">
+                <div class="viewer-header">
+                    <div class="viewer-title">
+                        <i class="ri-checkbox-blank-circle-line"></i>
+                        <h2 id="viewer-title">Chess Game Viewer</h2>
+                    </div>
+                    <div class="viewer-controls">
+                        <button class="nav-btn" id="btn-first" onclick="goToFirstMove()" title="First Move">
+                            <i class="ri-skip-back-fill"></i>
+                        </button>
+                        <button class="nav-btn" id="btn-prev" onclick="goToPrevMove()" title="Previous Move">
+                            <i class="ri-arrow-left-s-line"></i>
+                        </button>
+                        <span class="move-indicator" id="move-indicator">-/-</span>
+                        <button class="nav-btn" id="btn-next" onclick="goToNextMove()" title="Next Move">
+                            <i class="ri-arrow-right-s-line"></i>
+                        </button>
+                        <button class="nav-btn" id="btn-last" onclick="goToLastMove()" title="Last Move">
+                            <i class="ri-skip-forward-fill"></i>
+                        </button>
+                        <button class="nav-btn nav-btn-play" id="btn-play" onclick="toggleAutoplay()" title="Auto Play">
+                            <i class="ri-play-fill"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="chess-board-container">
+                    <div id="chess-board"></div>
+                    <div class="board-info" id="board-info">
+                        <div class="empty-state">
+                            <i class="ri-chess-line"></i>
+                            <h3>No Game Selected</h3>
+                            <p>Click the view button on a Pi device to watch the game</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tournament Section Below Board -->
+                <div class="tournament-section">
+                    <div class="section-header">
+                        <h2><i class="ri-folder-chart-line"></i> Tournaments</h2>
+                        <button class="btn-refresh" onclick="refreshTournaments()">
+                            <i class="ri-refresh-line"></i> Refresh
+                        </button>
+                    </div>
+                    <div class="tournament-grid" id="tournament-grid">
+                        <!-- Tournament cards will be inserted here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel - Pi Control -->
+            <aside class="control-panel-right" id="control-panel-right">
+                <div class="panel-header">
+                    <h2><i class="ri-remote-control-line"></i> Device Control</h2>
+                </div>
+                <div id="control-section-content">
+                    <div class="empty-state">
+                        <i class="ri-device-line"></i>
+                        <h3>Select a Pi Device</h3>
+                        <p>Choose a device from the sidebar to control it</p>
+                    </div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

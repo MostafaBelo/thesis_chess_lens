@@ -1,0 +1,67 @@
+Now that we know where is the board. Now we need to know
+what are the pieces on that board. 
+Let's start with one jammed board 
+
+Focusing on one piece at a time, we need to know what exactly is this piece. 
+
+In other terms, we have to define its type,with confidence 
+ 
+in this case, the model is 94% sure that this is a Black Rook
+ 
+then, the model repeatss this process for each piece on that board 
+
+
+But more specifically how does it do that 
+
+First, it crops the picture to include the piece 
+
+Then pass that cropped image to our algorithem 
+so that it can know three specific thingss: 
+
+First, Is this square occupied or not. 
+If it is occupied, then is that piece, black or white, 
+Then of what type is this piece 
+
+in this case, the square is occupied, the piece is black, and the type is a rook. 
+
+. 
+We should also mention that we have tried other approaches, 
+but the cnn algorithem that we have just descibed, scored higher accuracies that other 
+.. 
+
+
+But we can't just throw in images to an AI model and it magically knows what is that 
+We have to teach it specifically  what we are looking for. 
+.. 
+
+
+This process is called training, and it is simply feeding the model alot of chess images until it knows exactly how chess pieces look like 
+In our case, we spent dozens of hours collecting around 5000 images, some of them were collected manually with our phoness, we have collected around 5000 images from different 
+
+
+sources some of them were online, and others we pictured using our 
+mobile phones. all of these imagess were then fed to the model 
+to train it on how chess pieces look like. 
+The result is an AI model intellegent enough to know
+how does chess pieces look like
+.. 
+
+
+Other people stop here. But we, as chess players, saw an opportunity 
+We tought our model how whole chess games, starting from the first move, 
+till the checkmate, look like. 
+
+.. 
+
+We give the model all possibilities of chess games, 
+and as the games progresses, we narrow down these possibilities. 
+untill we know the best fit for the game. 
+The result is an AI model that knows what are chess positions, and can also
+detect illegal movess and reduce errors. 
+
+
+Now we will continue with another important module, that is frame filtering
+
+.. 
+
+

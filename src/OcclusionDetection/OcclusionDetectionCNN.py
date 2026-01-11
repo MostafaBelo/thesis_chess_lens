@@ -100,11 +100,9 @@ class OcclusionDetectorCNN:
         # Image.fromarray((img.permute(1, 2, 0).cpu().numpy(
         # )*255).astype(np.uint8)).save("/home/potato/occlusion_test.jpg")
         img = img.unsqueeze(0)
-        print(img.shape)
         with torch.no_grad():
             out: torch.Tensor = model(img)
         # pred = out.softmax(dim=1)
         pred = out.sigmoid()
-        print(pred)
 
         return (pred > .5).item(), pred.item()

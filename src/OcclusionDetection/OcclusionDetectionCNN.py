@@ -85,6 +85,7 @@ class OcclusionDetectorCNN:
         img = img.permute(2, 0, 1).flip(dims=(0,)).unsqueeze(0)
         with torch.no_grad():
             out: torch.Tensor = model(img)
-        pred = out.softmax(dim=1)
+        # pred = out.softmax(dim=1)
+        pred = out.sigmoid()
 
-        return (pred > .5)[:, 0].item(), pred[:, 0].item()
+        return (pred > .5).item(), pred.item()

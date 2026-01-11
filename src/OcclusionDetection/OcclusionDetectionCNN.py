@@ -82,7 +82,7 @@ class OcclusionDetectorCNN:
         global model
         model = TinyOcclusionCNN()
         model.load_state_dict(torch.load(
-            os.path.join(os.environ['WEIGHTS'], "occlusion_cnn.pt"), map_location=device))
+            os.path.join(os.environ['WEIGHTS'], "occlusion_cnn.pth"), map_location=device))
         model = model.to(device).eval()
 
     def set_img(self, img: torch.Tensor):

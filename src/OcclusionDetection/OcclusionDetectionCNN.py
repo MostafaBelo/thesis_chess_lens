@@ -5,6 +5,7 @@ import numpy as np
 import torch
 from torch import nn
 import torch.nn.functional as F
+import timm
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -28,15 +29,28 @@ def correct_image(image):
 
 
 class TinyOcclusionCNN(nn.Module):
+    # def __init__(self):
+    #     super().__init__()
+    #     self.net = nn.Sequential(
+    #         nn.Conv2d(3, 16, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
+    #         nn.Conv2d(16, 32, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
+    #         nn.Conv2d(32, 64, 3, padding=1), nn.ReLU(),
+    #         nn.AdaptiveAvgPool2d(1),
+    #         nn.Flatten(),
+    #         nn.Linear(64, 2)
+    #     )
+
     def __init__(self):
         super().__init__()
-        self.net = nn.Sequential(
-            nn.Conv2d(3, 16, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
-            nn.Conv2d(16, 32, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
-            nn.Conv2d(32, 64, 3, padding=1), nn.ReLU(),
-            nn.AdaptiveAvgPool2d(1),
-            nn.Flatten(),
-            nn.Linear(64, 2)
+        self.net = timm.create_model(
+            "mobilenetv3_small_100",
+            pretrained=False,
+            num_classes=1
+        )
+
+        self.net.classifier = nn.Sequential(
+            nn.Dropout(0.2),
+            nn.Linear(self.net.classifier.in_features, 1)
         )
 
     def forward(self, x):
@@ -56,7 +70,7 @@ class OcclusionDetectorCNN:
         global model
         model = TinyOcclusionCNN()
         model.load_state_dict(torch.load(
-            os.path.join(os.environ['WEIGHTS'], "occlusion_cnn.pt"), map_location=device))
+            os.path.join(os.environ['WEIGHTS'], "occlusion_cnn.pth"), map_location=device))
         model = model.to(device)
 
     def set_img(self, img: torch.Tensor):

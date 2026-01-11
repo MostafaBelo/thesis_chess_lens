@@ -25,6 +25,7 @@ picam2.set_controls({
 })
 picam2.start_preview(Preview.NULL)
 picam2.start()
+time.sleep(2)
 
 
 def take_image() -> None:

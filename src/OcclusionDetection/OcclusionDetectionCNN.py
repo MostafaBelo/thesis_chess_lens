@@ -5,7 +5,10 @@ import numpy as np
 import torch
 from torch import nn
 import torch.nn.functional as F
+from torchvision import transforms
 import timm
+
+from PIL import Image
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -17,15 +20,17 @@ else:
 
 
 def correct_image(image):
-    b, g, r = cv2.split(image.astype(np.float32))
-    avg_b, avg_g, avg_r = np.mean(b), np.mean(g), np.mean(r)
-    avg_gray = (avg_b + avg_g + avg_r) / 3
+    # b, g, r = cv2.split(image.astype(np.float32))
+    # avg_b, avg_g, avg_r = np.mean(b), np.mean(g), np.mean(r)
+    # avg_gray = (avg_b + avg_g + avg_r) / 3
 
-    b = b * (avg_gray / avg_b)
-    g = g * (avg_gray / avg_g)
-    r = r * (avg_gray / avg_r)
+    # b = b * (avg_gray / avg_b)
+    # g = g * (avg_gray / avg_g)
+    # r = r * (avg_gray / avg_r)
 
-    return cv2.merge([b, g, r]).clip(0, 255).astype(np.uint8)
+    # return cv2.merge([b, g, r]).clip(0, 255).astype(np.uint8)
+
+    return transforms.ToTensor(Image.fromarray(image).resize((240, 240)))
 
 
 class TinyOcclusionCNN(nn.Module):

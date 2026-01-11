@@ -32,6 +32,7 @@ if camera == "pi":
     })
     picam2.start_preview(Preview.NULL)
     picam2.start()
+    time.sleep(2)
 elif camera == "cv2":
     import cv2
     cap = cv2.VideoCapture(0)

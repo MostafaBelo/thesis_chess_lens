@@ -77,12 +77,28 @@ HTML_PAGE = """
     .connected { background: #5cb85c; }
     .disconnected { background: #d9534f; }
     .waiting { background: #f0ad4e; }
+
+    #stopButton {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #d9534f;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #stopButton:hover {
+      background: #c9302c;
+    }
   </style>
 </head>
 <body>
   <h1>Live Chess Board</h1>
   <div id="status" class="status waiting">Connecting...</div>
   <div id="board"></div>
+  <button id="stopButton">Stop Game</button>
   <div id="fen">Waiting for data...</div>
 
   <script>
@@ -161,6 +177,17 @@ HTML_PAGE = """
       statusEl.textContent = 'Connection Error';
       statusEl.className = 'status disconnected';
     };
+
+    // Stop game button handler
+    document.getElementById('stopButton').addEventListener('click', () => {
+      fetch('/stop_game')
+        .then(response => {
+          console.log('Stop game request sent');
+        })
+        .catch(error => {
+          console.error('Error sending stop game request:', error);
+        });
+    });
   </script>
 </body>
 </html>
@@ -178,6 +205,8 @@ class FenServer:
         self.current_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
         self.clients = set()
         self.lock = threading.Lock()
+
+        self.stop_game = None
 
         self._setup_routes()
 
@@ -216,6 +245,11 @@ class FenServer:
             finally:
                 with self.lock:
                     self.clients.discard(ws)
+
+        @self.app.route("/stop_game")
+        def stopgame():
+            if self.stop_game is not None:
+                self.stop_game()
 
     def _broadcast(self, message: str):
         dead = []

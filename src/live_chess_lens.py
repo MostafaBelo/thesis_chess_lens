@@ -70,11 +70,20 @@ game = ChessLens.ChessLensGame(algorithm, config={
 
     "fen_update": server.update_fen
 })
+is_running = True
+
+
+def stop_game():
+    is_running = False
+
+
+server.stop_game = stop_game
+
 try:
     frame_times = []
     frame_paths = []
-    # while True:
-    for t in range(500):
+    while is_running:
+        # for t in range(500):
         img = take_image()
         t1 = time.perf_counter()
         # game.set_img(img, verbose=True)

@@ -16,20 +16,34 @@ os.makedirs(data_dir, exist_ok=True)
 
 img_count = 0
 
-picam2 = Picamera2()
-camera_config = picam2.create_still_configuration()
-picam2.configure(camera_config)
-picam2.set_controls({
-    "AwbEnable": True,
-    "AwbMode": 4
-})
-picam2.start_preview(Preview.NULL)
-picam2.start()
-time.sleep(2)
+camera = "pi"  # pi / cv2
+
+if camera == "pi":
+    sys.path.append("/usr/lib/python3/dist-packages")
+    from picamera2 import Picamera2, Preview
+    picam2 = Picamera2()
+    camera_config = picam2.create_still_configuration()
+    picam2.configure(camera_config)
+    picam2.set_controls({
+        "AwbEnable": True,
+        "AwbMode": 4
+    })
+    picam2.start_preview(Preview.NULL)
+    picam2.start()
+    time.sleep(2)
+elif camera == "cv2":
+    import cv2
+    cap = cv2.VideoCapture(0)
 
 
-def take_image() -> None:
-    img = picam2.capture_array()
+def take_image():
+    if camera == "pi":
+        img = picam2.capture_array()
+    elif camera == "cv2":
+        ret, img = cap.read()  # Read frame continuously for live preview
+        if not ret:
+            cap.release()
+            raise Exception("❌ Failed to capture image")
     img = Image.fromarray(img).resize((640, 480))
     img.save(f"{data_dir}/img_{img_count}.jpg")
 

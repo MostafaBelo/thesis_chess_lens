@@ -262,6 +262,7 @@ class ChessLensGame:
         vals = [correct_r, correct_l, correct_t, correct_b]
         orientations = ["r", "l", "t", "b"]
         self.orientation = orientations[vals.index(max(vals))]
+        print("Orientation:", self.orientation)
 
     def detect_occlusion(self) -> bool:
         return self.current_img.is_occluded()

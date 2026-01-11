@@ -213,6 +213,8 @@ class ChessLensGame:
         self.avg_times = {
             "load": 0,
             "board_detection": 0,
+            "wakeup": 0,
+            "occlusion": 0,
             "piece_recognition": 0,
             "HMM": 0
         }
@@ -235,9 +237,10 @@ class ChessLensGame:
         t1 = time.perf_counter()
         self.current_img.load_image(img)
         img = self.current_img
+        t2 = time.perf_counter()
         is_wake_up = self.process_img(verbose)
         self.t += 1
-        t2 = time.perf_counter()
+        t3 = time.perf_counter()
 
         self.avg_times["load"] += t2-t1
 
@@ -296,7 +299,6 @@ class ChessLensGame:
         return -np.log(torch.rot90(probs, k=k, dims=(2, 3)).squeeze().permute(1, 2, 0).numpy()[::-1]+(1e-7))
 
     def process_img(self, verbose=False):
-        t2 = time.perf_counter()
         img = self.current_img
 
         isbound = self.context_model.check_bind(self.t)
@@ -304,6 +306,7 @@ class ChessLensGame:
         if isbound:
             self.get_latest_fens()
 
+        t1 = time.perf_counter()
         # Board Detection
         if self.t % self.bd_period == 0:
             try:
@@ -320,6 +323,7 @@ class ChessLensGame:
                 # raise e
                 # print(f"Failed to detect board - {e}")
         img.board_detection = self.board_detection
+        t2 = time.perf_counter()
 
         # Wakup Detection
         if self.is_detect_wakeup:
@@ -333,6 +337,7 @@ class ChessLensGame:
             else:
                 self.last_wakeup = self.t
         print("Awake")
+        t3 = time.perf_counter()
 
         # Occlusion Detection
         if self.is_detect_occlusion:
@@ -341,7 +346,7 @@ class ChessLensGame:
                 print(f"Occluded - {is_occluded}")
                 return
         print("Not Occluded")
-        t3 = time.perf_counter()
+        t4 = time.perf_counter()
 
         # Frame Processing
         img.recognize_pieces()
@@ -349,7 +354,7 @@ class ChessLensGame:
         # Orientation
         if self.orientation is None:
             self.calc_orientation()
-        t4 = time.perf_counter()
+        t5 = time.perf_counter()
 
         if verbose:
             # print(img.fen)
@@ -358,11 +363,13 @@ class ChessLensGame:
         # Context Awareness
         self.context_model.set_probs(
             self.context_model.model.top_t()+1, self.prep_probs(img.piece_matrix), self.t)
-        t5 = time.perf_counter()
+        t6 = time.perf_counter()
 
-        self.avg_times["board_detection"] += t3-t2
-        self.avg_times["piece_recognition"] += t4-t3
-        self.avg_times["HMM"] += t5-t4
+        self.avg_times["board_detection"] += t2-t1
+        self.avg_times["wakeup"] += t3-t2
+        self.avg_times["occlusion"] += t4-t3
+        self.avg_times["piece_recognition"] += t5-t4
+        self.avg_times["HMM"] += t6-t5
 
         return True
 

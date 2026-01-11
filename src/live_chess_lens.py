@@ -37,7 +37,7 @@ elif camera == "cv2":
     import cv2
     cap = cv2.VideoCapture(0)
 
-interval = 0.5
+interval = 0.3
 
 
 transform_pil = transforms.ToTensor()
@@ -64,7 +64,7 @@ filename = "game_fens.csv"
 #    f.write("rnbqkbnr")
 game = ChessLens.ChessLensGame(algorithm, config={
     "game_out_path": filename,
-    "is_detect_occlusion": False,
+    # "is_detect_occlusion": False,
     # "is_detect_wakeup": False,
     "context_delay": 2,
 
@@ -91,7 +91,7 @@ try:
     game.bind()
     history = game.get_history(True)
 
-    print(f"Avg Image Loading: {game.avg_times["load"]*1e3:.4f}ms | Avg Board Detection: {game.avg_times["board_detection"]*1e3:.4f}ms | Avg Piece Recognition: {game.avg_times["piece_recognition"]*1e3:.4f}ms | Avg HMM: {game.avg_times["HMM"]*1e3:.4f}ms")
+    print(f"Avg Image Loading: {game.avg_times["load"]*1e3 / len(frame_times):.4f}ms | Avg Board Detection: {game.avg_times["board_detection"]*1e3 / len(frame_times):.4f}ms | Avg Wakeup: {game.avg_times["wakeup"]*1e3 / len(frame_times):.4f}ms | Avg Occlusion: {game.avg_times["occlusion"]*1e3 / len(frame_times):.4f}ms | Avg Piece Recognition: {game.avg_times["piece_recognition"]*1e3 / len(frame_times):.4f}ms | Avg HMM: {game.avg_times["HMM"]*1e3 / len(frame_times):.4f}ms")
     print(
         f"Avg Frame: {avg_frame*1e3:.4f}ms | Frame Count: {len(frame_times)} | Total Time: {total_time*1e3:.4f}ms")
 

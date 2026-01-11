@@ -19,7 +19,11 @@ else:
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
-transformer = transforms.ToTensor()
+transformer = transforms.Compose([
+    transforms.ToPILImage(),
+    transforms.Resize((240, 240)),
+    transforms.ToTensor()
+])
 
 
 def correct_image(image):
@@ -33,7 +37,7 @@ def correct_image(image):
 
     # return cv2.merge([b, g, r]).clip(0, 255).astype(np.uint8)
 
-    return transformer(Image.fromarray(image).resize((240, 240)))
+    return transformer(image)
 
 
 class TinyOcclusionCNN(nn.Module):
@@ -85,12 +89,14 @@ class OcclusionDetectorCNN:
         self.img = img
 
     def is_occluded(self):
-        img = (self.img.squeeze().permute(1, 2, 0).flip(dims=(2,)).cpu().numpy()
-               * 255).astype(np.uint8)
+        # img = (self.img.squeeze().permute(1, 2, 0).flip(dims=(2,)).cpu().numpy()
+        #        * 255).astype(np.uint8)
         img = correct_image(img)
-        img = torch.tensor(
-            img, dtype=torch.float32, device=device)/255
-        img = img.permute(2, 0, 1).flip(dims=(0,)).unsqueeze(0)
+        # img = torch.tensor(
+        #     img, dtype=torch.float32, device=device)/255
+        # img = img.permute(2, 0, 1)
+        print(img.shape)
+        img = img.unsqueeze(0)
         with torch.no_grad():
             out: torch.Tensor = model(img)
         # pred = out.softmax(dim=1)

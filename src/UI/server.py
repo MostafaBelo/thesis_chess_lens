@@ -249,7 +249,10 @@ class FenServer:
         @self.app.route("/stop_game")
         def stopgame():
             if self.stop_game is not None:
+                print("yes")
                 self.stop_game()
+
+            return Response()
 
     def _broadcast(self, message: str):
         dead = []

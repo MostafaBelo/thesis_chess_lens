@@ -1,4 +1,3 @@
-from picamera2 import Picamera2, Preview
 import os
 from dotenv import load_dotenv
 load_dotenv()  # noqa
@@ -9,14 +8,21 @@ from PIL import Image
 import time
 import sys
 sys.path.append("/usr/lib/python3/dist-packages")
+from picamera2 import Picamera2, Preview  # noqa
+import os  # noqa
 
 data_dir = ""
+os.makedirs(data_dir, exist_ok=True)
 
 img_count = 0
 
 picam2 = Picamera2()
 camera_config = picam2.create_still_configuration()
 picam2.configure(camera_config)
+picam2.set_controls({
+    "AwbEnable": True,
+    "AwbMode": 4
+})
 picam2.start_preview(Preview.NULL)
 picam2.start()
 

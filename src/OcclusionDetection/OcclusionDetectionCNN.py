@@ -89,7 +89,7 @@ class OcclusionDetectorCNN:
         self.img = img.clone().detach()
 
     def is_occluded(self):
-        img = self.img
+        img = self.img.squeeze()
         # img = (self.img.squeeze().permute(1, 2, 0).flip(dims=(2,)).cpu().numpy()
         #        * 255).astype(np.uint8)
         img = correct_image(img)

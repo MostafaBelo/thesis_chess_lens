@@ -20,9 +20,9 @@ else:
 
 
 transformer = transforms.Compose([
-    transforms.ToPILImage(),
-    transforms.Resize((240, 240)),
-    transforms.ToTensor()
+    # transforms.ToPILImage(),
+    # transforms.Resize((240, 240)),
+    # transforms.ToTensor()
 ])
 
 
@@ -41,29 +41,29 @@ def correct_image(image):
 
 
 class TinyOcclusionCNN(nn.Module):
-    # def __init__(self):
-    #     super().__init__()
-    #     self.net = nn.Sequential(
-    #         nn.Conv2d(3, 16, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
-    #         nn.Conv2d(16, 32, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
-    #         nn.Conv2d(32, 64, 3, padding=1), nn.ReLU(),
-    #         nn.AdaptiveAvgPool2d(1),
-    #         nn.Flatten(),
-    #         nn.Linear(64, 2)
-    #     )
-
     def __init__(self):
         super().__init__()
-        self.net = timm.create_model(
-            "mobilenetv3_small_100",
-            pretrained=False,
-            num_classes=1
+        self.net = nn.Sequential(
+            nn.Conv2d(3, 16, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
+            nn.Conv2d(16, 32, 3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
+            nn.Conv2d(32, 64, 3, padding=1), nn.ReLU(),
+            nn.AdaptiveAvgPool2d(1),
+            nn.Flatten(),
+            nn.Linear(64, 2)
         )
 
-        self.net.classifier = nn.Sequential(
-            nn.Dropout(0.2),
-            nn.Linear(self.net.classifier.in_features, 1)
-        )
+    # def __init__(self):
+    #     super().__init__()
+    #     self.net = timm.create_model(
+    #         "mobilenetv3_small_100",
+    #         pretrained=False,
+    #         num_classes=1
+    #     )
+
+    #     self.net.classifier = nn.Sequential(
+    #         nn.Dropout(0.2),
+    #         nn.Linear(self.net.classifier.in_features, 1)
+    #     )
 
     def forward(self, x):
         return self.net(x)
@@ -82,7 +82,7 @@ class OcclusionDetectorCNN:
         global model
         model = TinyOcclusionCNN()
         model.load_state_dict(torch.load(
-            os.path.join(os.environ['WEIGHTS'], "occlusion_cnn.pth"), map_location=device))
+            os.path.join(os.environ['WEIGHTS'], "occlusion_cnn.pt"), map_location=device))
         model = model.to(device).eval()
 
     def set_img(self, img: torch.Tensor):
@@ -90,19 +90,11 @@ class OcclusionDetectorCNN:
 
     def is_occluded(self):
         img = self.img.squeeze()
-        # img = (self.img.squeeze().permute(1, 2, 0).flip(dims=(2,)).cpu().numpy()
-        #        * 255).astype(np.uint8)
         img = correct_image(img)
-        # img = torch.tensor(
-        #     img, dtype=torch.float32, device=device)/255
-        # img = img.permute(2, 0, 1)
-        # print(img.shape)
-        # Image.fromarray((img.permute(1, 2, 0).cpu().numpy(
-        # )*255).astype(np.uint8)).save("/home/potato/occlusion_test.jpg")
         img = img.unsqueeze(0)
         with torch.no_grad():
             out: torch.Tensor = model(img)
-        # pred = out.softmax(dim=1)
-        pred = out.sigmoid()
+        pred = out.softmax(dim=1)[:, 0]
+        # pred = out.sigmoid()
 
         return (pred > .5).item(), pred.item()

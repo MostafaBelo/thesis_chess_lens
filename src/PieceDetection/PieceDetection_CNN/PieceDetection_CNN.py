@@ -443,7 +443,7 @@ class PieceDetector:
             piece_detection_model = PieceDetectorCNNModel()
             piece_detection_model.load_state_dict(torch.load(
                 os.path.join(os.environ['WEIGHTS'], "piece_cnn.pt"), map_location=device))
-            piece_detection_model = piece_detection_model.to(device)
+            piece_detection_model = piece_detection_model.to(device).eval()
 
         elif model_type == "onnx":
             piece_detection_model = PieceDetectorCNNModelOnnx(

@@ -83,7 +83,7 @@ class OcclusionDetectorCNN:
         model = TinyOcclusionCNN()
         model.load_state_dict(torch.load(
             os.path.join(os.environ['WEIGHTS'], "occlusion_cnn.pth"), map_location=device))
-        model = model.to(device)
+        model = model.to(device).eval()
 
     def set_img(self, img: torch.Tensor):
         self.img = img.clone().detach()
@@ -100,6 +100,7 @@ class OcclusionDetectorCNN:
         # Image.fromarray((img.permute(1, 2, 0).cpu().numpy(
         # )*255).astype(np.uint8)).save("/home/potato/occlusion_test.jpg")
         img = img.unsqueeze(0)
+        print(img.shape)
         with torch.no_grad():
             out: torch.Tensor = model(img)
         # pred = out.softmax(dim=1)

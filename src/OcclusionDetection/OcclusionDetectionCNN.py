@@ -19,6 +19,9 @@ else:
     device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
+transformer = transforms.ToTensor()
+
+
 def correct_image(image):
     # b, g, r = cv2.split(image.astype(np.float32))
     # avg_b, avg_g, avg_r = np.mean(b), np.mean(g), np.mean(r)
@@ -30,7 +33,7 @@ def correct_image(image):
 
     # return cv2.merge([b, g, r]).clip(0, 255).astype(np.uint8)
 
-    return transforms.ToTensor(Image.fromarray(image).resize((240, 240)))
+    return transformer(Image.fromarray(image).resize((240, 240)))
 
 
 class TinyOcclusionCNN(nn.Module):

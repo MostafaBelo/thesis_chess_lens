@@ -97,12 +97,13 @@ class OcclusionDetectorCNN:
         #     img, dtype=torch.float32, device=device)/255
         # img = img.permute(2, 0, 1)
         # print(img.shape)
-        Image.fromarray((img.permute(1, 2, 0).cpu().numpy(
-        )*255).astype(np.uint8)).save("/home/potato/occlusion_test.jpg")
-        img = img.unsqueeze(0)
+        # Image.fromarray((img.permute(1, 2, 0).cpu().numpy(
+        # )*255).astype(np.uint8)).save("/home/potato/occlusion_test.jpg")
+        img = img.unsqueeze(0).flip(dims=(1,))
         with torch.no_grad():
             out: torch.Tensor = model(img)
         # pred = out.softmax(dim=1)
         pred = out.sigmoid()
+        print(pred)
 
         return (pred > .5).item(), pred.item()

@@ -74,6 +74,7 @@ is_running = True
 
 
 def stop_game():
+    global is_running
     is_running = False
 
 

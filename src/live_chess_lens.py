@@ -18,7 +18,7 @@ from UI.server import FenServer
 server = FenServer(port=8000)
 server.start()
 
-camera = "pi"  # pi / cv2
+camera = "cv2"  # pi / cv2
 
 if camera == "pi":
     sys.path.append("/usr/lib/python3/dist-packages")
@@ -37,7 +37,7 @@ elif camera == "cv2":
     import cv2
     cap = cv2.VideoCapture(0)
 
-interval = 0.3
+interval = 1
 
 
 transform_pil = transforms.ToTensor()
@@ -51,19 +51,19 @@ def take_image() -> torch.Tensor:
         if not ret:
             cap.release()
             raise Exception("❌ Failed to capture image")
+        img = img[:, :, ::-1]
     img = Image.fromarray(img).resize((640, 640))
-    # img.save("test.jpg")
     img = transform_pil(img)
     # print(img.shape, img.dtype)
     return img
 
 
 algorithm = "cnn_onnx_static"
-filename = "game_fens.csv"
+dirname = "game_fens"
 # with open(filename, "w") as f:
 #    f.write("rnbqkbnr")
 game = ChessLens.ChessLensGame(algorithm, config={
-    "game_out_path": filename,
+    "game_out_path": dirname,
     # "is_detect_occlusion": False,
     # "is_detect_wakeup": False,
     "context_delay": 2,
@@ -87,8 +87,8 @@ try:
         # for t in range(500):
         img = take_image()
         t1 = time.perf_counter()
-        # game.set_img(img, verbose=True)
-        is_wake_up = game.set_img(img)
+        iw_wake_up = game.set_img(img, verbose=True)
+        # is_wake_up = game.set_img(img)
         t2 = time.perf_counter()
 
         frame_times.append(t2-t1)

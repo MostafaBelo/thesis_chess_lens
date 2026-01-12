@@ -7,8 +7,6 @@ from PIL import Image
 
 import time
 import sys
-sys.path.append("/usr/lib/python3/dist-packages")
-from picamera2 import Picamera2, Preview  # noqa
 import os  # noqa
 
 data_dir = ""
@@ -44,6 +42,7 @@ def take_image():
         if not ret:
             cap.release()
             raise Exception("❌ Failed to capture image")
+        img = img[:, :, ::-1]
     img = Image.fromarray(img).resize((640, 480))
     img.save(f"{data_dir}/img_{img_count}.jpg")
 

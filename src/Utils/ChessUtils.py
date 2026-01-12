@@ -5,6 +5,10 @@ import chess
 import chess.pgn
 import chess.svg
 
+import cv2
+from PIL import Image
+import io
+
 import os
 
 if "svg" in os.environ and os.environ["svg"] == "TRUE":
@@ -137,14 +141,23 @@ class ChessTensorUtils():
         return game
 
 
-def fen_to_png(fen: str, folder_path: str, file_name: str):
+def fen_to_png(fen: str, folder_path: str, file_name: str, is_write=True):
+    full_path = os.path.join(folder_path, file_name)
+    folder_path = os.path.dirname(full_path)
+    file_name = os.path.basename(full_path)
     board = chess.Board(f"{fen} w KQkq - 1 1")
     boardsvg = chess.svg.board(coordinates=True, board=board, size=350, colors={
                                "square light": "#E6D0A7", "square dark": "#A67D5B"})
-    svg_file_path = f"{folder_path}/positions.svg"
-    f = open(svg_file_path, "w")
-    f.write(boardsvg)
-    f.close()
+    # svg_file_path = f"{folder_path}/positions.svg"
+    # f = open(svg_file_path, "w")
+    # f.write(boardsvg)
+    # f.close()
+    svg_bytes = boardsvg.encode('utf-8')
     png_file_path = f"{folder_path}/{file_name}"
     if "svg" in os.environ and os.environ["svg"] == "TRUE":
-        cairosvg.svg2png(url=svg_file_path, write_to=png_file_path, scale=7)
+        img = cairosvg.svg2png(
+            bytestring=svg_bytes, write_to=(png_file_path if is_write else None), output_height=200, output_width=200)
+        img = np.array(Image.open(io.BytesIO(img)))
+        if img.shape[2] == 4:
+            img = img[:, :, :3]
+        return img

@@ -20,6 +20,7 @@ from Utils import ChessUtils
 
 from typing import Literal
 
+import os
 import time
 
 
@@ -135,6 +136,14 @@ class ChessLensImage:
         # convert piece matrix to fen
         self.fen = ChessUtils.ChessTensorUtils().tensorToFEN_MAX(
             self.piece_matrix)
+
+    def get_fen_img(self):
+        if not self.is_pieces_detected():
+            raise Exception("Pieces not detected")
+
+        fen_img = ChessUtils.fen_to_png(
+            self.fen, ".", file_name="", is_write=False)
+        return fen_img
 
     def save_fen_image(self, file_name="out_fen.png"):
         if not self.is_pieces_detected():
@@ -333,10 +342,11 @@ class ChessLensGame:
                 is_wakeup = self.detect_wakeup()
             if not is_wakeup:
                 print("Not Awake")
-                return
+                if (not verbose):
+                    return
             else:
+                print("Awake")
                 self.last_wakeup = self.t
-        print("Awake")
         t3 = time.perf_counter()
 
         # Occlusion Detection
@@ -344,8 +354,10 @@ class ChessLensGame:
             is_occluded = self.detect_occlusion()
             if is_occluded:
                 print(f"Occluded - {is_occluded}")
-                return
-        print("Not Occluded")
+                if (not verbose):
+                    return
+            else:
+                print("Not Occluded")
         t4 = time.perf_counter()
 
         # Frame Processing
@@ -357,12 +369,28 @@ class ChessLensGame:
         t5 = time.perf_counter()
 
         if verbose:
-            # print(img.fen)
-            img.save_fen_image(f"game_fens/fen_{self.t}.png")
+            fen_img = img.get_fen_img()
+            img_np = ((img.img).permute(1, 2, 0).cpu().numpy()
+                      * 255).astype(np.uint8)
+            img_np = np.ascontiguousarray(img_np)
+            corners = img.board_detection.clone().detach().to(torch.int32)
+            for _ in range(len(corners)):
+                cv2.circle(img_np, (corners[_, 0].item(), corners[_, 1].item()),
+                           radius=5, color=(33, 158, 188), thickness=-1)
+            img_np[:200, -200:] = fen_img
+            cv2.putText(img_np, "Awake" if is_wakeup else "Not Awake", (50, 50),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0) if is_wakeup else (255, 0, 0), 2)
+            cv2.putText(img_np, "Occluded" if is_occluded else "Not Occluded", (50, 100),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0) if is_wakeup else (0, 255, 0), 2)
+            img_out = Image.fromarray(img_np).convert("RGB")
+            if (self.game_out_path is not None):
+                img_out.save(os.path.join(
+                    self.game_out_path, f"img_{self.t}.jpg"))
 
         # Context Awareness
-        self.context_model.set_probs(
-            self.context_model.model.top_t()+1, self.prep_probs(img.piece_matrix), self.t)
+        if (is_wakeup) and (not is_occluded):
+            self.context_model.set_probs(
+                self.context_model.model.top_t()+1, self.prep_probs(img.piece_matrix), self.t)
         t6 = time.perf_counter()
 
         self.avg_times["board_detection"] += t2-t1
@@ -400,5 +428,5 @@ class ChessLensGame:
 
         # self.broadcasted_fens += fens
         if (self.game_out_path is not None) and len(fens) > 0:
-            with open(self.game_out_path, "a") as f:
+            with open(os.path.join(self.game_out_path, "game_fens.csv"), "a") as f:
                 f.write("\n" + "\n".join(fens))

@@ -381,7 +381,7 @@ class ChessLensGame:
             cv2.putText(img_np, "Awake" if is_wakeup else "Not Awake", (50, 50),
                         cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0) if is_wakeup else (255, 0, 0), 2)
             cv2.putText(img_np, "Occluded" if is_occluded else "Not Occluded", (50, 100),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0) if is_wakeup else (0, 255, 0), 2)
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0) if is_occluded else (0, 255, 0), 2)
             img_out = Image.fromarray(img_np).convert("RGB")
             if (self.game_out_path is not None):
                 img_out.save(os.path.join(

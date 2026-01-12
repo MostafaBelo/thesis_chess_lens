@@ -18,7 +18,7 @@ from UI.server import FenServer
 server = FenServer(port=8000)
 server.start()
 
-camera = "cv2"  # pi / cv2
+camera = "pi"  # pi / cv2
 
 if camera == "pi":
     sys.path.append("/usr/lib/python3/dist-packages")
@@ -37,7 +37,7 @@ elif camera == "cv2":
     import cv2
     cap = cv2.VideoCapture(0)
 
-interval = 1
+interval = 0.5
 
 
 transform_pil = transforms.ToTensor()

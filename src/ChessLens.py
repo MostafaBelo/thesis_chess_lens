@@ -230,6 +230,7 @@ class ChessLensGame:
 
         self.broadcasted_fens = []
         self.last_num = 0
+        self.latest_bound_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
 
     def clear(self):
         self.board_detection = None
@@ -370,6 +371,8 @@ class ChessLensGame:
 
         if verbose:
             fen_img = img.get_fen_img()
+            fen_latest_img = ChessUtils.fen_to_png(
+                self.latest_bound_fen, ".", file_name="", is_write=False)
             img_np = ((img.img).permute(1, 2, 0).cpu().numpy()
                       * 255).astype(np.uint8)
             img_np = np.ascontiguousarray(img_np)
@@ -378,6 +381,7 @@ class ChessLensGame:
                 cv2.circle(img_np, (corners[_, 0].item(), corners[_, 1].item()),
                            radius=5, color=(33, 158, 188), thickness=-1)
             img_np[:200, -200:] = fen_img
+            img_np[-200:, -200:] = fen_latest_img
             cv2.putText(img_np, "Awake" if is_wakeup else "Not Awake", (50, 50),
                         cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0) if is_wakeup else (255, 0, 0), 2)
             cv2.putText(img_np, "Occluded" if is_occluded else "Not Occluded", (50, 100),
@@ -424,6 +428,7 @@ class ChessLensGame:
         print("FENS:", fens)
 
         if (self.fen_update is not None) and (len(fens) >= 1):
+            self.latest_bound_fen = fens[-1]
             self.fen_update(fens[-1])
 
         # self.broadcasted_fens += fens

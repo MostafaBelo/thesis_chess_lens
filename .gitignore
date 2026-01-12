@@ -6,6 +6,7 @@
 
 **/out_fen.png
 **/positions.svg
+**/game_fens/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

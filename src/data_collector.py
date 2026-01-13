@@ -49,7 +49,8 @@ def take_image():
 
 try:
     while True:
-        input(f"Image {img_count}:")
+        # input(f"Image {img_count}:")
+        time.sleep(.5)
 
         take_image()
         img_count += 1

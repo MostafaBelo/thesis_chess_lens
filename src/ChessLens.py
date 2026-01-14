@@ -314,6 +314,7 @@ class ChessLensGame:
         isbound = self.context_model.check_bind(self.t)
         print("bound", isbound, self.t)
         if isbound:
+            # if True:
             self.get_latest_fens()
 
         t1 = time.perf_counter()
@@ -413,6 +414,7 @@ class ChessLensGame:
         return self.context_model.get_history(include_non_bound)
 
     def get_latest_fens(self):
+        # hist = self.get_history(True)
         hist = self.get_history()
         fens = []
         for i in range(hist.shape[0]):

@@ -37,7 +37,7 @@ elif camera == "cv2":
     import cv2
     cap = cv2.VideoCapture(0)
 
-interval = 0.5
+interval = 0.2
 
 
 transform_pil = transforms.ToTensor()
@@ -87,8 +87,8 @@ try:
         # for t in range(500):
         img = take_image()
         t1 = time.perf_counter()
-        iw_wake_up = game.set_img(img, verbose=True)
-        # is_wake_up = game.set_img(img)
+        # is_wake_up = game.set_img(img, verbose=True)
+        is_wake_up = game.set_img(img)
         t2 = time.perf_counter()
 
         frame_times.append(t2-t1)

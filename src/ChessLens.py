@@ -204,6 +204,11 @@ class ChessLensGame:
         else:
             self.context_bind_period = 1
 
+        if (config is not None) and ("context_continous" in config):
+            self.context_continous = config["context_continous"]
+        else:
+            self.context_continous = False
+
         if (config is not None) and ("game_out_path" in config):
             self.game_out_path = config["game_out_path"]
         else:
@@ -313,8 +318,7 @@ class ChessLensGame:
 
         isbound = self.context_model.check_bind(self.t)
         print("bound", isbound, self.t)
-        if isbound:
-            # if True:
+        if isbound or self.context_continous:
             self.get_latest_fens()
 
         t1 = time.perf_counter()
@@ -414,8 +418,7 @@ class ChessLensGame:
         return self.context_model.get_history(include_non_bound)
 
     def get_latest_fens(self):
-        # hist = self.get_history(True)
-        hist = self.get_history()
+        hist = self.get_history(self.context_continous)
         fens = []
         for i in range(hist.shape[0]):
             fens.append(

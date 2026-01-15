@@ -22,10 +22,10 @@ if camera == "pi":
     picam2 = Picamera2()
     camera_config = picam2.create_still_configuration()
     picam2.configure(camera_config)
-    picam2.set_controls({
-        "AwbEnable": True,
-        "AwbMode": 4
-    })
+    # picam2.set_controls({
+    #     "AwbEnable": True,
+    #     "AwbMode": 4
+    # })
     picam2.start_preview(Preview.NULL)
     picam2.start()
     time.sleep(2)

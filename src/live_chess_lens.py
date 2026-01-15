@@ -26,10 +26,10 @@ if camera == "pi":
     picam2 = Picamera2()
     camera_config = picam2.create_still_configuration()
     picam2.configure(camera_config)
-    picam2.set_controls({
-        "AwbEnable": True,
-        "AwbMode": 4
-    })
+    # picam2.set_controls({
+    #     "AwbEnable": True,
+    #     "AwbMode": 4
+    # })
     picam2.start_preview(Preview.NULL)
     picam2.start()
     time.sleep(2)
@@ -66,7 +66,8 @@ game = ChessLens.ChessLensGame(algorithm, config={
     "game_out_path": dirname,
     # "is_detect_occlusion": False,
     # "is_detect_wakeup": False,
-    "context_delay": 2,
+    "context_delay": 100,
+    "context_continous": True,
 
     "fen_update": server.update_fen
 })

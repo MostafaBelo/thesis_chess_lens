@@ -20,9 +20,9 @@ class PieceDetector:
             case "cnn":
                 self.piece_detector = PieceDetection_CNN.PieceDetector("torch")
 
-            case "yolo":
-                self.piece_detector = PieceDetection_YOLO.PieceDetector(
-                    "torch")
+            # case "yolo":
+            #     self.piece_detector = PieceDetection_YOLO.PieceDetector(
+            #         "torch")
 
             case "cnn_onnx":
                 self.piece_detector = PieceDetection_CNN.PieceDetector("onnx")
@@ -39,32 +39,29 @@ class PieceDetector:
                 self.piece_detector = PieceDetection_CNN.PieceDetector(
                     "prunned_torch")
 
-            case "yolo_onnx":
-                self.piece_detector = PieceDetection_YOLO.PieceDetector("onnx")
+            # case "yolo_onnx":
+            #     self.piece_detector = PieceDetection_YOLO.PieceDetector("onnx")
 
-            case "yolo_onnx_dynamic":
-                self.piece_detector = PieceDetection_YOLO.PieceDetector(
-                    "onnx_dynamic")
+            # case "yolo_onnx_dynamic":
+            #     self.piece_detector = PieceDetection_YOLO.PieceDetector(
+            #         "onnx_dynamic")
 
-            case "yolo_onnx_static":
-                self.piece_detector = PieceDetection_YOLO.PieceDetector(
-                    "onnx_static")
+            # case "yolo_onnx_static":
+            #     self.piece_detector = PieceDetection_YOLO.PieceDetector(
+            #         "onnx_static")
 
         # else:
         #     raise Exception("Piece Detection Method not found")
 
-    def set_img(self, img: torch.Tensor, corners: torch.Tensor):
-        self.img = img  # 3, H, W
-        self.corners = corners  # 4, 2
+    def preprocess(self, img: torch.Tensor, corners: torch.Tensor):
+        return self.piece_detector.preprocess(img, corners)
 
-        self.piece_detector.set_img(self.img, self.corners)
+    def predict(self, preprocessed_board: torch.Tensor):
+        return self.piece_detector.predict(preprocessed_board)
 
-    def preprocess(self):
-        self.piece_detector.preprocess()
-
-    def predict(self):
-        self.res = self.piece_detector.predict()
-        return self.res
+    def process(self, img: torch.Tensor, corners: torch.Tensor):
+        preprocessed_board = self.piece_detector.preprocess(img, corners)
+        return self.predict(preprocessed_board)
 
     def guess_orientation(self):
         if self.res is None:

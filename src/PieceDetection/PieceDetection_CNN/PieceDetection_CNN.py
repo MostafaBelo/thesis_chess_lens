@@ -473,10 +473,6 @@ class PieceDetector:
         # print(piece_detection_model)
         # print("\n"*5)
 
-    def set_img(self, img: torch.Tensor, corners: torch.Tensor):
-        self.img = img  # 3, H, W
-        self.corners = corners  # 4, 2
-
     def _warp(self, padding=(0, 0)):
         img_size = (256, 256)
         quad = self.corners.numpy().astype(np.float32)
@@ -501,17 +497,15 @@ class PieceDetector:
 
         return warpped, M
 
-    def preprocess(self):
-        PieceCropper.piece_cropper.set_img(
-            self.img, self.corners)
-        self.board_split = PieceCropper.piece_cropper.process_img()
+    def preprocess(self, img: torch.Tensor, corners: torch.Tensor):
+        return PieceCropper.piece_cropper.process_img(img, corners)
 
-    def predict(self):
+    def predict(self, board_split):
         if isinstance(piece_detection_model, PieceDetectorCNNModel) or isinstance(piece_detection_model, PrunnedPieceDetectorCNN):
             piece_detection_model.eval()
         with torch.inference_mode():
             preds = piece_detection_model(
-                self.board_split.unsqueeze(0).to(device))
+                board_split.unsqueeze(0).to(device))
 
         occupancy: torch.Tensor = preds["occupancy"]
         piece_color: torch.Tensor = preds["piece_color"]

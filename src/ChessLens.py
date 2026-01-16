@@ -24,6 +24,12 @@ import os
 import time
 
 
+to_tensor = transforms.Compose([
+    lambda x: Image.fromarray(x),
+    transforms.ToTensor()
+])
+
+
 class ChessLensImage:
     def __init__(self, img: str | torch.Tensor | np.ndarray | None = None, piece_detector: Literal["cnn", "yolo",
                                                                                                    "cnn_onnx", "cnn_onnx_dynamic", "cnn_onnx_static", "cnn_prunned",
@@ -67,8 +73,6 @@ class ChessLensImage:
             img = torch.tensor(img)
 
         self.img = img
-        if self.img is not None:
-            BoardDetection.board_extractor.set_img(self.img)
 
     def detect_board(self, verbose=False):
         if not self.is_img_loaded():
@@ -76,8 +80,8 @@ class ChessLensImage:
 
         # run board detection
 
-        # BoardDetection.board_extractor.set_img(self.img)
         self.board_detection, conf = BoardDetection.board_extractor.extract_board(
+            self.img,
             verbose)
         if type(self.board_detection) != torch.Tensor:
             self.board_detection = torch.tensor(self.board_detection)
@@ -88,6 +92,7 @@ class ChessLensImage:
             raise Exception("Board not detected")
 
         warpped_img, M = BoardDetection.board_extractor.warp(
+            self.img,
             self.board_detection.numpy())
         self.warped_img = warpped_img
         self.M = M
@@ -95,10 +100,8 @@ class ChessLensImage:
 
     def is_occluded(self):
         warped, _ = self.warp()
-        warped_tensor = torch.from_numpy(warped).permute(
-            2, 0, 1).unsqueeze(0).float() / 255.0
-        self.occlusion_model.set_img(warped_tensor)
-        pred, conf = self.occlusion_model.is_occluded()
+        warped_tensor = to_tensor(warped)
+        pred, conf = self.occlusion_model.is_occluded(warped_tensor)
         return pred
 
     def recognize_clock(self):
@@ -114,24 +117,23 @@ class ChessLensImage:
         if not self.is_board_detected():
             raise Exception("No board detected")
 
-        self.piece_detector.set_img(self.img, self.board_detection)
-
         if verbose:
             start_time = time.perf_counter()
-        self.piece_detector.preprocess()
+        # self.piece_detector.preprocess()
+        # self.piece_matrix = self.piece_detector.predict()
+        self.piece_matrix = self.piece_detector.process(
+            self.img, self.board_detection)
+        # if verbose:
+        #     end_time = time.perf_counter()
+        #     print(
+        #         f"Piece Recognition - Preprocessing {(end_time-start_time)*1e3:.6f} ms")
+        # if verbose:
+        #     start_time = time.perf_counter()
         if verbose:
             end_time = time.perf_counter()
-            print(
-                f"Piece Recognition - Preprocessing {(end_time-start_time)*1e3:.6f} ms")
-
-        if verbose:
-            start_time = time.perf_counter()
-        self.piece_matrix = self.piece_detector.predict()
-        if verbose:
-            end_time = time.perf_counter()
-            print(
-                f"Piece Recognition - Processing {(end_time-start_time)*1e3:.6f} ms")
-        self.orientation = self.piece_detector.guess_orientation()
+            # print(f"Piece Recognition - Processing {(end_time-start_time)*1e3:.6f} ms")
+            print(f"Piece Recognition {(end_time-start_time)*1e3:.6f} ms")
+        # self.orientation = self.piece_detector.guess_orientation()
 
         # convert piece matrix to fen
         self.fen = ChessUtils.ChessTensorUtils().tensorToFEN_MAX(

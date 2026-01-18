@@ -40,7 +40,11 @@ elif camera == "cv2":
 interval = 0.2
 
 
-transform_pil = transforms.ToTensor()
+transformations = transforms.Compose([
+    lambda x: Image.fromarray(x),
+    transforms.Resize((640, 640)),
+    transforms.ToTensor()
+])
 
 
 def take_image() -> torch.Tensor:
@@ -52,8 +56,7 @@ def take_image() -> torch.Tensor:
             cap.release()
             raise Exception("❌ Failed to capture image")
         img = img[:, :, ::-1]
-    img = Image.fromarray(img).resize((640, 640))
-    img = transform_pil(img)
+    img = transformations(img)
     # print(img.shape, img.dtype)
     return img
 
@@ -88,8 +91,8 @@ try:
         # for t in range(500):
         img = take_image()
         t1 = time.perf_counter()
-        # is_wake_up = game.set_img(img, verbose=True)
-        is_wake_up = game.set_img(img)
+        # game.set_img(img, verbose=True)
+        game.set_img(img)
         t2 = time.perf_counter()
 
         frame_times.append(t2-t1)

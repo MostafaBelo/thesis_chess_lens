@@ -74,6 +74,9 @@ class ChessLensImage:
 
         self.img = img
 
+    def prep_img(self, img: str | torch.Tensor | np.ndarray):
+        pass
+
     def detect_board(self, verbose=False):
         if not self.is_img_loaded():
             raise Exception("No image loaded")

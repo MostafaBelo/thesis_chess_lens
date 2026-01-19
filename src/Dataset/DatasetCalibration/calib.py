@@ -67,6 +67,9 @@ try:
         ret_corners, corners = cv2.findChessboardCorners(
             gray, CHECKERBOARD, None)
 
+        print("Frame Captured")
+        print(f"Corners Found: {ret_corners}")
+
         # display = frame.copy()
         # if ret_corners:
         #     cv2.drawChessboardCorners(

@@ -19,7 +19,6 @@ img_count = 0
 camera = "pi"  # pi / cv2
 
 postprocess = None
-postprocess_params = {}
 
 if camera in ["pi", "pi130"]:
     sys.path.append("/usr/lib/python3/dist-packages")
@@ -54,7 +53,6 @@ if camera in ["pi", "pi130"]:
         postprocess = process
 
 elif camera == "cv2":
-    import cv2
     cap = cv2.VideoCapture(0)
 
 

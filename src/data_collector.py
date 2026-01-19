@@ -19,6 +19,7 @@ img_count = 0
 camera = "pi"  # pi / cv2
 
 postprocess = None
+postprocess_params = {}
 
 if camera in ["pi", "pi130"]:
     sys.path.append("/usr/lib/python3/dist-packages")
@@ -35,23 +36,19 @@ if camera in ["pi", "pi130"]:
     time.sleep(2)
 
     if camera == "pi130":
+        calib = np.load(os.path.join(
+            os.environ["WEIGHTS"], 'fisheye_calibration.npz'))
+        K = calib['K']
+        D = calib['D']
+        img_size = tuple(calib['img_size'])
+
+        map1, map2 = cv2.fisheye.initUndistortRectifyMap(
+            K, D, np.eye(3), K, img_size, cv2.CV_16SC2)
+
         def process(frame):
-            h, w = frame.shape[:2]
-            K = np.array([[w*0.7, 0, w/2],
-                          [0, h*0.7, h/2],
-                          [0, 0, 1]], dtype=np.float32)
-
-            D = np.array([-0.3, 0.1, 0, 0], dtype=np.float32)
-
-            # Undistort
-            new_K = cv2.fisheye.estimateNewCameraMatrixForUndistortRectify(
-                K, D, (w, h), np.eye(3), balance=0.5)
-
-            map1, map2 = cv2.fisheye.initUndistortRectifyMap(
-                K, D, np.eye(3), new_K, (w, h), cv2.CV_16SC2)
-
             undistorted = cv2.remap(frame, map1, map2,
-                                    interpolation=cv2.INTER_LINEAR)
+                                    interpolation=cv2.INTER_LINEAR,
+                                    borderMode=cv2.BORDER_CONSTANT)
             return undistorted
 
         postprocess = process

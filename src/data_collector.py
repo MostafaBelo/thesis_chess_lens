@@ -62,7 +62,7 @@ elif camera == "cv2":
 
 
 def take_image():
-    if camera == "pi":
+    if camera in ["pi", "pi130"]:
         img = picam2.capture_array()
     elif camera == "cv2":
         ret, img = cap.read()  # Read frame continuously for live preview

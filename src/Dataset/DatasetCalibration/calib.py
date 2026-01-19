@@ -53,6 +53,7 @@ saved_img_count = 0
 
 
 def take_image():
+    global saved_img_count
     if camera in ["pi", "pi130"]:
         img = picam2.capture_array()
     elif camera == "cv2":

@@ -95,7 +95,8 @@ try:
         if ret_corners:
             corners2 = cv2.cornerSubPix(
                 gray, corners, (11, 11), (-1, -1), criteria)
-            objpoints.append(objp)
+            # objpoints.append(objp)
+            objpoints.append(objp.reshape(-1, 1, 3).copy().astype(np.float32))
             imgpoints.append(corners2)
             img_count += 1
             print(f"Captured image {img_count}")

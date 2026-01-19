@@ -4,8 +4,8 @@ import os
 from tqdm import tqdm
 
 input_folder = "/mnt/D/University/Thesis_Dataset/Temp/photos2/photos"
-output_valid_folder = "/mnt/D/University/Thesis_Dataset/Temp/photos2/game6/valid"
-output_occluded_folder = "/mnt/D/University/Thesis_Dataset/Temp/photos2/game6/occluded"
+output_valid_folder = "/mnt/D/University/Thesis_Dataset/Temp/photos2/game9/valid"
+output_occluded_folder = "/mnt/D/University/Thesis_Dataset/Temp/photos2/game9/occluded"
 img = ChessLens.ChessLensImage(None, "cnn_onnx_static")
 
 os.makedirs(output_valid_folder, exist_ok=True)

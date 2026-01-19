@@ -5,7 +5,7 @@ import sys
 import glob
 
 # Checkerboard dimensions (internal corners)
-CHECKERBOARD = (9, 6)  # Adjust to your pattern
+CHECKERBOARD = (8, 8)  # Adjust to your pattern
 square_size = 25  # Size of squares in mm
 
 # Termination criteria
@@ -67,19 +67,18 @@ try:
         ret_corners, corners = cv2.findChessboardCorners(
             gray, CHECKERBOARD, None)
 
-        display = frame.copy()
+        # display = frame.copy()
+        # if ret_corners:
+        #     cv2.drawChessboardCorners(
+        #         display, CHECKERBOARD, corners, ret_corners)
+        #     cv2.putText(display, "Pattern found! Press SPACE", (10, 30),
+        #                 cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
+        # cv2.putText(display, f"Captured: {img_count}/20", (10, 70),
+        #             cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+        # cv2.imshow('Calibration', display)
+
         if ret_corners:
-            cv2.drawChessboardCorners(
-                display, CHECKERBOARD, corners, ret_corners)
-            cv2.putText(display, "Pattern found! Press SPACE", (10, 30),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-
-        cv2.putText(display, f"Captured: {img_count}/20", (10, 70),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
-        cv2.imshow('Calibration', display)
-
-        key = cv2.waitKey(1)
-        if key == ord(' ') and ret_corners:
             corners2 = cv2.cornerSubPix(
                 gray, corners, (11, 11), (-1, -1), criteria)
             objpoints.append(objp)
@@ -89,8 +88,6 @@ try:
 
             if img_count >= 20:
                 break
-        elif key == ord('q'):
-            break
 except Exception as e:
     print(f"Exited due to error - {e}")
 finally:

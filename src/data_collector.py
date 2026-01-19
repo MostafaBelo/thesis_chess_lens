@@ -16,7 +16,7 @@ os.makedirs(data_dir, exist_ok=True)
 
 img_count = 0
 
-camera = "pi"  # pi / cv2
+camera = "pi130"  # pi / pi130 / cv2
 
 postprocess = None
 

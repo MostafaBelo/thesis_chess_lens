@@ -20,7 +20,7 @@ from UI.server import FenServer
 server = FenServer(port=8000)
 server.start()
 
-camera = "pi"  # pi / pi130 / cv2
+camera = "pi130"  # pi / pi130 / cv2
 
 postprocess = None
 

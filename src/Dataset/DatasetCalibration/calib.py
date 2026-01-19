@@ -1,7 +1,9 @@
 import cv2
 import numpy as np
 import time
+import os
 import sys
+from PIL import Image
 import glob
 
 # Checkerboard dimensions (internal corners)
@@ -44,6 +46,9 @@ elif camera == "cv2":
     cap = cv2.VideoCapture(0)
 
 
+os.makedirs("photos", exist_ok=True)
+
+
 def take_image():
     if camera in ["pi", "pi130"]:
         img = picam2.capture_array()
@@ -53,6 +58,7 @@ def take_image():
             cap.release()
             raise Exception("❌ Failed to capture image")
         img = img[:, :, ::-1]
+    Image.fromarray(img).save(f"photos/frame_{img_count}.jpg")
     return img
 
 
@@ -61,7 +67,7 @@ try:
     while True:
         frame = take_image()
 
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
 
         # Find checkerboard corners
         ret_corners, corners = cv2.findChessboardCorners(

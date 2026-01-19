@@ -49,6 +49,9 @@ elif camera == "cv2":
 os.makedirs("photos", exist_ok=True)
 
 
+saved_img_count = 0
+
+
 def take_image():
     if camera in ["pi", "pi130"]:
         img = picam2.capture_array()
@@ -58,7 +61,8 @@ def take_image():
             cap.release()
             raise Exception("❌ Failed to capture image")
         img = img[:, :, ::-1]
-    Image.fromarray(img).save(f"photos/frame_{img_count}.jpg")
+    Image.fromarray(img).save(f"photos/frame_{saved_img_count}.jpg")
+    saved_img_count += 1
     return img
 
 

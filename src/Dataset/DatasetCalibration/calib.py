@@ -7,7 +7,7 @@ from PIL import Image
 import glob
 
 # Checkerboard dimensions (internal corners)
-CHECKERBOARD = (8, 8)  # Adjust to your pattern
+CHECKERBOARD = (7, 7)  # Adjust to your pattern
 square_size = 25  # Size of squares in mm
 
 # Termination criteria

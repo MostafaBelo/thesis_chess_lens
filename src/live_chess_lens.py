@@ -21,7 +21,12 @@ from UI.server import FenServer
 server = FenServer(port=8000)
 server.start()
 
-camera = ImageProvider(interval=0.2)
+camera = ImageProvider(
+    interval=0.2,
+    # camera="files",
+    # interval=0,
+    # data_dir="/mnt/D/University/Thesis_Dataset/Temp/photos2/photos"
+)
 
 algorithm = "cnn_onnx_static"
 dirname = "game_fens"
@@ -52,6 +57,8 @@ try:
     while is_running:
         # for t in range(500):
         img = camera.take_image()
+        if img is None:
+            break
         t1 = time.perf_counter()
         # game.set_img(img, verbose=True)
         game.set_img(img)

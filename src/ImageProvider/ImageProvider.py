@@ -4,6 +4,8 @@ load_dotenv()  # noqa
 
 import numpy as np
 import cv2
+from PIL import Image
+import re
 
 import time
 import sys
@@ -12,7 +14,7 @@ from typing import Literal
 
 
 class ImageProvider:
-    def __init__(self, camera: Literal["pi", "pi130", "cv2", "files"] | None = None, interval=0.2):
+    def __init__(self, camera: Literal["pi", "pi130", "cv2", "files"] | None = None, interval=0.2, data_dir=None):
         self.interval = interval
         self.last_img_timestamp = -1
 
@@ -54,8 +56,22 @@ class ImageProvider:
         elif self.camera == "cv2":
             self.cap = cv2.VideoCapture(0)
 
+        elif self.camera == "files":
+            if data_dir is None or not (os.path.isdir(data_dir)):
+                raise Exception("Invalid Images Data Directory")
+
+            self.imgs_to_load: list[str] = os.listdir(data_dir)
+
+            def natural_key(s):
+                # Split string into text and number chunks
+                return [int(part) if part.isdigit() else part.lower()
+                        for part in re.split(r'(\d+)', s)]
+            self.imgs_to_load.sort(key=natural_key)
+            self.imgs_to_load = [
+                os.path.join(data_dir, path) for path in self.imgs_to_load if os.path.splitext(path)[1].lower() in [".jpg", ".jpeg", ".png"]]
+
     def take_image(self) -> np.ndarray:
-        if self.last_img_timestamp != -1:
+        if (self.last_img_timestamp != -1) and (self.interval != 0):
             time_since_last_img = time.perf_counter() - self.last_img_timestamp
             if time_since_last_img < self.interval:
                 time.sleep(self.interval - time_since_last_img)
@@ -68,6 +84,14 @@ class ImageProvider:
                 self.cap.release()
                 raise Exception("❌ Failed to capture image")
             img = img[:, :, ::-1]
+        elif self.camera == "files":
+            if len(self.imgs_to_load) > 0:
+                img = cv2.imread(self.imgs_to_load[0])
+                img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                self.imgs_to_load.pop(0)
+                return img
+            else:
+                return None
         if self.postprocess is not None:
             img = self.postprocess(img)
         self.last_img_timestamp = time.perf_counter()

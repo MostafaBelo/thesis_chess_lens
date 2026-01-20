@@ -21,9 +21,7 @@ from UI.server import FenServer
 server = FenServer(port=8000)
 server.start()
 
-camera = ImageProvider()
-
-interval = 0.2
+camera = ImageProvider(interval=0.2)
 
 algorithm = "cnn_onnx_static"
 dirname = "game_fens"
@@ -60,9 +58,6 @@ try:
         t2 = time.perf_counter()
 
         frame_times.append(t2-t1)
-
-        if (interval > t2-t1):
-            time.sleep(interval - (t2-t1))
 
     avg_frame = sum(frame_times)/len(frame_times)
     total_time = sum(frame_times)

@@ -74,7 +74,8 @@ class ChessLensImage:
     def load_image(self, img: str | torch.Tensor | np.ndarray | None) -> None:
         if img is None:
             self.img = None
-        self.img = self.prep_img(img)
+        else:
+            self.img = self.prep_img(img)
 
     def prep_img(self, img: str | np.ndarray | torch.Tensor) -> torch.Tensor:
         if isinstance(img, str):
@@ -90,7 +91,7 @@ class ChessLensImage:
             img = load_transform(img)
             return img
         else:
-            raise Exception("Invalid Image Type")
+            raise Exception(f"Invalid Image Type - {type(img)}")
 
     def detect_board(self, verbose=False) -> tuple[torch.Tensor, float]:
         if not self.is_img_loaded():

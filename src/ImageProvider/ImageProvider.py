@@ -12,7 +12,10 @@ from typing import Literal
 
 
 class ImageProvider:
-    def __init__(self, camera: Literal["pi", "pi130", "cv2", "files"] | None = None):
+    def __init__(self, camera: Literal["pi", "pi130", "cv2", "files"] | None = None, interval=0.2):
+        self.interval = interval
+        self.last_img_timestamp = -1
+
         if camera is None:
             self.camera = "cv2" if (
                 "CAMERA" not in os.environ) else os.environ["CAMERA"]
@@ -52,6 +55,11 @@ class ImageProvider:
             self.cap = cv2.VideoCapture(0)
 
     def take_image(self) -> np.ndarray:
+        if self.last_img_timestamp != -1:
+            time_since_last_img = time.perf_counter() - self.last_img_timestamp
+            if time_since_last_img < self.interval:
+                time.sleep(self.interval - time_since_last_img)
+
         if self.camera in ["pi", "pi130"]:
             img = self.picam2.capture_array()
         elif self.camera == "cv2":
@@ -62,6 +70,7 @@ class ImageProvider:
             img = img[:, :, ::-1]
         if self.postprocess is not None:
             img = self.postprocess(img)
+        self.last_img_timestamp = time.perf_counter()
         return img
 
     def quit(self):

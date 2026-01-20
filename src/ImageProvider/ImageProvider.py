@@ -51,7 +51,7 @@ class ImageProvider:
         elif self.camera == "cv2":
             self.cap = cv2.VideoCapture(0)
 
-    def take_image(self):
+    def take_image(self) -> np.ndarray:
         if self.camera in ["pi", "pi130"]:
             img = self.picam2.capture_array()
         elif self.camera == "cv2":

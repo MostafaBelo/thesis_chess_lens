@@ -77,15 +77,15 @@ class ChessLensImage:
         self.img = self.prep_img(img)
 
     def prep_img(self, img: str | np.ndarray | torch.Tensor) -> torch.Tensor:
-        if type(img) == str:
+        if isinstance(img, str):
             img = Image.open(img).convert("RGB")
             img = load_transform(img)
             return img
-        elif type(img) == np.ndarray:
+        elif isinstance(img, np.ndarray):
             img = Image.fromarray(img)
             img = load_transform(img)
             return img
-        elif type(img) == torch.Tensor:
+        elif isinstance(img, torch.Tensor):
             img = from_tensor_transfrom(img)
             img = load_transform(img)
             return img

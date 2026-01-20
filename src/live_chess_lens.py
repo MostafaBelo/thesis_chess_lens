@@ -4,6 +4,7 @@ load_dotenv()  # noqa
 
 from Utils import ChessUtils
 import ChessLens
+from ImageProvider.ImageProvider import ImageProvider
 
 import numpy as np
 import cv2
@@ -20,69 +21,9 @@ from UI.server import FenServer
 server = FenServer(port=8000)
 server.start()
 
-camera = "pi130"  # pi / pi130 / cv2
-
-postprocess = None
-
-if camera in ["pi", "pi130"]:
-    sys.path.append("/usr/lib/python3/dist-packages")
-    from picamera2 import Picamera2, Preview
-    picam2 = Picamera2()
-    camera_config = picam2.create_still_configuration()
-    picam2.configure(camera_config)
-    # picam2.set_controls({
-    #     "AwbEnable": True,
-    #     "AwbMode": 4
-    # })
-    picam2.start_preview(Preview.NULL)
-    picam2.start()
-    time.sleep(2)
-
-    if camera == "pi130":
-        calib = np.load(os.path.join(
-            os.environ["WEIGHTS"], 'fisheye_calibration.npz'))
-        K = calib['K']
-        D = calib['D']
-        img_size = tuple(calib['img_size'])
-
-        map1, map2 = cv2.fisheye.initUndistortRectifyMap(
-            K, D, np.eye(3), K, img_size, cv2.CV_16SC2)
-
-        def process(frame):
-            undistorted = cv2.remap(frame, map1, map2,
-                                    interpolation=cv2.INTER_LINEAR,
-                                    borderMode=cv2.BORDER_CONSTANT)
-            return undistorted
-
-        postprocess = process
-
-elif camera == "cv2":
-    cap = cv2.VideoCapture(0)
+camera = ImageProvider()
 
 interval = 0.2
-
-
-transformations = transforms.Compose([
-    lambda x: Image.fromarray(x),
-    transforms.Resize((640, 640)),
-    transforms.ToTensor()
-])
-
-
-def take_image():
-    if camera in ["pi", "pi130"]:
-        img = picam2.capture_array()
-    elif camera == "cv2":
-        ret, img = cap.read()  # Read frame continuously for live preview
-        if not ret:
-            cap.release()
-            raise Exception("❌ Failed to capture image")
-        img = img[:, :, ::-1]
-    if postprocess is not None:
-        img = postprocess(img)
-    img = transformations(img)
-    return img
-
 
 algorithm = "cnn_onnx_static"
 dirname = "game_fens"
@@ -112,7 +53,7 @@ try:
     frame_paths = []
     while is_running:
         # for t in range(500):
-        img = take_image()
+        img = camera.take_image()
         t1 = time.perf_counter()
         # game.set_img(img, verbose=True)
         game.set_img(img)
@@ -146,8 +87,4 @@ try:
 except KeyboardInterrupt:
     print("Stopped Manually")
 finally:
-    if camera == "pi":
-        picam2.stop()
-    elif camera == "cv2":
-        cap.release()
-        cv2.destroyAllWindows()
+    camera.quit()

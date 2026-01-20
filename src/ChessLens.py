@@ -29,6 +29,12 @@ to_tensor = transforms.Compose([
     transforms.ToTensor()
 ])
 
+from_tensor_transfrom = transforms.ToPILImage()
+load_transform = transforms.Compose([
+    transforms.Resize((640, 640)),
+    transforms.ToTensor()
+])
+
 
 class ChessLensImage:
     def __init__(self, img: str | torch.Tensor | np.ndarray | None = None, piece_detector: Literal["cnn", "yolo",
@@ -51,7 +57,6 @@ class ChessLensImage:
         self.board_detection = None
         self.clock_time = None
         self.piece_matrix = None
-        self.orientation = None
         self.fen = None
 
     def is_img_loaded(self) -> bool:
@@ -66,18 +71,28 @@ class ChessLensImage:
     def is_pieces_detected(self) -> bool:
         return not (self.piece_matrix is None or self.fen is None)
 
-    def load_image(self, img: str | torch.Tensor | np.ndarray):
-        if (type(img) == str):
-            img = transforms.ToTensor()(Image.open(img).convert("RGB").resize((640, 640)))
-        elif (type(img) == np.ndarray):
-            img = torch.tensor(img)
+    def load_image(self, img: str | torch.Tensor | np.ndarray | None) -> None:
+        if img is None:
+            self.img = None
+        self.img = self.prep_img(img)
 
-        self.img = img
+    def prep_img(self, img: str | np.ndarray | torch.Tensor) -> torch.Tensor:
+        if type(img) == str:
+            img = Image.open(img).convert("RGB")
+            img = load_transform(img)
+            return img
+        elif type(img) == np.ndarray:
+            img = Image.fromarray(img)
+            img = load_transform(img)
+            return img
+        elif type(img) == torch.Tensor:
+            img = from_tensor_transfrom(img)
+            img = load_transform(img)
+            return img
+        else:
+            raise Exception("Invalid Image Type")
 
-    def prep_img(self, img: str | torch.Tensor | np.ndarray):
-        pass
-
-    def detect_board(self, verbose=False):
+    def detect_board(self, verbose=False) -> tuple[torch.Tensor, float]:
         if not self.is_img_loaded():
             raise Exception("No image loaded")
 
@@ -90,7 +105,7 @@ class ChessLensImage:
             self.board_detection = torch.tensor(self.board_detection)
         return self.board_detection, conf
 
-    def warp(self):
+    def warp(self) -> tuple[np.ndarray, np.ndarray]:
         if not self.is_board_detected():
             raise Exception("Board not detected")
 
@@ -101,19 +116,19 @@ class ChessLensImage:
         self.M = M
         return warpped_img, M
 
-    def is_occluded(self):
+    def is_occluded(self) -> float:
         warped, _ = self.warp()
         warped_tensor = to_tensor(warped)
         pred, conf = self.occlusion_model.is_occluded(warped_tensor)
         return pred
 
-    def recognize_clock(self):
+    def recognize_clock(self) -> None:
         if not self.is_img_loaded():
             raise Exception("No image loaded")
 
         # run clock recognition
 
-    def recognize_pieces(self, verbose=False):
+    def recognize_pieces(self, verbose=False) -> tuple[torch.Tensor, str]:
         if not self.is_img_loaded():
             raise Exception("No image loaded")
 
@@ -136,13 +151,14 @@ class ChessLensImage:
             end_time = time.perf_counter()
             # print(f"Piece Recognition - Processing {(end_time-start_time)*1e3:.6f} ms")
             print(f"Piece Recognition {(end_time-start_time)*1e3:.6f} ms")
-        # self.orientation = self.piece_detector.guess_orientation()
 
         # convert piece matrix to fen
         self.fen = ChessUtils.ChessTensorUtils().tensorToFEN_MAX(
             self.piece_matrix)
 
-    def get_fen_img(self):
+        return self.piece_matrix, self.fen
+
+    def get_fen_img(self) -> np.ndarray:
         if not self.is_pieces_detected():
             raise Exception("Pieces not detected")
 
@@ -150,23 +166,24 @@ class ChessLensImage:
             self.fen, ".", file_name="", is_write=False)
         return fen_img
 
-    def save_fen_image(self, file_name="out_fen.png"):
+    def save_fen_image(self, file_name="out_fen.png") -> None:
         if not self.is_pieces_detected():
             raise Exception("Pieces not detected")
 
         fen_img = ChessUtils.fen_to_png(self.fen, ".", file_name)
 
-    def preview_board(self):
+    def preview_board(self) -> None:
         plt.imshow(self.img)
         plt.imshow(self.board_detection[2], alpha=self.board_detection[2])
 
-    def preview_pieces(self):
-        self.pieces_yolo.show()
+    def preview_pieces(self) -> None:
+        # self.pieces_yolo.show()
+        pass
 
-    def apply(self):
-        self.detect_board()
-        self.recognize_clock()
-        self.recognize_pieces()
+    # def apply(self):
+    #     self.detect_board()
+    #     self.recognize_clock()
+    #     self.recognize_pieces()
 
 
 class ChessLensGame:

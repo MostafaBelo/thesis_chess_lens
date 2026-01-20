@@ -58,7 +58,10 @@ class ImageProvider:
 
         elif self.camera == "files":
             if data_dir is None or not (os.path.isdir(data_dir)):
-                raise Exception("Invalid Images Data Directory")
+                if ("CAMERA_DATA_DIR" in os.environ) and (os.path.isdir(os.environ["CAMERA_DATA_DIR"])):
+                    data_dir = os.environ["CAMERA_DATA_DIR"]
+                else:
+                    raise Exception("Invalid Images Data Directory")
 
             self.imgs_to_load: list[str] = os.listdir(data_dir)
 

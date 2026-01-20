@@ -15,17 +15,16 @@ class ChessHMM:
     def bind(self):
         self.model.bind(self.model.top_t())
 
-    def set_probs(self, timestep, piece_matrix, actual_frame_index):
-        self.timestamp_map[timestep] = actual_frame_index
+    def set_probs(self, timestep, piece_matrix, actual_frame_time):
+        self.timestamp_map[timestep] = actual_frame_time
 
         self.model.set_probs(timestep, piece_matrix)
 
-        if (((self.model.top_t() % self.bind_period) == 0) and (self.model.top_t() >= self.bind_period+self.delay) and (self.model.top_t()-self.delay-self.bind_period+1 > self.model.top_bind_t())):
-            self.model.bind(self.model.top_t()-self.delay+1)
+        # if (((self.model.top_t() % self.bind_period) == 0) and (self.model.top_t() >= self.bind_period+self.delay) and (self.model.top_t()-self.delay-self.bind_period+1 > self.model.top_bind_t())):
+        #     self.model.bind(self.model.top_t()-self.delay+1)
 
     def check_bind(self, frame_index):
         bind_at = -1
-        print("times", self.model.top_t(), self.model.top_bind_t())
 
         for i in range(self.model.top_bind_t()+1, self.model.top_t()):
             if (frame_index - self.timestamp_map[i]) >= self.delay:

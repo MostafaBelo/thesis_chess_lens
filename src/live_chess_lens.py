@@ -36,7 +36,9 @@ game = ChessLens.ChessLensGame(algorithm, config={
     "game_out_path": dirname,
     # "is_detect_occlusion": False,
     # "is_detect_wakeup": False,
-    "context_delay": 100,
+    # "context_delay": 0,
+    # "context_continous": False,
+    "context_delay": 60,
     "context_continous": True,
 
     "fen_update": server.update_fen
@@ -53,7 +55,6 @@ server.stop_game = stop_game
 
 try:
     frame_times = []
-    frame_paths = []
     while is_running:
         # for t in range(500):
         img = camera.take_image()

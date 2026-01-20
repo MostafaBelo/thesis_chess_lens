@@ -10,13 +10,14 @@ import cv2
 
 from PIL import Image
 
+from ImageProvider import ImageProvider
 from BoardDetection import BoardDetection
 from OcclusionDetection import OcclusionDetectionCNN
 from WakeupDetection import WakeupModule
 from PieceDetection import PieceDetection
 from ContextAwareModels.HMM import ChessHMM
 
-from Utils import ChessUtils
+from Utils import ChessUtils, Utils
 
 from typing import Literal
 
@@ -48,11 +49,12 @@ class ChessLensImage:
         else:
             self.piece_detector = PieceDetection.PieceDetector(piece_detector)
 
+        self.wakeup_module = WakeupModule.WakeupModule()
         self.occlusion_model = OcclusionDetectionCNN.OcclusionDetectorCNN()
 
     def clear(self):
         self.img = None
-        self.warped_img = None
+        self.warpped_img = None
 
         self.board_detection = None
         self.clock_time = None
@@ -72,6 +74,8 @@ class ChessLensImage:
         return not (self.piece_matrix is None or self.fen is None)
 
     def load_image(self, img: str | torch.Tensor | np.ndarray | None) -> None:
+        self.clear()
+
         if img is None:
             self.img = None
         else:
@@ -110,17 +114,25 @@ class ChessLensImage:
         if not self.is_board_detected():
             raise Exception("Board not detected")
 
+        if self.warpped_img is not None:
+            return self.warpped_img, self.M
+
         warpped_img, M = BoardDetection.board_extractor.warp(
             self.img,
             self.board_detection.numpy())
-        self.warped_img = warpped_img
+        self.warpped_img = warpped_img
         self.M = M
         return warpped_img, M
 
-    def is_occluded(self) -> float:
-        warped, _ = self.warp()
-        warped_tensor = to_tensor(warped)
-        pred, conf = self.occlusion_model.is_occluded(warped_tensor)
+    def is_wakep(self) -> bool:
+        warpped, _ = self.warp()
+        pred = self.wakeup_module.is_wakeup(warpped)
+        return pred
+
+    def is_occluded(self) -> bool:
+        warpped, _ = self.warp()
+        warpped_tensor = to_tensor(warpped)
+        pred, conf = self.occlusion_model.is_occluded(warpped_tensor)
         return pred
 
     def recognize_clock(self) -> None:
@@ -220,7 +232,7 @@ class ChessLensGame:
         if (config is not None) and ("context_delay" in config):
             self.context_delay = config["context_delay"]
         else:
-            self.context_delay = 120
+            self.context_delay = 60
 
         if (config is not None) and ("context_bind_period" in config):
             self.context_bind_period = config["context_bind_period"]
@@ -245,7 +257,6 @@ class ChessLensGame:
         self.current_img = ChessLensImage(piece_detector=piece_detector)
         self.clear()
         self.piece_detector = piece_detector
-        self.wakeup_module = WakeupModule.WakeupModule()
 
         self.avg_times = {
             "load": 0,
@@ -257,7 +268,6 @@ class ChessLensGame:
         }
 
         self.broadcasted_fens = []
-        self.last_num = 0
         self.latest_bound_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
 
     def clear(self):
@@ -282,8 +292,6 @@ class ChessLensGame:
 
         self.avg_times["load"] += t2-t1
 
-        return (is_wake_up == True)
-
     def calc_orientation(self):
         piece_matrix = self.current_img.piece_matrix.clone().detach().squeeze()
 
@@ -305,24 +313,13 @@ class ChessLensGame:
         self.orientation = orientations[vals.index(max(vals))]
         print("Orientation:", self.orientation)
 
+    def detect_wakeup(self) -> bool:
+        return self.current_img.is_wakep()
+
     def detect_occlusion(self) -> bool:
         return self.current_img.is_occluded()
 
-    def detect_wakeup(self) -> bool:
-        warped_img, _ = self.current_img.warp()
-        return self.wakeup_module.is_wakeup(warped_img)
-
     def prep_probs(self, probs) -> np.ndarray:
-        # probs = self.current_img.piece_matrix
-
-        if "yolo" in self.piece_detector:
-            probs = torch.zeros(1, 13, 8, 8, dtype=torch.float32) + .1
-
-            i = torch.arange(8).unsqueeze(1).expand(8, 8)
-            j = torch.arange(8).unsqueeze(0).expand(8, 8)
-            probs[0, self.current_img.piece_matrix.squeeze().to(
-                torch.int32), i, j] = .9
-
         if self.orientation == "r":
             k = -1  # r
         elif self.orientation == "l":
@@ -339,7 +336,7 @@ class ChessLensGame:
     def process_img(self, verbose=False):
         img = self.current_img
 
-        isbound = self.context_model.check_bind(self.t)
+        isbound = self.context_model.check_bind(time.perf_counter())
         print("bound", isbound, self.t)
         if isbound or self.context_continous:
             self.get_latest_fens()
@@ -422,7 +419,7 @@ class ChessLensGame:
         # Context Awareness
         if (is_wakeup) and (not is_occluded):
             self.context_model.set_probs(
-                self.context_model.model.top_t()+1, self.prep_probs(img.piece_matrix), self.t)
+                self.context_model.model.top_t()+1, self.prep_probs(img.piece_matrix), time.perf_counter())
         t6 = time.perf_counter()
 
         self.avg_times["board_detection"] += t2-t1
@@ -447,12 +444,11 @@ class ChessLensGame:
             fens.append(
                 ChessUtils.ChessTensorUtils.tensorToFEN_MAX(hist[[i], ::-1]))
 
-        fens = [
-            f"{fen}" for fen in fens if not (fen in self.broadcasted_fens)]
+        fens = [f"{fens[i]}" for i in range(len(fens)) if (
+            i != 0 and fens[i] != fens[i-1])]
+        fens = [f"{fens[i]} - {i}" for i in range(len(fens))]
+        fens = [fen for fen in fens if fen not in self.broadcasted_fens]
         self.broadcasted_fens += fens
-        # for i in range(len(fens)):
-        #   fens[i] += f"{self.last_num+i}"
-        self.last_num += len(fens)
         print("FENS:", fens)
 
         if (self.fen_update is not None) and (len(fens) >= 1):
@@ -463,3 +459,277 @@ class ChessLensGame:
         if (self.game_out_path is not None) and len(fens) > 0:
             with open(os.path.join(self.game_out_path, "game_fens.csv"), "a") as f:
                 f.write("\n" + "\n".join(fens))
+
+
+class ChessLensGame1:
+    def __init__(self, piece_detector: Literal["cnn",
+                                               "cnn_onnx", "cnn_onnx_dynamic", "cnn_onnx_static"] | None = None, config=None):
+
+        if (config is not None) and ("camera_interval" in config):
+            self.camera_interval = config["camera_interval"]
+        else:
+            self.camera_interval = 0.2
+
+        if (config is not None) and ("bd_period" in config):
+            self.bd_period = config["bd_period"]
+        else:
+            self.bd_period = 5
+
+        if (config is not None) and ("max_bd_fails" in config):
+            self.max_bd_fails = config["max_bd_fails"]
+        else:
+            self.max_bd_fails = 5
+
+        if (config is not None) and ("wakeup_period" in config):
+            self.wakeup_period = config["wakeup_period"]
+        else:
+            self.wakeup_period = 10
+
+        # if (config is not None) and ("game_out_path" in config):
+        #     self.game_out_path = config["game_out_path"]
+        # else:
+        #     self.game_out_path = None
+
+        self.camera = ImageProvider.ImageProvider(
+            interval=self.camera_interval)
+        self.current_img = ChessLensImage(piece_detector=piece_detector)
+        self.clear()
+        self.piece_detector = piece_detector
+
+        self.board_flag = Utils.Observable(False)
+        self.board_fails_count = 0
+
+        self.avg_times = {
+            "load": 0,
+            "board_detection": 0,
+            "wakeup": 0,
+            "occlusion": 0,
+            "piece_recognition": 0,
+        }
+
+        # self.latest_bound_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
+
+    def clear(self):
+        self.board_detection = None
+
+        self.t = 0
+        self.last_wakeup = 0
+
+    def operate(self):
+        img = self.camera.take_image()
+        if img is None:
+            return False
+        return self.set_img(img)
+
+    def set_img(self, img: str | torch.Tensor | np.ndarray) -> np.ndarray | None:
+        t1 = time.perf_counter()
+        self.current_img.load_image(img)
+        img = self.current_img
+        t2 = time.perf_counter()
+        res: np.ndarray | None = self.process_img()
+        self.t += 1
+        t3 = time.perf_counter()
+
+        self.avg_times["load"] += t2-t1
+
+        return res
+
+    def detect_wakeup(self) -> bool:
+        return self.current_img.is_wakep()
+
+    def detect_occlusion(self) -> bool:
+        return self.current_img.is_occluded()
+
+    def prep_probs(self, probs: torch.Tensor) -> np.ndarray:
+        return probs.squeeze().permute(1, 2, 0).numpy()
+
+    def process_img(self) -> np.ndarray | None:
+        img = self.current_img
+
+        t1 = time.perf_counter()
+        # Board Detection
+        if self.t % self.bd_period == 0:
+            try:
+                new_corners, conf = img.detect_board()
+                old_detection = self.board_detection
+                new_detection = new_corners
+
+                if old_detection is None:
+                    self.board_detection = new_detection
+                else:
+                    self.board_detection = (new_detection + old_detection) / 2
+
+                self.board_fails_count = 0
+                self.board_flag.set(False)
+            except Exception as e:
+                self.board_fails_count += 1
+                if (self.board_fails_count >= self.max_bd_fails) or (self.board_detection is None):
+                    self.board_flag.set(True)
+                    return None
+
+        img.board_detection = self.board_detection
+        t2 = time.perf_counter()
+
+        # Wakup Detection
+        if self.last_wakeup - self.t >= self.wakeup_period:
+            is_wakeup = True
+        else:
+            is_wakeup = self.detect_wakeup()
+        if not is_wakeup:
+            return None
+        else:
+            self.last_wakeup = self.t
+        t3 = time.perf_counter()
+
+        # Occlusion Detection
+        is_occluded = self.detect_occlusion()
+        if is_occluded:
+            return None
+        else:
+            pass
+        t4 = time.perf_counter()
+
+        # Frame Processing
+        piece_matrix, fen = img.recognize_pieces()
+        probs = self.prep_probs(piece_matrix)
+        t5 = time.perf_counter()
+
+        self.avg_times["board_detection"] += t2-t1
+        self.avg_times["wakeup"] += t3-t2
+        self.avg_times["occlusion"] += t4-t3
+        self.avg_times["piece_recognition"] += t5-t4
+
+        return probs
+
+    def quit(self):
+        self.camera.quit()
+
+
+class ChessLensGame2:
+    def __init__(self, config=None):
+
+        if (config is not None) and ("context_bredth" in config):
+            self.context_bredth = config["context_bredth"]
+        else:
+            self.context_bredth = 50
+
+        if (config is not None) and ("context_delay" in config):
+            self.context_delay = config["context_delay"]
+        else:
+            self.context_delay = 120
+
+        if (config is not None) and ("context_bind_period" in config):
+            self.context_bind_period = config["context_bind_period"]
+        else:
+            self.context_bind_period = 1
+
+        if (config is not None) and ("context_continous" in config):
+            self.context_continous = config["context_continous"]
+        else:
+            self.context_continous = False
+
+        if (config is not None) and ("game_out_path" in config):
+            self.game_out_path = config["game_out_path"]
+        else:
+            self.game_out_path = None
+
+        if (config is not None) and ("fen_update" in config):
+            self.fen_update = config["fen_update"]
+        else:
+            self.fen_update = None
+
+        self.clear()
+
+        self.avg_times = {
+            "HMM": 0
+        }
+
+        self.broadcasted_fens = []
+        self.latest_bound_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
+
+    def clear(self):
+        self.orientation = None
+
+        self.context_model = ChessHMM(
+            self.context_bredth, self.context_delay, self.context_bind_period)
+        self.pgn = None
+
+    def calc_orientation(self, piece_matrix: np.ndarray):
+        piece_matrix = piece_matrix.argmax(axis=2)
+
+        whites = (piece_matrix < 6).astype(np.float32)
+
+        correct_r: int = (whites[:, 4:]).sum() - \
+            (whites[:, :4]).sum()
+        correct_l: int = -correct_r
+
+        correct_t: int = (whites[:4, :]).sum() - \
+            (whites[4:, :]).sum()
+        correct_b: int = -correct_t
+
+        vals = [correct_r, correct_l, correct_t, correct_b]
+        orientations = ["r", "l", "t", "b"]
+        self.orientation = orientations[vals.index(max(vals))]
+
+    def prep_probs(self, probs: np.ndarray) -> np.ndarray:
+        if self.orientation == "r":
+            k = -1  # r
+        elif self.orientation == "l":
+            k = 1  # l
+        elif self.orientation == "t":
+            k = 2
+        elif self.orientation == "b":
+            k = 0
+        else:
+            raise Exception("Invalid Orientation")
+
+        # return -np.log(torch.rot90(probs, k=k, dims=(1, 2)).squeeze().permute(1, 2, 0).numpy()[::-1]+(1e-7))
+        return -np.log(np.rot90(probs, k=k, axes=(0, 1))[::-1]+(1e-7))
+
+    def operate(self, piece_matrix):
+        isbound = self.context_model.check_bind(time.perf_counter())
+        if isbound or self.context_continous:
+            self.get_latest_fens()
+
+        # Orientation
+        if self.orientation is None:
+            self.calc_orientation(piece_matrix)
+        t1 = time.perf_counter()
+
+        # Context Awareness
+        self.context_model.set_probs(
+            self.context_model.model.top_t()+1, self.prep_probs(piece_matrix), time.perf_counter())
+        t2 = time.perf_counter()
+
+        self.avg_times["HMM"] += t2-t1
+
+    def bind(self):
+        if self.context_model.model.top_t() != self.context_model.model.top_bind_t():
+            self.context_model.bind()
+
+    def get_history(self, include_non_bound: bool = False):
+        hist = self.context_model.get_history(include_non_bound)
+
+        fens = []
+        for i in range(hist.shape[0]):
+            fens.append(
+                ChessUtils.ChessTensorUtils.tensorToFEN_MAX(hist[[i], ::-1]))
+
+        fens = [f"{fens[i]}" for i in range(len(fens)) if (
+            i == 0 or (i != 0 and fens[i] != fens[i-1]))]
+        fens = [f"{fens[i]} - {i}" for i in range(len(fens))]
+
+        return fens
+
+    def get_latest_fens(self):
+        fens = self.get_history(self.context_continous)
+
+        fens = [fen for fen in fens if fen not in self.broadcasted_fens]
+        self.broadcasted_fens += fens
+
+        if (self.fen_update is not None) and (len(fens) >= 1):
+            self.latest_bound_fen = fens[-1]
+            self.fen_update(fens[-1])
+
+    def quit(self):
+        pass

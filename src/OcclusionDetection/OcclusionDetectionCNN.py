@@ -88,7 +88,7 @@ class OcclusionDetectorCNN:
         #     os.environ['WEIGHTS'], "occlusion_new.pth"))
         model = model.to(device).eval()
 
-    def is_occluded(self, img: torch.Tensor):
+    def is_occluded(self, img: torch.Tensor) -> tuple[bool, float]:
         img = img.clone().detach().squeeze()
         img = correct_image(img)
         img = img.unsqueeze(0)

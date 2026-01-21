@@ -19,7 +19,7 @@ game1 = ChessLens.ChessLensGame1(algorithm, config={
 game2 = ChessLens.ChessLensGame2(config={
     # "context_delay": 0,
     # "context_continous": False,
-    "context_delay": 60,
+    "context_delay": 5,
     "context_continous": True,
 
     "game_out_path": dirname,
@@ -40,11 +40,11 @@ try:
     while is_running:
         t1 = time.perf_counter()
         probs = game1.operate()
+        game2.update_bindings()
         if probs is False:
             break
         elif probs is None:
             continue
-        # game.set_img(img, verbose=True)
         game2.operate(probs)
         t2 = time.perf_counter()
 

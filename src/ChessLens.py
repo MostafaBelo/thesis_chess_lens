@@ -687,10 +687,6 @@ class ChessLensGame2:
         return -np.log(np.rot90(probs, k=k, axes=(0, 1))[::-1]+(1e-7))
 
     def operate(self, piece_matrix):
-        isbound = self.context_model.check_bind(time.perf_counter())
-        if isbound or self.context_continous:
-            self.get_latest_fens()
-
         # Orientation
         if self.orientation is None:
             self.calc_orientation(piece_matrix)
@@ -702,6 +698,11 @@ class ChessLensGame2:
         t2 = time.perf_counter()
 
         self.avg_times["HMM"] += t2-t1
+
+    def update_bindings(self):
+        isbound = self.context_model.check_bind(time.perf_counter())
+        if isbound or self.context_continous:
+            self.get_latest_fens()
 
     def bind(self):
         if self.context_model.model.top_t() != self.context_model.model.top_bind_t():

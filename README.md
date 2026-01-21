@@ -1,13 +1,13 @@
-### Steps to use 
-- Download the repo
+### Steps to use
+
+- Clone the repo
 - cd into it
-- bash init.sh
+- Run the init.sh
+
 ```
-bash init.sh
+source init.sh
 ```
+
 ```
- cd src
-```
-```
-python pipeline.py
+cd src
 ```

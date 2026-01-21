@@ -1,7 +1,0 @@
-{
-	"python.analysis.extraPaths": ["./DataSetLoaders", "./Utils"],
-	"files.associations": {
-		"*.js": "javascriptreact",
-		"queue": "cpp"
-	}
-}

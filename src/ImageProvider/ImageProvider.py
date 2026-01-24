@@ -44,12 +44,11 @@ class ImageProvider:
 
                 new_K = cv2.fisheye.estimateNewCameraMatrixForUndistortRectify(
                     K, D, img_size, np.eye(3),
-                    balance=1,
-                    new_size=img_size
+                    balance=1.0,
                 )
 
                 map1, map2 = cv2.fisheye.initUndistortRectifyMap(
-                    K, D, np.eye(3), new_K, img_size, cv2.CV_16SC2
+                    K, D, np.eye(3), new_K, img_size, cv2.CV_32FC1
                 )
 
                 def process(frame) -> np.ndarray:

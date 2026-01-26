@@ -8,6 +8,9 @@ import torch.nn.functional as F
 from torchvision import transforms
 import timm
 
+import onnx
+import onnxruntime as ort
+
 from PIL import Image
 
 from dotenv import load_dotenv
@@ -69,6 +72,30 @@ class TinyOcclusionCNN(nn.Module):
         return self.net(x)
 
 
+class OcclusionModelOnnx():
+    def __init__(self, model_path: str):
+        self.session = ort.InferenceSession(
+            model_path,
+        )
+
+        self.input_name = self.session.get_inputs()[0].name
+        self.output_names = [self.session.get_outputs()[i].name for i in range(
+            len(self.session.get_outputs()))]
+
+    def __call__(self, *args):
+        return self.forward(*args)
+
+    def forward(self, x: torch.Tensor):
+        x = x.cpu().numpy()
+        outputs = self.session.run(self.output_names, {self.input_name: x})
+
+        for i in range(len(outputs)):
+            outputs[i] = torch.tensor(outputs[i])
+
+        res = outputs[0]
+        return res
+
+
 model = None
 
 
@@ -80,13 +107,15 @@ class OcclusionDetectorCNN:
 
     def load_model(self):
         global model
-        model = TinyOcclusionCNN()
-        model.load_state_dict(torch.load(
-            # model.net.load_state_dict(torch.load(
-            os.path.join(os.environ['WEIGHTS'], "occlusion.pth"), map_location=device))
+        # model = TinyOcclusionCNN()
+        model = OcclusionModelOnnx(os.path.join(
+            os.environ['WEIGHTS'], "occlusion.onnx"))
+        # model.load_state_dict(torch.load(
+        # model.net.load_state_dict(torch.load(
+        # os.path.join(os.environ['WEIGHTS'], "occlusion.pth"), map_location=device))
         # torch.save(model.state_dict(), os.path.join(
         #     os.environ['WEIGHTS'], "occlusion_new.pth"))
-        model = model.to(device).eval()
+        # model = model.to(device).eval()
 
     def is_occluded(self, img: torch.Tensor) -> tuple[bool, float]:
         img = img.clone().detach().squeeze()

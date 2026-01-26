@@ -14,7 +14,7 @@ from typing import Literal
 
 
 class ImageProvider:
-    def __init__(self, camera: Literal["pi", "pi130", "cv2", "files"] | None = None, interval=0.2, data_dir=None):
+    def __init__(self, camera: Literal["pi", "pifish", "cv2", "files"] | None = None, interval=0.2, data_dir=None):
         self.interval = interval
         self.last_img_timestamp = -1
 
@@ -25,7 +25,7 @@ class ImageProvider:
             self.camera = camera
         self.postprocess = None
 
-        if self.camera in ["pi", "pi130"]:
+        if self.camera in ["pi", "pifish"]:
             sys.path.append("/usr/lib/python3/dist-packages")
             from picamera2 import Picamera2, Preview
             self.picam2 = Picamera2()
@@ -35,7 +35,7 @@ class ImageProvider:
             self.picam2.start()
             time.sleep(2)
 
-            if self.camera == "pi130":
+            if self.camera == "pifish":
                 calib = np.load(os.path.join(
                     os.environ["WEIGHTS"], 'fisheye_calibration.npz'))
                 K = calib['K']
@@ -89,7 +89,7 @@ class ImageProvider:
             if time_since_last_img < self.interval:
                 time.sleep(self.interval - time_since_last_img)
 
-        if self.camera in ["pi", "pi130"]:
+        if self.camera in ["pi", "pifish"]:
             img = self.picam2.capture_array()
         elif self.camera == "cv2":
             ret, img = self.cap.read()  # Read frame continuously for live preview

@@ -41,17 +41,18 @@ class ImageProvider:
                 K = calib['K']
                 D = calib['D']
                 img_size = tuple(calib['img_size'])
+                out_size = (int(img_size[0]*0.6), int(img_size[1]*0.6))
 
                 new_K = cv2.fisheye.estimateNewCameraMatrixForUndistortRectify(
                     K, D, img_size, np.eye(3),
                     balance=1.0,
-                    fov_scale=0.7,
-                    new_size=img_size
+                    # fov_scale=0.7,
+                    # new_size=out_size
                 )
 
                 # new_K = K.copy()
-                # new_K[0, 0] *= 2
-                # new_K[1, 1] *= 2
+                # new_K[0, 0] *= 0.7
+                # new_K[1, 1] *= 0.7
 
                 map1, map2 = cv2.fisheye.initUndistortRectifyMap(
                     K, D, np.eye(3), new_K, img_size, cv2.CV_32FC1

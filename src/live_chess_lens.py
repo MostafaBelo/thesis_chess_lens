@@ -61,8 +61,8 @@ try:
         if img is None:
             break
         t1 = time.perf_counter()
-        # game.set_img(img, verbose=True)
-        game.set_img(img)
+        game.set_img(img, verbose=True)
+        # game.set_img(img)
         t2 = time.perf_counter()
 
         frame_times.append(t2-t1)

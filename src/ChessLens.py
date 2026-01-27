@@ -397,7 +397,7 @@ class ChessLensGame:
         if verbose:
             fen_img = img.get_fen_img()
             fen_latest_img = ChessUtils.fen_to_png(
-                self.latest_bound_fen, ".", file_name="", is_write=False)
+                self.latest_bound_fen.split(" - ")[0], ".", file_name="", is_write=False)
             img_np = ((img.img).permute(1, 2, 0).cpu().numpy()
                       * 255).astype(np.uint8)
             img_np = np.ascontiguousarray(img_np)

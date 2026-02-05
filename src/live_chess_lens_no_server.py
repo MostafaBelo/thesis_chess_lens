@@ -5,11 +5,19 @@ from Utils import ChessUtils
 import ChessLens
 
 import time
+import requests
 
-from UI.server import FenServer
+# from UI.server import FenServer
 
-server = FenServer(port=8000)
-server.start()
+# server = FenServer(port=8000)
+# server.start()
+
+
+def update_fen(fen: str):
+    requests.get(f"10.42.0.0:8000/update_fen?fen={fen}")
+
+    # server.update_fen(fen)
+
 
 algorithm = "cnn_onnx_static"
 dirname = "game_fens"
@@ -23,7 +31,7 @@ game2 = ChessLens.ChessLensGame2(config={
     "context_continous": True,
 
     "game_out_path": dirname,
-    "fen_update": server.update_fen
+    "fen_update": update_fen
 })
 is_running = True
 
@@ -33,7 +41,7 @@ def stop_game():
     is_running = False
 
 
-server.stop_game = stop_game
+# server.stop_game = stop_game
 
 try:
     frame_times = []
@@ -43,8 +51,9 @@ try:
         game2.update_bindings()
         if probs is False:
             break
-        elif probs is not None:
-            game2.operate(probs)
+        elif probs is None:
+            continue
+        game2.operate(probs)
         t2 = time.perf_counter()
 
         frame_times.append(t2-t1)

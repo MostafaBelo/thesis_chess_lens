@@ -1,5 +1,5 @@
 import threading
-from flask import Flask, Response
+from flask import Flask, request, Response
 from flask_sock import Sock
 
 HTML_PAGE = """
@@ -251,6 +251,13 @@ class FenServer:
             if self.stop_game is not None:
                 self.stop_game()
 
+            return Response()
+
+        @self.app.route("/update_fen", methods=["GET"])
+        def updatefen():
+            fen = request.args.get("fen")
+            if fen is not None:
+                self.update_fen(fen)
             return Response()
 
     def _broadcast(self, message: str):

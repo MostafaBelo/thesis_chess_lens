@@ -66,28 +66,28 @@ try:
         t2 = time.perf_counter()
 
         frame_times.append(t2-t1)
-
-    avg_frame = sum(frame_times)/len(frame_times)
-    total_time = sum(frame_times)
-    game.bind()
-    history = game.get_history(True)
-
-    print(f"Avg Image Loading: {game.avg_times["load"]*1e3 / len(frame_times):.4f}ms | Avg Board Detection: {game.avg_times["board_detection"]*1e3 / len(frame_times):.4f}ms | Avg Wakeup: {game.avg_times["wakeup"]*1e3 / len(frame_times):.4f}ms | Avg Occlusion: {game.avg_times["occlusion"]*1e3 / len(frame_times):.4f}ms | Avg Piece Recognition: {game.avg_times["piece_recognition"]*1e3 / len(frame_times):.4f}ms | Avg HMM: {game.avg_times["HMM"]*1e3 / len(frame_times):.4f}ms")
-    print(
-        f"Avg Frame: {avg_frame*1e3:.4f}ms | Frame Count: {len(frame_times)} | Total Time: {total_time*1e3:.4f}ms")
-
-    fens = []
-    for i in range(history.shape[0]):
-        fens.append(ChessUtils.ChessTensorUtils.tensorToFEN_MAX(
-            history[[i], ::-1]))
-        # ChessUtils.fen_to_png(fens[-1], "Game", f"game_{i}.png")
-
-    with open("Game/game_out.txt", "w") as f:
-        pgn = ChessUtils.ChessTensorUtils.fens_to_pgn(fens)
-        f.write(f"{'\n'.join(fens)}\n\n{pgn}")
-
-    print(pgn)
 except KeyboardInterrupt:
     print("Stopped Manually")
 finally:
+    if len(frame_times) > 0:
+        avg_frame = sum(frame_times)/len(frame_times)
+        total_time = sum(frame_times)
+        game.bind()
+        history = game.get_history(True)
+        print(f"Avg Image Loading: {game.avg_times["load"]*1e3 / len(frame_times):.4f}ms | Avg Board Detection: {game.avg_times["board_detection"]*1e3 / len(frame_times):.4f}ms | Avg Wakeup: {game.avg_times["wakeup"]*1e3 / len(frame_times):.4f}ms | Avg Occlusion: {game.avg_times["occlusion"]*1e3 / len(frame_times):.4f}ms | Avg Piece Recognition: {game.avg_times["piece_recognition"]*1e3 / len(frame_times):.4f}ms | Avg HMM: {game.avg_times["HMM"]*1e3 / len(frame_times):.4f}ms")
+        print(
+            f"Avg Frame: {avg_frame*1e3:.4f}ms | Frame Count: {len(frame_times)} | Total Time: {total_time*1e3:.4f}ms")
+
+        fens = []
+        for i in range(history.shape[0]):
+            fens.append(ChessUtils.ChessTensorUtils.tensorToFEN_MAX(
+                history[[i], ::-1]))
+            # ChessUtils.fen_to_png(fens[-1], "Game", f"game_{i}.png")
+
+        with open("Game/game_out.txt", "w") as f:
+            pgn = ChessUtils.ChessTensorUtils.fens_to_pgn(fens)
+            f.write(f"{'\n'.join(fens)}\n\n{pgn}")
+
+        print(pgn)
+
     camera.quit()

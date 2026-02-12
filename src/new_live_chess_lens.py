@@ -48,24 +48,25 @@ try:
         t2 = time.perf_counter()
 
         frame_times.append(t2-t1)
-
-    avg_frame = sum(frame_times)/len(frame_times)
-    total_time = sum(frame_times)
-    game2.bind()
-    fens = game2.get_history(True)
-
-    print(f"Avg Image Loading: {game1.avg_times["load"]*1e3 / len(frame_times):.4f}ms | Avg Board Detection: {game1.avg_times["board_detection"]*1e3 / len(frame_times):.4f}ms | Avg Wakeup: {game1.avg_times["wakeup"]*1e3 / len(frame_times):.4f}ms | Avg Occlusion: {game1.avg_times["occlusion"]*1e3 / len(frame_times):.4f}ms | Avg Piece Recognition: {game1.avg_times["piece_recognition"]*1e3 / len(frame_times):.4f}ms | Avg HMM: {game2.avg_times["HMM"]*1e3 / len(frame_times):.4f}ms")
-    print(
-        f"Avg Frame: {avg_frame*1e3:.4f}ms | Frame Count: {len(frame_times)} | Total Time: {total_time*1e3:.4f}ms")
-
-    fens = [fen.split(" - ")[0] for fen in fens]
-    with open("Game/game_out.txt", "w") as f:
-        pgn = ChessUtils.ChessTensorUtils.fens_to_pgn(fens)
-        f.write(f"{'\n'.join(fens)}\n\n{pgn}")
-
-    print(pgn)
 except KeyboardInterrupt:
     print("Stopped Manually")
 finally:
+    if len(frame_times) > 0:
+        avg_frame = sum(frame_times)/len(frame_times)
+        total_time = sum(frame_times)
+        game2.bind()
+        fens = game2.get_history(True)
+
+        print(f"Avg Image Loading: {game1.avg_times["load"]*1e3 / len(frame_times):.4f}ms | Avg Board Detection: {game1.avg_times["board_detection"]*1e3 / len(frame_times):.4f}ms | Avg Wakeup: {game1.avg_times["wakeup"]*1e3 / len(frame_times):.4f}ms | Avg Occlusion: {game1.avg_times["occlusion"]*1e3 / len(frame_times):.4f}ms | Avg Piece Recognition: {game1.avg_times["piece_recognition"]*1e3 / len(frame_times):.4f}ms | Avg HMM: {game2.avg_times["HMM"]*1e3 / len(frame_times):.4f}ms")
+        print(
+            f"Avg Frame: {avg_frame*1e3:.4f}ms | Frame Count: {len(frame_times)} | Total Time: {total_time*1e3:.4f}ms")
+
+        fens = [fen.split(" - ")[0] for fen in fens]
+        with open("Game/game_out.txt", "w") as f:
+            pgn = ChessUtils.ChessTensorUtils.fens_to_pgn(fens)
+            f.write(f"{'\n'.join(fens)}\n\n{pgn}")
+
+        print(pgn)
+
     game1.quit()
     game2.quit()
